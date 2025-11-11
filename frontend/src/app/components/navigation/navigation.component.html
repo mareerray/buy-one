@@ -1,0 +1,19 @@
+<nav class="navbar">
+  <a routerLink="/" class="logo-link">QuirkCotton</a>
+  <div class="nav-links">
+    <a routerLink="/shop">Shop All</a>
+    <a routerLink="/creators">Browse Creators</a>
+    <a routerLink="/about">About Us</a>
+  </div>
+  <div class="nav-actions">
+    <ng-container *ngIf="isAuthenticated; else guestLinks">
+      <span>Hello {{ currentUserName }}</span>
+      <a routerLink="/profile">Profile</a>
+      <a routerLink="/logout">Logout</a>
+    </ng-container>
+    <ng-template #guestLinks>
+      <a routerLink="/signin">Sign In</a>
+      <a routerLink="/signup">Sign Up</a>
+    </ng-template>
+  </div>
+</nav>

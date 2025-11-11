@@ -1,0 +1,120 @@
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+  <div class="col-12 col-md-6 col-lg-4">
+    <mat-card class="sign-in-card sign-up-card">
+      <mat-card-header>
+        <mat-card-title class="text-center w-100 mb-4">
+          <h2 style="text-align: center;">Join QuirkCotton</h2>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="form" (ngSubmit)="submit()">
+        <!-- Avatar Upload Section -->
+        <div class="avatar-section mb-3 text-center">
+        <div *ngIf="avatar; else uploadButton">
+            <img [src]="avatar" alt="Avatar preview" class="avatar-preview mb-2" />
+            <br />
+            <button mat-stroked-button type="button" color="warn" (click)="handleRemoveAvatar()">
+            Remove Avatar
+            </button>
+        </div>
+        <ng-template #uploadButton>
+            <!-- <label for="avatarUpload"> -->
+            <input #avatarUpload
+                id="avatarUpload"
+                type="file"
+                accept="image/*"
+                (change)="handleAvatarUpload($event)"
+                hidden
+            />
+            <button mat-stroked-button type="button" (click)="avatarUpload.click()" color="primary" component="span">
+                Upload Avatar Image
+            </button>
+            <!-- </label> -->
+            <p class="text-secondary mt-2" style="font-size: 0.92em;">(max size: 2MB, image files only)</p>
+        </ng-template>
+        <div class="error-msg mt-1" *ngIf="avatarError">
+            {{ avatarError }}
+        </div>
+        </div>          
+          <!-- Name Field -->
+          <mat-form-field appearance="outline" class="w-100 mb-3">
+            <mat-label>Full Name</mat-label>
+            <input matInput type="text" formControlName="name" placeholder="John Doe" />
+            <mat-icon matPrefix>person</mat-icon>
+            <mat-error *ngIf="form.get('name')?.hasError('required')">
+              Name is required
+            </mat-error>
+            <mat-error *ngIf="form.get('name')?.hasError('minlength')">
+              Name must be at least 2 characters
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Email Field -->
+          <mat-form-field appearance="outline" class="w-100 mb-3">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" formControlName="email" placeholder="you@example.com" />
+            <mat-icon matPrefix>email</mat-icon>
+            <mat-error *ngIf="form.get('email')?.hasError('required')">
+              Email is required
+            </mat-error>
+            <mat-error *ngIf="form.get('email')?.hasError('email')">
+              Please enter a valid email
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Password Field -->
+          <mat-form-field appearance="outline" class="w-100 mb-3">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" formControlName="password" placeholder="••••••••" />
+            <mat-icon matPrefix>lock</mat-icon>
+            <mat-error *ngIf="form.get('password')?.hasError('required')">
+              Password is required
+            </mat-error>
+            <mat-error *ngIf="form.get('password')?.hasError('minlength')">
+              Password must be at least 8 characters
+            </mat-error>
+            <mat-error *ngIf="form.get('password')?.hasError('pattern')">
+              Password must contain uppercase, lowercase, and number
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Confirm Password Field -->
+          <mat-form-field appearance="outline" class="w-100 mb-3">
+            <mat-label>Confirm Password</mat-label>
+            <input matInput type="password" formControlName="confirmPassword" placeholder="••••••••" />
+            <mat-icon matPrefix>lock</mat-icon>
+            <mat-error *ngIf="form.hasError('notMatching') && form.get('confirmPassword')?.touched">
+              Passwords do not match
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Account Type Radio Group -->
+          <div class="mb-3">
+            <mat-label>Account Type</mat-label>
+            <mat-radio-group formControlName="role" class="d-flex gap-3 mt-1">
+              <mat-radio-button value="client">Client</mat-radio-button>
+              <mat-radio-button value="seller">Seller</mat-radio-button>
+            </mat-radio-group>
+          </div>
+
+          <!-- Submit Button -->
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            class="w-100 mb-3"
+            [disabled]="form.invalid">
+            Create Account
+          </button>
+          
+          <!-- Sign In Link -->
+          <p class="text-center text-secondary">
+            Already have an account?
+            <a routerLink="/signin" class="text-primary">Sign In</a>
+          </p>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
