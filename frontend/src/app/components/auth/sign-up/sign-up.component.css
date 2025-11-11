@@ -1,0 +1,13 @@
+.avatar-preview {
+  height: 64px;
+  width: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--primary, #8b5cf6);
+  background: #fff;
+  margin-bottom: 6px;
+}
+
+:host ::ng-deep .mat-mdc-card-header {
+  display: block !important;
+}
