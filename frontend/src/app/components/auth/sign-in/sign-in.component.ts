@@ -65,6 +65,7 @@ export class SignInComponent implements OnInit {
         this.isLoading = false;
 
         if (result.success) {
+            console.log("Login successful");
             const user = this.authService.currentUserValue;
             if (user?.role === 'seller') {
             this.router.navigate(['/seller/dashboard']);

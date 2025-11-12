@@ -1,7 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
 
-/* html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; } */
 :root {
     --primary: #8b5cf6;
     --primary-dark: #7c3aed;
@@ -32,12 +30,18 @@ body {
 
 /* Override Material theme colors */
 .mat-mdc-card {
+    width: 500px;
+    max-width: 90vw;
+    margin: 24px auto;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    position: relative;
     background-color: var(--card-bg) !important;
     color: var(--text-primary) !important;
     border: 1px solid var(--border);
 }
 .mat-mdc-outlined-button {
-    /* color: var(--text-primary) !important; */
     color: var(--link) !important;
 }
 
@@ -53,13 +57,18 @@ body {
 }
 
 .btn-primary {
-    background-color: var(--primary);
-    border-color: var(--primary);
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
 }
 
 .btn-primary:hover {
-    background-color: var(--primary-dark);
-    border-color: var(--primary-dark);
+    color: var(--link);
+}
+
+.btn-outline-light:hover {
+    color: var(--link);
+    background-color: #0d6efd;
+    border: none;
 }
 
 .text-primary {

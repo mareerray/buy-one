@@ -1,16 +1,16 @@
 .avatar-preview {
-  height: 80px;
-  width: 80px;
+  height: 84px;
+  width: 84px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid var(--border, #334155);
-  background: #fff;
+  /* background: #fff; */
   margin-bottom: 6px;
 }
 
 .upload-avatar {
-  height: 80px;
-  width: 80px;
+  height: 84px;
+  width: 84px;
   border-radius: 50%;
   object-fit: cover;
   font-size: 12px;

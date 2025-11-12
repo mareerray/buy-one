@@ -4,9 +4,9 @@ export interface User {
     password: string;
     name: string;
     role: 'client' | 'seller';
-    joinedDate: string;
+    // joinedDate: string;
     avatar?: string;
-    phone?: string;
-    address?: string;
-    description?: string;
+    // phone?: string;
+    // address?: string;
+    // description?: string;
 }

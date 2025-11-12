@@ -49,11 +49,11 @@ export class AuthService {
         password: userData.password!,
         name: userData.name!,
         role: userData.role || 'client',
-        joinedDate: new Date().toISOString(),
+        // joinedDate: new Date().toISOString(),
         avatar: userData.avatar || '',
-        phone: userData.phone || '',
-        address: userData.address || '',
-        description: userData.description || '',
+        // phone: userData.phone || '',
+        // address: userData.address || '',
+        // description: userData.description || '',
         };
 
         this.mockUsersService.mockUsers.push(newUser);

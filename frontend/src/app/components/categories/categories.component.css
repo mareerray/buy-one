@@ -1,0 +1,13 @@
+.category-card {
+  background: linear-gradient(135deg, #a855f7 30%, #f472b6 70%);
+  color: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 28px #a855f744;
+  padding: 2rem;
+  margin: 0.7rem;
+  transition: transform 0.2s;
+}
+.category-card:hover {
+  transform: scale(1.04);
+  box-shadow: 0 6px 38px #a855f799;
+}

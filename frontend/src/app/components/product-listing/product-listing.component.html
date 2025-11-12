@@ -1,0 +1,54 @@
+<div class="min-h-screen bg-slate-900">
+  <div class="bg-slate-950 border-b sticky top-0 z-10">
+    <div class="max-w-7xl mx-auto px-8 py-6">
+      <h1 class="mb-6">Premium Quirky Tees</h1>
+      <div class="flex flex-col md:flex-row gap-4">
+        <div class="flex-1 relative">
+          <input type="text" placeholder="Search products..." [(ngModel)]="searchQuery" class="pl-10" />
+        </div>
+        <select [(ngModel)]="categoryFilter" class="w-full md:w-48">
+          <option *ngFor="let category of categories" [value]="category">
+            {{ category === 'all' ? 'All Categories' : category }}
+          </option>
+        </select>
+        <select [(ngModel)]="sortBy" class="w-full md:w-48">
+          <option value="name">Name</option>
+          <option value="price-low">Price: Low to High</option>
+          <option value="price-high">Price: High to Low</option>
+        </select>
+        <div class="flex gap-2">
+          <button (click)="viewMode = 'grid'">Grid</button>
+          <button (click)="viewMode = 'list'">List</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="max-w-7xl mx-auto px-8 py-8">
+    <div class="mb-4 text-sm text-slate-600">
+      Showing {{ filteredProducts.length }} of {{ products.length }} products
+    </div>
+    <div *ngIf="filteredProducts.length === 0" class="text-center py-12">
+      <p class="text-slate-500">No products found matching your criteria.</p>
+    </div>
+    <div *ngIf="filteredProducts.length > 0"
+      [ngClass]="viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' : 'flex flex-col gap-4'">
+      <div *ngFor="let product of filteredProducts" [ngClass]="viewMode === 'list' ? 'w-full' : ''" class="product-card shadow bg-white rounded p-6">
+        <!-- Show first image, or a placeholder if not available -->
+        <img *ngIf="product.images && product.images.length > 0; else noImage"
+             [src]="product.images[0]" [alt]="product.name" class="mb-4 w-full h-48 object-cover rounded">
+        <ng-template #noImage>
+          <div class="mb-4 w-full h-48 flex items-center justify-center bg-slate-200 rounded">No image</div>
+        </ng-template>
+        <h3 class="font-bold mb-2">{{ product.name }}</h3>
+        <p class="mb-2 text-slate-600">{{ product.description }}</p>
+        <p class="mb-2 text-slate-900 font-semibold">€{{ product.price }}</p>
+        <p class="mb-2 text-sm text-gray-500">In Stock: {{ product.quantity }}</p>
+        <div class="flex space-x-2 mt-2">
+          <button (click)="handleAddToCart(product)" class="bg-purple-600 text-white px-4 py-2 rounded">Add to Cart</button>
+          <button (click)="onProductClick(product)" class="bg-gray-200 text-gray-700 px-4 py-2 rounded">View Details</button>
+          <button (click)="onSellerClick(product.sellerId)" class="bg-gray-200 text-gray-700 px-4 py-2 rounded">Seller</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
