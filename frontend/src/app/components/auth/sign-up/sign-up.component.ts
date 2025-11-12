@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -19,17 +20,17 @@ import { MatRadioModule} from '@angular/material/radio';
     templateUrl: './sign-up.component.html',
     styleUrls: ['./sign-up.component.css'],
     imports: [
-        CommonModule, 
-        ReactiveFormsModule,
-        MatCardModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        MatIconModule,
-        MatProgressSpinnerModule,
-        NgIf,
-        MatRadioModule
-
+      RouterModule,
+      CommonModule, 
+      ReactiveFormsModule,
+      MatCardModule,
+      MatFormFieldModule,
+      MatInputModule,
+      MatButtonModule,
+      MatIconModule,
+      MatProgressSpinnerModule,
+      NgIf,
+      MatRadioModule
     ]
 })
 export class SignUpComponent {

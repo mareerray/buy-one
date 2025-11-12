@@ -1,6 +1,8 @@
 import { Component, OnInit, NgModule } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
+
 import { AuthService } from '../../../services/auth.service';
 
 // Import the Material modules you use in this component
@@ -18,6 +20,7 @@ import { NgIf } from '@angular/common';
     styleUrls: ['./sign-in.component.css'],
     standalone: true,
     imports: [
+        RouterModule,
         ReactiveFormsModule,
         MatCardModule,
         MatFormFieldModule,
