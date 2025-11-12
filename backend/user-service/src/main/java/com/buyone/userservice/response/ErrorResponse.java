@@ -1,3 +1,5 @@
+package com.buyone.userservice.response;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Builder;
