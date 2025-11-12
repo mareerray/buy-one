@@ -1,0 +1,24 @@
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import jakarta.validation.constraints.*;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class UpdateUserRequest {
+    @Size(min = 2, max = 40, message = "Name must be between 2 and 40 characters")
+    private String name;
+    
+    @Email(message = "Invalid email format")
+    @Size(max = 100, message = "Email must be less than 100 characters")
+    private String email;
+    
+    @Size(min = 6, max = 24, message = "Password must be between 6 and 24 characters")
+    private String password;
+    
+    private String avatar;
+    // Add more as your model evolves
+}
