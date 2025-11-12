@@ -1,3 +1,5 @@
+package com.buyone.userservice.exception;
+
 public class AuthException extends RuntimeException {
     
     public AuthException() {

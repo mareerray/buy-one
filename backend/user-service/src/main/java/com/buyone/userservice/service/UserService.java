@@ -1,3 +1,9 @@
+package com.buyone.userservice.service;
+
+import com.buyone.userservice.request.RegisterUserRequest;
+import com.buyone.userservice.request.UpdateUserRequest;
+import com.buyone.userservice.response.UserResponse;
+
 public interface UserService {
     User createUser(User user);
     Optional<UserResponse> getUserById(String id);
