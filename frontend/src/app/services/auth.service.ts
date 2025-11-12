@@ -29,6 +29,7 @@ export class AuthService {
         const { password, ...userDTO } = user;
         localStorage.setItem('currentUser', JSON.stringify(userDTO));
         this.currentUserSubject.next(userDTO as UserDTO);
+        console.log(userDTO);
         return { success: true };
         }
 

@@ -21,3 +21,15 @@
   color: var(--link, #69f0ae);
   margin: 0 0.5rem;
 }
+.navbar-user {
+  /* display: flex; */
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.navbar-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}

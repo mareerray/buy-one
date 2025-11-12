@@ -1,6 +1,7 @@
-import { Component, Input } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component} from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-navigation',
@@ -9,8 +10,22 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./navigation.component.css'],
   imports: [RouterModule, CommonModule]
 })
+
 export class NavigationComponent {
-  @Input() isAuthenticated = false;
-  @Input() userRole: 'client' | 'seller' | null = null;
-  @Input() currentUserName = '';
+  isAuthenticated = false;
+  currentUserName = '';
+  currentUserAvatar = '';
+
+  constructor(private authService: AuthService, private router: Router) {
+    this.authService.currentUser$.subscribe(user => {
+      this.isAuthenticated = !!user;
+      this.currentUserName = user?.name || '';
+      this.currentUserAvatar = user?.avatar || '';
+    });
+  }
+
+  onLogout() {
+    this.authService.logout();
+    this.router.navigate(['/signin']);
+  }
 }

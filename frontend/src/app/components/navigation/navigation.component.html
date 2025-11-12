@@ -7,9 +7,12 @@
   </div>
   <div class="nav-actions">
     <ng-container *ngIf="isAuthenticated; else guestLinks">
-      <span>Hello {{ currentUserName }}</span>
+      <span class="navbar-user">
+        <img *ngIf="currentUserAvatar" [src]="currentUserAvatar" alt="avatar" class="navbar-avatar" />
+          Hello {{ currentUserName }}
+        </span>
       <a routerLink="/profile">Profile</a>
-      <a routerLink="/logout">Logout</a>
+      <a (click)="onLogout()" style="cursor:pointer">Logout</a>
     </ng-container>
     <ng-template #guestLinks>
       <a routerLink="/signin">Sign In</a>

@@ -14,8 +14,8 @@ export interface User {
   // description?: string;
 }
 
-const papaAvatar = 'assets/avatars/papa.png';
-const emilyAvatar = 'assets/avatars/emily.png';
+const papaAvatar = 'assets/avatars/papa.jpg';
+const emilyAvatar = 'assets/avatars/emily.jpg';
 
 @Injectable({
   providedIn: 'root',
