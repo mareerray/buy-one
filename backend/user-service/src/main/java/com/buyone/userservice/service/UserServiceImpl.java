@@ -27,23 +27,23 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
-    public UserResponse createUser(UserRequest userRequest) {
-        if (userRequest.getEmail() == null || userRequest.getEmail().isBlank()) {
+    public UserResponse createUser(RegisterUserRequest request) {
+        if (request.getEmail() == null || request.getEmail().isBlank()) {
             throw new BadRequestException("Email cannot be empty");
         }
-        if (userRepository.findByEmail(userRequest.getEmail()).isPresent()) {
-            throw new ConflictException("Email already exists: " + userRequest.getEmail());
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new ConflictException("Email already exists: " + request.getEmail());
         }
-        if (userRequest.getPassword() == null || userRequest.getPassword().isBlank()) {
+        if (request.getPassword() == null || request.getPassword().isBlank()) {
             throw new BadRequestException("Password cannot be empty");
         }
         
         User user = User.builder()
-                .name(userRequest.getName())
-                .email(userRequest.getEmail())
-                .password(passwordEncoder.encode(userRequest.getPassword()))
-                .role(userRequest.getRole())
-                .avatar(userRequest.getAvatar())
+                .name(request.getName())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(request.getRole())
+                .avatar(request.getAvatar())
                 .build();
         
         User savedUser = userRepository.save(user);
@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
-    public UserResponse updateUser(String id, UserRequest userRequest) {
+    public UserResponse updateUser(String id, UpdateUserRequest userRequest) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + id));
         if (userRequest.getEmail() != null && userRepository.findByEmail(userRequest.getEmail()).isPresent()
@@ -127,6 +127,12 @@ public class UserServiceImpl implements UserService {
     
     // Mapping helper
     private UserResponse toUserResponse(User user) {
-        return new UserResponse(user.getName(), user.getEmail(), user.getRole(), user.getAvatar());
+        return UserResponse.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .avatar(user.getAvatar())
+                .build();
     }
 }

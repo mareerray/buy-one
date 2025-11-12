@@ -1,126 +1,91 @@
+package com.buyone.userservice.exception;
+
+import com.buyone.userservice.response.ErrorResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.MethodArgumentNotValidException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
-import org.springframework.web.bind.*;
-import org.springframework.http.*;
-import org.springframework.validation.*;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.client.*;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 
+import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
-
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     
-    // handle validation err (beans validation, @valid)
+    // Helper for building error responses
+    private ResponseEntity<ErrorResponse> buildError(HttpStatus status, String message, String path) {
+        ErrorResponse error = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(status.value())
+                .error(status.getReasonPhrase())
+                .message(message)
+                .path(path)
+                .build();
+        return new ResponseEntity<>(error, status);
+    }
+    
+    // 400: Bean validation (@Valid) errors
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException ex) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("status", HttpStatus.BAD_REQUEST.value());
-        body.put("error", "Bad Request");
-        
-        // Build clear message for tests & clients
+    public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException ex, HttpServletRequest request) {
         String message = ex.getBindingResult().getFieldErrors().stream()
                 .map(err -> err.getField() + ": " + err.getDefaultMessage())
                 .collect(Collectors.joining(", "));
-        
-        body.put("message", message);
-        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+        return buildError(HttpStatus.BAD_REQUEST, message, request.getRequestURI());
     }
     
-    // response format
-    private ResponseEntity<Map<String, Object>> buildResponse(HttpStatus status, String message) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("status", status.value());
-        body.put("error", status.getReasonPhrase());
-        body.put("message", message != null ? message : "No details provided");
-        return new ResponseEntity<>(body, status);
-    }
-    
-    
-    // 400 - bad req
+    // 400: Bad request
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<Map<String, Object>> handleBadRequest(BadRequestException ex) {
-        return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    public ResponseEntity<ErrorResponse> handleBadRequest(BadRequestException ex, HttpServletRequest request) {
+        return buildError(HttpStatus.BAD_REQUEST, ex.getMessage(), request.getRequestURI());
     }
     
-    // 401 - unauthorized (auth or token fail)
+    // 401: Unauthorized
     @ExceptionHandler(AuthException.class)
-    public ResponseEntity<Map<String, Object>> handleAuth(AuthException ex) {
-        return buildResponse(HttpStatus.UNAUTHORIZED, ex.getMessage());
+    public ResponseEntity<ErrorResponse> handleAuth(AuthException ex, HttpServletRequest request) {
+        return buildError(HttpStatus.UNAUTHORIZED, ex.getMessage(), request.getRequestURI());
     }
     
-    // 403 - Forbidden ( role access violation, admin vs user)
+    // 403: Forbidden
     @ExceptionHandler(ForbiddenException.class)
-    public ResponseEntity<Map<String, Object>> handleForbidden(ForbiddenException ex) {
-        return buildResponse(HttpStatus.FORBIDDEN, ex.getMessage());
+    public ResponseEntity<ErrorResponse> handleForbidden(ForbiddenException ex, HttpServletRequest request) {
+        return buildError(HttpStatus.FORBIDDEN, ex.getMessage(), request.getRequestURI());
     }
     
-    // 404 - Resource not found ( missing user/product/etc.)
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleNotFound(ResourceNotFoundException ex) {
-        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage());
-    }
-    
-    // 405 - Method not allowed
-    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<Map<String, Object>> handleMethodNotAllowed(HttpRequestMethodNotSupportedException ex) {
-        return buildResponse(HttpStatus.METHOD_NOT_ALLOWED, "Method Not Allowed: " + ex.getMessage());
-    }
-    
-    
-    // 409 - conflict (duplicate email or resource)
-    @ExceptionHandler(ConflictException.class)
-    public ResponseEntity<Map<String, Object>> handleConflict(ConflictException ex) {
-        return buildResponse(HttpStatus.CONFLICT, ex.getMessage());
-    }
-    
+    // 403: Authorization denied (Spring Security)
     @ExceptionHandler(AuthorizationDeniedException.class)
-    public ResponseEntity<Map<String, Object>> handleAuthorizationDenied(AuthorizationDeniedException ex) {
-        return buildResponse(HttpStatus.FORBIDDEN, "Access Denied: " + ex.getMessage());
+    public ResponseEntity<ErrorResponse> handleAuthorizationDenied(AuthorizationDeniedException ex, HttpServletRequest request) {
+        return buildError(HttpStatus.FORBIDDEN, "Access Denied: " + ex.getMessage(), request.getRequestURI());
     }
     
-    //httprequestethodnotsupported exception
+    // 404: Not found
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFound(ResourceNotFoundException ex, HttpServletRequest request) {
+        return buildError(HttpStatus.NOT_FOUND, ex.getMessage(), request.getRequestURI());
+    }
+    
+    // 405: Method not allowed
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<Map<String, Object>> handleAuthorizationDenied(HttpRequestMethodNotSupportedException ex) {
-        return buildResponse(HttpStatus.FORBIDDEN, "Access Denied: " + ex.getMessage());
+    public ResponseEntity<ErrorResponse> handleMethodNotAllowed(HttpRequestMethodNotSupportedException ex, HttpServletRequest request) {
+        return buildError(HttpStatus.METHOD_NOT_ALLOWED, "Method Not Allowed: " + ex.getMessage(), request.getRequestURI());
     }
     
-
+    // 409: Conflict (duplicate resource)
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ErrorResponse> handleConflict(ConflictException ex, HttpServletRequest request) {
+        return buildError(HttpStatus.CONFLICT, ex.getMessage(), request.getRequestURI());
+    }
     
-    
-    // 500 - fail safe
+    // 500: Generic fallback
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> handleGeneric(Exception ex) {
-        ex.printStackTrace(); // Still log full stack in console
-        
-        Map<String, Object> body = new HashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
-        body.put("error", "Internal Server Error");
-        
-        // Add key details about the error
-        body.put("exception", ex.getClass().getSimpleName());
-        body.put("message", ex.getMessage() != null ? ex.getMessage() : "Unexpected server error");
-        body.put("cause", ex.getCause() != null ? ex.getCause().toString() : "No root cause");
-        
-        // Optional: include a short stack preview (for local dev only)
-        List<String> stackPreview = Arrays.stream(ex.getStackTrace())
-                .limit(5)
-                .map(StackTraceElement::toString)
-                .collect(Collectors.toList());
-        body.put("stackTrace", stackPreview);
-        
-        return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<ErrorResponse> handleGeneric(Exception ex, HttpServletRequest request) {
+        ex.printStackTrace();
+        String cause = ex.getCause() != null ? ex.getCause().toString() : "No root cause";
+        String fullMessage = (ex.getMessage() != null ? ex.getMessage() : "Unexpected server error")
+                + " [" + cause + "]";
+        return buildError(HttpStatus.INTERNAL_SERVER_ERROR, fullMessage, request.getRequestURI());
     }
-    
-    
 }
