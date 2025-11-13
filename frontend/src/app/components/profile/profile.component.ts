@@ -5,6 +5,7 @@ import { UserDTO } from '../../models/userDTO.model';
 import { UserUpdateDTO } from '../../models/userUpdateDTO.model';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { AbstractControl } from '@angular/forms';
 
 @Component({
     selector: 'app-profile',
@@ -20,7 +21,7 @@ export class ProfileComponent implements OnInit {
   passwordForm: FormGroup;
   avatarPreview: string | null = null;
 
-    constructor(private authService: AuthService, private fb: FormBuilder) {
+  constructor(private authService: AuthService, private fb: FormBuilder) {
     this.profileForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -42,7 +43,7 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-    onAvatarSelect(event: Event) {
+  onAvatarSelect(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
     const reader = new FileReader();
@@ -61,7 +62,7 @@ export class ProfileComponent implements OnInit {
       };
       this.authService.updateUser(dto);
     }
-  }
+}
 
   changePassword() {
     if (this.passwordForm.valid && this.currentUser) {
@@ -76,8 +77,9 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  private passwordsMatch(form: FormGroup) {
-    return form.get('newPassword')!.value === form.get('confirmPassword')!.value
-      ? null : { mismatch: true };
+  private passwordsMatch(form: AbstractControl) {
+    const newPassword = form.get('newPassword')?.value;
+    const confirmPassword = form.get('confirmPassword')?.value;
+    return newPassword === confirmPassword ? null : { mismatch: true };
   }
 }

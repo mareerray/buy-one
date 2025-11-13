@@ -1,6 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'; // for ngClass, ngIf, ngFor
 import { FormsModule } from '@angular/forms';  // for ngModel (template-driven forms)
+import { MOCK_PRODUCTS } from '../../models/product.model';
 
 export interface Product {
   id: string;
@@ -20,15 +21,20 @@ export interface Product {
   standalone: true,
   imports: [CommonModule, FormsModule]
 })
-export class ProductListingComponent {
-  @Input() products: Product[] = [];
+export class ProductListingComponent implements OnInit {
+  products: Product[] = [];
+
+  // @Input() products: Product[] = [];
   @Input() onProductClick: (product: Product) => void = () => {};
   @Input() onSellerClick: (sellerId: string) => void = () => {};
 
   searchQuery: string = '';
   categoryFilter: string = 'all';
   sortBy: string = 'name';
-  viewMode: 'grid' | 'list' = 'grid';
+
+  ngOnInit() {
+    this.products = MOCK_PRODUCTS;
+  }
 
   get categories(): string[] {
     return ['all', ...Array.from(new Set(this.products.map(p => p.category)))];

@@ -56,6 +56,12 @@ body {
     color: var(--text-primary);
 }
 
+.card:hover {
+    box-shadow: 0 8px 24px rgba(69,85,108,.18);
+    transform: translateY(-4px) scale(1.03);
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
 .btn-primary {
     background-color: var(--primary-dark);
     border-color: var(--primary-dark);
@@ -65,7 +71,7 @@ body {
     color: var(--link);
 }
 
-.btn-primary:hover, .btn-outline-light:hover {
+.btn-primary:hover, .btn-outline-light:hover, .btn-outline-primary:hover {
     color: var(--text-primary);
     background-color: #198754;
     border: none;

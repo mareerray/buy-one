@@ -22,7 +22,7 @@ export class HomeComponent {
   onSellerClick(sellerId: string) {
     // Show seller info
   }
-  onShopNow() {}
-  onSellWithUs() {}
-  onBrowseCreators() {}
+  shopNow() {}
+  registerSeller() {}
+  browseCreators() {}
 }

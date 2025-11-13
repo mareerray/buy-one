@@ -68,9 +68,9 @@ export class SignInComponent implements OnInit {
             console.log("Login successful");
             const user = this.authService.currentUserValue;
             if (user?.role === 'seller') {
-            this.router.navigate(['/seller/dashboard']);
+            this.router.navigate(['/profile']);
             } else {
-            this.router.navigate(['/']);
+            this.router.navigate(['/profile']);
             }
         } else {
             this.errorMessage = result.message || 'Login failed';

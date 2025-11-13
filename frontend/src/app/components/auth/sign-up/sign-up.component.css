@@ -1,3 +1,7 @@
+.alert-info {
+  background-color: none !important;
+}
+
 .avatar-preview {
   height: 84px;
   width: 84px;

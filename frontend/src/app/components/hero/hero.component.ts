@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common'; // for ngClass, ngIf, ngFor
+import { Router } from '@angular/router'; // for routerLink
+import { AuthService } from '../../services/auth.service';
 
 
 interface HeroSlide {
@@ -18,9 +20,19 @@ interface HeroSlide {
   imports: [CommonModule]
 })
 export class HeroComponent implements OnInit {
-  @Input() onShopNow: () => void = () => {};
-  @Input() onSellWithUs: () => void = () => {};
-  @Input() onBrowseCreators: () => void = () => {};
+  constructor(private router: Router, private authService: AuthService) {}
+
+  shopNow() {
+    this.router.navigate(['/product-listing']);
+  }
+  registerSeller() {
+    this.authService.logout(); 
+    this.router.navigate(['/signup']);
+  }
+
+  browseCreators() {
+    this.router.navigate(['/product-listing']);
+  }
 
   heroSlides: HeroSlide[] = [
     { id: '1', title: 'Quirky Tees, Curated for You', subtitle: 'Where creators sell bold designs. Where fans discover unique styles.', image: 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=1200', badge: 'Marketplace' },

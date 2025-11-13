@@ -1,15 +1,12 @@
 <app-hero
-  (onShopNow)="onShopNow()"
-  (onSellWithUs)="onSellWithUs()"
-  (onBrowseCreators)="onBrowseCreators()"  [onShopNow]="onShopNow">
+  (shopNow)="shopNow()"
+  (registerSeller)="registerSeller()"
+  (browseCreators)="browseCreators()">
 </app-hero>
 
 <app-categories
 [onCategoryClick]="onCategoryClick"> 
 </app-categories>
 
-<app-product-listing
-[products]="products"
-  [onProductClick]="onProductClick"
-  [onSellerClick]="onSellerClick"> 
+<app-product-listing> 
 </app-product-listing>
