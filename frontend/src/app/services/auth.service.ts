@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../models/user.model';
 import { UserDTO } from '../models/userDTO.model';
+import { UserUpdateDTO } from '../models/userUpdateDTO.model';
 import { MockUsersService } from '../services/mock-users.service';
 
 @Injectable({
@@ -13,7 +14,7 @@ export class AuthService {
     );
     public currentUser$: Observable<UserDTO | null> = this.currentUserSubject.asObservable();
 
-    constructor(private mockUsersService: MockUsersService) {}
+    constructor(private usersService: MockUsersService) {}
 
     private loadUserFromStorage(): UserDTO | null {
         const userJson = localStorage.getItem('currentUser');
@@ -21,7 +22,7 @@ export class AuthService {
     }
 
     login(email: string, password: string): { success: boolean; message?: string } {
-        const user = this.mockUsersService.mockUsers.find(
+        const user = this.usersService.mockUsers.find(
         u => u.email === email && u.password === password
         );
 
@@ -37,7 +38,7 @@ export class AuthService {
     }
 
     signup(userData: Partial<User>): { success: boolean; message?: string } {
-        const existingUser = this.mockUsersService.mockUsers.find(
+        const existingUser = this.usersService.mockUsers.find(
             u => u.email === userData.email);
         
         if (existingUser) {
@@ -50,14 +51,10 @@ export class AuthService {
         password: userData.password!,
         name: userData.name!,
         role: userData.role || 'client',
-        // joinedDate: new Date().toISOString(),
         avatar: userData.avatar || '',
-        // phone: userData.phone || '',
-        // address: userData.address || '',
-        // description: userData.description || '',
         };
 
-        this.mockUsersService.mockUsers.push(newUser);
+        this.usersService.mockUsers.push(newUser);
         const { password, ...userDTO } = newUser;
         localStorage.setItem('currentUser', JSON.stringify(userDTO));
         this.currentUserSubject.next(userDTO as UserDTO);
@@ -81,4 +78,11 @@ export class AuthService {
     isSeller(): boolean {
         return this.currentUserValue?.role === 'seller';
     }
+
+    updateUser(update: UserUpdateDTO) {
+    const updated = this.usersService.updateUser(update);
+    if (updated) {
+      this.currentUserSubject.next({ ...updated }); // Broadcast update
+    }
+  }
 }

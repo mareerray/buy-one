@@ -1,5 +1,14 @@
 import { Injectable } from '@angular/core';
 
+// DTO for updating users (kept inline to avoid missing module)
+export interface UserUpdateDTO {
+  id: string;
+  name: string;
+  email: string;
+  avatar?: string;
+  password?: string;
+}
+
 // Define a flat User interface for all user fields
 export interface User {
   id: string;
@@ -7,11 +16,7 @@ export interface User {
   email: string;
   password: string;
   role: 'client' | 'seller';
-  // joinedDate: string;
   avatar?: string;
-  // phone?: string;
-  // address?: string;
-  // description?: string;
 }
 
 const papaAvatar = 'assets/avatars/papa.jpg';
@@ -29,7 +34,6 @@ export class MockUsersService {
       email: "papa@papa.com",
       password: "Papa123!",
       role: "client",
-      // joinedDate: "2023-01-01T09:00:00Z",
       avatar: papaAvatar,
     },
     {
@@ -38,11 +42,7 @@ export class MockUsersService {
       email: "emily@apple.com",
       password: "Emily123!",
       role: "seller",
-      // joinedDate: "2023-01-02T09:00:00Z",
       avatar: emilyAvatar,
-      // phone: "+49 123 456 7890",
-      // address: "Berlin, Germany",
-      // description: "Crafting quirky tees for techies and anime fans!",
     }
   ];
 
@@ -56,5 +56,15 @@ export class MockUsersService {
 
   getUserByEmail(email: string): User | null {
     return this.mockUsers.find(user => user.email === email) || null;
+  }
+
+  updateUser(dto: UserUpdateDTO): User | null {
+    const user = this.mockUsers.find(u => u.id === dto.id);
+    if (!user) return null;
+    user.name = dto.name;
+    user.email = dto.email;
+    if (dto.avatar) user.avatar = dto.avatar;
+    if (dto.password) user.password = dto.password;
+    return user;
   }
 }
