@@ -20,7 +20,7 @@ export const MOCK_PRODUCTS: Product[] = [
       'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800'
     ],
     category: 'code-nerd',
-    sellerId: 's001',
+    sellerId: 'USER-002',
     quantity: 10
   },
   {
@@ -33,7 +33,7 @@ export const MOCK_PRODUCTS: Product[] = [
       'https://images.unsplash.com/photo-1724654814378-108c93f5fa54?w=800'
     ],
     category: 'anime-pop',
-    sellerId: 's002',
+    sellerId: 'USER-002',
     quantity: 7
   },
   {
@@ -45,7 +45,7 @@ export const MOCK_PRODUCTS: Product[] = [
       'https://images.unsplash.com/photo-1660900506164-9efffc7a4245?w=400'
     ],
     category: 'minimal-tech',
-    sellerId: 's003',
+    sellerId: 'USER-004',
     quantity: 25
   },
   {
@@ -57,7 +57,7 @@ export const MOCK_PRODUCTS: Product[] = [
       'https://images.unsplash.com/photo-1758179762049-615d9aac58ea?w=400'
     ],
     category: 'gaming-esports',
-    sellerId: 's004',
+    sellerId: 'USER-004',
     quantity: 12
   },
   {
@@ -69,7 +69,7 @@ export const MOCK_PRODUCTS: Product[] = [
       'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=401'
     ],
     category: 'geeky-memes',
-    sellerId: 's005',
+    sellerId: 'USER-006',
     quantity: 16
   },
   {
@@ -81,7 +81,7 @@ export const MOCK_PRODUCTS: Product[] = [
       'https://images.unsplash.com/photo-1724654814378-108c93f5fa54?w=401'
     ],
     category: 'limited-editions',
-    sellerId: 's006',
+    sellerId: 'USER-006',
     quantity: 3
   }
 ];

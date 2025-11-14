@@ -1,7 +1,7 @@
 <div class="container py-3">
   <div class="row gy-2 align-items-center">
     <div class="col-12 col-md flex-grow-1">
-      <input type="text" class="form-control" placeholder="Search products..." [(ngModel)]="searchQuery" />
+      <input type="text" class="form-control custom-input" placeholder="Search products..." [(ngModel)]="searchQuery" />
     </div>
     <div class="col-6 col-md-2">
       <select class="form-select" [(ngModel)]="categoryFilter">
@@ -27,12 +27,15 @@
     <div class="container py-5">
       <div class="row g-4">
         <div *ngFor="let product of filteredProducts" class="col-12 col-md-6 col-lg-4">
-          <div class="card h-100 shadow-sm rounded">
+          <div class="card h-100 shadow-sm rounded"
+            (click)="viewProductDetail(product.id)" 
+            style="cursor: pointer;">
             <!-- Product Image -->
             <img *ngIf="product.images && product.images.length > 0; else noImg"
                 [src]="product.images[0]"
                 [alt]="product.name"
-                class="card-img-top" style="height: 220px; object-fit: cover; border-radius: 0.75rem 0.75rem 0 0;">
+                class="card-img-top" 
+                style="height: 220px; object-fit: cover; border-radius: 0.75rem 0.75rem 0 0;">
             <ng-template #noImg>
               <div class="d-flex align-items-center justify-content-center bg-light text-muted card-img-top"
                   style="height: 220px; border-radius: 0.75rem 0.75rem 0 0;">
@@ -49,13 +52,18 @@
               <!-- Price -->
               <p class="text-primary mb-2 fw-semibold fs-5">€{{ product.price }}</p>
               <!-- Seller Info -->
-              <p class="mb-3 text-muted">
+              <p class="mb-4 ">
+                <i class="fas fa-user"></i>
+                <span class="fw-semibold"> Seller:</span> {{ product.sellerId }}
+              </p>
+              <!-- <p class="mb-3">
                 <i class="fas fa-user"></i>
                 {{ product.sellerId }}
-              </p>
+              </p> -->
     <!-- Buttons -->
               <div class="mt-auto d-flex gap-2">
-                <button class="btn btn-outline-primary w-50">
+                <button class="btn btn-outline-primary w-50"
+                (click)="viewProductDetail(product.id); $event.stopPropagation()">
                   <i class="fas fa-eye me-2"></i>View Detail
                 </button>
                 <button class="btn btn-outline-secondary w-50" disabled>

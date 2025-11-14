@@ -15,3 +15,13 @@
     color: var(--text-primary);
     border-color: var(--border);
 }
+
+.custom-input, .form-select {
+    background-color: transparent;
+    color: var(--link);
+    border-color: var(--border);
+} 
+
+.custom-input::placeholder {
+    color: var(--link);
+}

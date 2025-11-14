@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'; // for ngClass, ngIf, ngFor
 import { FormsModule } from '@angular/forms';  // for ngModel (template-driven forms)
 import { MOCK_PRODUCTS } from '../../models/product.model';
+import { Router } from '@angular/router';
 
 export interface Product {
   id: string;
@@ -22,11 +23,9 @@ export interface Product {
   imports: [CommonModule, FormsModule]
 })
 export class ProductListingComponent implements OnInit {
-  products: Product[] = [];
 
-  // @Input() products: Product[] = [];
-  @Input() onProductClick: (product: Product) => void = () => {};
-  @Input() onSellerClick: (sellerId: string) => void = () => {};
+  constructor(private router: Router) {}
+  products: Product[] = [];
 
   searchQuery: string = '';
   categoryFilter: string = 'all';
@@ -56,6 +55,10 @@ export class ProductListingComponent implements OnInit {
           default: return 0;
         }
       });
+  }
+
+  viewProductDetail(productId: string) {
+    this.router.navigate(['/product', productId]);
   }
 
   handleAddToCart(product: Product) {

@@ -4,6 +4,7 @@ import { SignInComponent } from './components/auth/sign-in/sign-in.component';
 import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { ProductListingComponent } from './components/product-listing/product-listing.component';
+import { ProductCardComponent } from './components/product-card/product-card.component';
 
 export const routes: Routes = [
   // { path: '', redirectTo: 'signin', pathMatch: 'full' }, // Default to 'signin'
@@ -11,7 +12,8 @@ export const routes: Routes = [
   { path: 'signin', component: SignInComponent },
   { path: 'signup', component: SignUpComponent },
   { path: 'profile', component: ProfileComponent },
-  { path: 'product-listing', component: ProductListingComponent }
+  { path: 'product-listing', component: ProductListingComponent },
+  { path: 'product/:id', component: ProductCardComponent }
 ];
 
 

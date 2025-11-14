@@ -20,7 +20,9 @@ export interface User {
 }
 
 const papaAvatar = 'assets/avatars/papa.jpg';
-const emilyAvatar = 'assets/avatars/emily.jpg';
+const emilyAvatar = 'assets/avatars/emily.jpg'; //002
+const johnAvatar = 'assets/avatars/koaladrinkscoffee.webp'; //004
+const sarahAvatar = 'assets/avatars/panda.webp'; //006
 
 @Injectable({
   providedIn: 'root',
@@ -43,6 +45,22 @@ export class MockUsersService {
       password: "Emily123!",
       role: "seller",
       avatar: emilyAvatar,
+    },
+    {
+      id: "USER-004",
+      name: "John Doe",
+      email: "john@doe.com",
+      password: "John123!",
+      role: "seller",
+      avatar: johnAvatar,
+    },
+      {
+      id: "USER-006",
+      name: "Sarah Lee",
+      email: "sarah@lee.com",
+      password: "Sarah123!",
+      role: "seller",
+      avatar: sarahAvatar,
     }
   ];
 
