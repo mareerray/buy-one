@@ -2,7 +2,7 @@
   <a routerLink="/" class="logo-link">grit:Tee</a>
   <div class="nav-links">
     <a routerLink="/product-listing">Shop All</a>
-    <a routerLink="/creators">Browse Creators</a>
+    <a routerLink="/categories">Browse Collections</a>
     <a routerLink="/about">About Us</a>
   </div>
   <div class="nav-actions">
@@ -10,7 +10,7 @@
       <a routerLink="/profile">
         <span class="navbar-user">
           <img *ngIf="currentUserAvatar" [src]="currentUserAvatar" alt="avatar" class="navbar-avatar" />
-             {{ currentUserName }}
+            {{ currentUserName }}
         </span>
       </a>
       <a (click)="onLogout()" style="cursor:pointer">
