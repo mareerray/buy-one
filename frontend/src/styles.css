@@ -67,6 +67,10 @@ body {
     border-color: var(--primary-dark);
 }
 
+.btn-outline-light {
+    color: var(--link);
+}
+
 .btn-primary:hover {
     color: var(--link);
 }

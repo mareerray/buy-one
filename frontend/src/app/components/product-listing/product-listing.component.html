@@ -35,10 +35,10 @@
                 [src]="product.images[0]"
                 [alt]="product.name"
                 class="card-img-top" 
-                style="height: 220px; object-fit: cover; border-radius: 0.75rem 0.75rem 0 0;">
+                style="height: 300px; object-fit: cover; border-radius: 0.75rem 0.75rem 0 0;">
             <ng-template #noImg>
               <div class="d-flex align-items-center justify-content-center bg-light text-muted card-img-top"
-                  style="height: 220px; border-radius: 0.75rem 0.75rem 0 0;">
+                  style="height: 300px; border-radius: 0.75rem 0.75rem 0 0;">
                 No image
               </div>
             </ng-template>
@@ -52,15 +52,15 @@
               <!-- Price -->
               <p class="text-primary mb-2 fw-semibold fs-5">€{{ product.price }}</p>
               <!-- Seller Info -->
-              <p class="mb-4 ">
-                <i class="fas fa-user"></i>
-                <span class="fw-semibold"> Seller:</span> {{ product.sellerId }}
-              </p>
-              <!-- <p class="mb-3">
-                <i class="fas fa-user"></i>
-                {{ product.sellerId }}
-              </p> -->
-    <!-- Buttons -->
+              <ng-container *ngIf="getSeller(product.sellerId) as seller">
+                <div class="mb-3 d-flex align-items-center">
+                  <!-- <span class="me-2">Seller: </span> -->
+                  <img *ngIf="seller.avatar" [src]="seller.avatar" [alt]="seller.name"
+                      class="rounded-circle me-2" style="width:25px; height:25px; object-fit:cover;">
+                  <span class="fw seller-name">{{ seller.name }}</span>
+                </div>
+              </ng-container>
+              <!-- Buttons -->
               <div class="mt-auto d-flex gap-2">
                 <button class="btn btn-outline-primary w-50"
                 (click)="viewProductDetail(product.id); $event.stopPropagation()">

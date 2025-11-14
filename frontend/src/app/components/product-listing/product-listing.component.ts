@@ -1,19 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'; // for ngClass, ngIf, ngFor
 import { FormsModule } from '@angular/forms';  // for ngModel (template-driven forms)
-import { MOCK_PRODUCTS } from '../../models/product.model';
+import { MOCK_PRODUCTS, Product } from '../../models/product.model';
 import { Router } from '@angular/router';
-
-export interface Product {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  images: string[];
-  category: string;
-  sellerId: string;
-  quantity: number;
-}
+import { MockUsersService, User } from '../../services/mock-users.service';
 
 @Component({
   selector: 'app-product-listing',
@@ -24,12 +14,15 @@ export interface Product {
 })
 export class ProductListingComponent implements OnInit {
 
-  constructor(private router: Router) {}
   products: Product[] = [];
-
   searchQuery: string = '';
   categoryFilter: string = 'all';
   sortBy: string = 'name';
+
+  constructor(
+    private router: Router,
+    private mockUsersService: MockUsersService
+  ) {}
 
   ngOnInit() {
     this.products = MOCK_PRODUCTS;
@@ -57,6 +50,13 @@ export class ProductListingComponent implements OnInit {
       });
   }
 
+  getSeller(sellerId: string): User | undefined {
+    // Returns the User object for the seller
+    return this.mockUsersService.mockUsers.find(
+      user => user.id === sellerId && user.role === 'seller'
+    );
+  }
+
   viewProductDetail(productId: string) {
     this.router.navigate(['/product', productId]);
   }
@@ -65,3 +65,4 @@ export class ProductListingComponent implements OnInit {
     alert(`${product.name} added to cart!`);
   }
 }
+

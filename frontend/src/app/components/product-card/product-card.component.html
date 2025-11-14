@@ -26,8 +26,16 @@
               <p class="price mb-1">Price: <span class="text-primary fw-bold fs-4">€{{ product.price }}</span></p>
               <p class="mb-1"><span class="fw-semibold">Quantity:</span> {{ product.quantity }}</p>
               <p class="mb-4 ">
-                <i class="fas fa-user"></i>
-                <span class="fw-semibold"> Seller:</span> {{ product.sellerId }}
+                <!-- Seller Info -->
+              <ng-container *ngIf="getSeller(product.sellerId) as seller">
+                <div class="mb-3 d-flex align-items-center">
+                <span class="me-2">Seller:</span>
+                  <img *ngIf="seller.avatar" [src]="seller.avatar" [alt]="seller.name"
+                      class="rounded-circle me-2" style="width:25px; height:25px; object-fit:cover;">
+                  <span class="fw seller-name">{{ seller.name }}</span>
+                </div>
+              </ng-container>
+
               </p>
               <button class="btn btn-outline-secondary mb-2 w-100" disabled>
                 <i class="fas fa-shopping-cart me-2"></i> Add to Cart
