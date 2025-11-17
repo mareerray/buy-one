@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Product, MOCK_PRODUCTS } from '../../models/product.model';
+import { CATEGORIES } from '../../models/categories.model';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -16,6 +17,7 @@ export class SellerDashboardComponent implements OnInit {
 
   userProducts: Product[] = [];
   productForm: FormGroup;
+  categories = CATEGORIES;
   imagePreview: string | ArrayBuffer | null = null;
 
   constructor(private fb: FormBuilder, private authService: AuthService) {
@@ -24,6 +26,8 @@ export class SellerDashboardComponent implements OnInit {
       description: ['', Validators.required],
       price: ['', [Validators.required, Validators.min(1.00)]],
       image: [null, Validators.required],
+      category: ['', Validators.required],
+      quantity: ['', [Validators.required, Validators.min(1)]],
     });
   }
 
@@ -34,13 +38,37 @@ export class SellerDashboardComponent implements OnInit {
     }
   }
 
+  maxImageSize = 2 * 1024 * 1024; // 2MB in bytes
+  allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+  imageValidationError: string | null = null;
+
   onImageChange(event: any) {
     const file = event.target.files[0];
-    if (file) {
-      this.productForm.patchValue({ image: file });
-      const reader = new FileReader();
-      reader.onload = () => this.imagePreview = reader.result;
-      reader.readAsDataURL(file);
+    this.imageValidationError = null;
+
+  if (file) {
+    // Validate file type
+    if (!this.allowedTypes.includes(file.type)) {
+      this.imageValidationError = 'Only JPG, PNG, and GIF files are allowed.';
+      this.productForm.patchValue({ image: null });
+      this.imagePreview = null;
+      return;
+    }
+
+    // Validate file size
+    if (file.size > this.maxImageSize) {
+      this.imageValidationError = 'Image size must be under 2MB.';
+      this.productForm.patchValue({ image: null });
+      this.imagePreview = null;
+      return;
+    }
+
+    // If valid, update form and preview
+    this.productForm.patchValue({ image: file });
+
+    const reader = new FileReader();
+    reader.onload = () => this.imagePreview = reader.result;
+    reader.readAsDataURL(file);
     }
   }
 
@@ -70,6 +98,13 @@ export class SellerDashboardComponent implements OnInit {
     this.userProducts.push(newProduct);
     this.productForm.reset();
     this.imagePreview = null;
+  }
+
+  resetForm() {
+    this.productForm.reset();
+    this.imagePreview = null;
+    this.imageValidationError = null;
+    // (Optionally, cancel editing state if you track edited index)
   }
 
   editProduct(index: number) {

@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'; // for ngClass, ngIf, ngFor
 import { FormsModule } from '@angular/forms';  // for ngModel (template-driven forms)
 import { MOCK_PRODUCTS, Product } from '../../models/product.model';
+import { MOCK_USERS, User } from '../../models/user.model'; 
 import { Router } from '@angular/router';
-import { MockUsersService, User } from '../../services/mock-users.service';
 
 @Component({
   selector: 'app-product-listing',
@@ -19,10 +19,7 @@ export class ProductListingComponent implements OnInit {
   categoryFilter: string = 'all';
   sortBy: string = 'name';
 
-  constructor(
-    private router: Router,
-    private mockUsersService: MockUsersService
-  ) {}
+  constructor(private router: Router) {}
 
   ngOnInit() {
     this.products = MOCK_PRODUCTS;
@@ -52,9 +49,7 @@ export class ProductListingComponent implements OnInit {
 
   getSeller(sellerId: string): User | undefined {
     // Returns the User object for the seller
-    return this.mockUsersService.mockUsers.find(
-      user => user.id === sellerId && user.role === 'seller'
-    );
+    return MOCK_USERS.find(user => user.id === sellerId && user.role === 'seller');
   }
 
   viewProductDetail(productId: string) {

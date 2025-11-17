@@ -4,7 +4,7 @@ import { Product } from '../../models/product.model';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/product.service';
 import { Observable, of } from 'rxjs';
-import { MockUsersService, User } from '../../services/mock-users.service';
+import { MOCK_USERS, User } from '../../models/user.model'; 
 
 @Component({
     selector: 'app-product-card',
@@ -16,7 +16,7 @@ export class ProductCardComponent implements OnInit {
     productId: string | null = null;
     product$: Observable<Product | undefined> = of(undefined);
 
-    constructor(private route: ActivatedRoute, private productService: ProductService, private mockUsersService: MockUsersService) {}
+    constructor(private route: ActivatedRoute, private productService: ProductService) {}
 
     ngOnInit() {
         this.productId = this.route.snapshot.paramMap.get('id');
@@ -27,10 +27,7 @@ export class ProductCardComponent implements OnInit {
     }
 
     getSeller(sellerId: string): User | undefined {
-    // Returns the User object for the seller
-        return this.mockUsersService.mockUsers.find(
-            user => user.id === sellerId && user.role === 'seller'
-        );
+        return MOCK_USERS.find(user => user.id === sellerId && user.role === 'seller');
     }
 
     goBack() {

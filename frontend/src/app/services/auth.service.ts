@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../models/user.model';
 import { UserDTO } from '../models/userDTO.model';
 import { UserUpdateDTO } from '../models/userUpdateDTO.model';
-import { MockUsersService } from '../services/mock-users.service';
+import { MOCK_USERS, authenticateUser, getUserByEmail, updateUser } from '../models/user.model';
 
 @Injectable({
     providedIn: 'root'
@@ -14,7 +14,7 @@ export class AuthService {
     );
     public currentUser$: Observable<UserDTO | null> = this.currentUserSubject.asObservable();
 
-    constructor(private usersService: MockUsersService) {}
+    constructor() {}
 
     private loadUserFromStorage(): UserDTO | null {
         const userJson = localStorage.getItem('currentUser');
@@ -22,9 +22,7 @@ export class AuthService {
     }
 
     login(email: string, password: string): { success: boolean; message?: string } {
-        const user = this.usersService.mockUsers.find(
-        u => u.email === email && u.password === password
-        );
+        const user = authenticateUser(email, password);
 
         if (user) {
         const { password, ...userDTO } = user;
@@ -38,8 +36,7 @@ export class AuthService {
     }
 
     signup(userData: Partial<User>): { success: boolean; message?: string } {
-        const existingUser = this.usersService.mockUsers.find(
-            u => u.email === userData.email);
+        const existingUser = getUserByEmail(userData.email!);
         
         if (existingUser) {
         return { success: false, message: 'Email already registered' };
@@ -53,12 +50,11 @@ export class AuthService {
         role: userData.role || 'client',
         avatar: userData.avatar || '',
         };
+        MOCK_USERS.push(newUser);
 
-        this.usersService.mockUsers.push(newUser);
         const { password, ...userDTO } = newUser;
         localStorage.setItem('currentUser', JSON.stringify(userDTO));
         this.currentUserSubject.next(userDTO as UserDTO);
-
         return { success: true };
     }
 
@@ -80,9 +76,10 @@ export class AuthService {
     }
 
     updateUser(update: UserUpdateDTO) {
-    const updated = this.usersService.updateUser(update);
+    const updated = updateUser(update);
     if (updated) {
-      this.currentUserSubject.next({ ...updated }); // Broadcast update
+        const { password, ...userDTO } = updated;
+        this.currentUserSubject.next(userDTO as UserDTO);
     }
   }
 }

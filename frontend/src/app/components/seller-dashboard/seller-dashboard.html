@@ -1,65 +1,101 @@
 <!-- seller-dashboard.component.html -->
 <div class="container mt-4">
-  <form [formGroup]="productForm" (ngSubmit)="submitProduct()" novalidate>
-    <div class="mb-3">
-      <label class="form-label">Product Name</label>
-      <input formControlName="name" type="text" class="form-control" [class.is-invalid]="productForm.get('name')?.invalid && productForm.get('name')?.touched" />
-      <div *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched" class="invalid-feedback">
-        Name is required.
-      </div>
-    </div>
 
-    <div class="mb-3">
-      <label class="form-label">Description</label>
-      <textarea formControlName="description" class="form-control" [class.is-invalid]="productForm.get('description')?.invalid && productForm.get('description')?.touched"></textarea>
-      <div *ngIf="productForm.get('description')?.invalid && productForm.get('description')?.touched" class="invalid-feedback">
-        Description is required.
-      </div>
-    </div>
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-10">
+      <h2 class="text-center mb-4">Seller Dashboard</h2>
 
-    <div class="mb-3">
-      <label class="form-label">Price</label>
-      <input formControlName="price" type="number" class="form-control" [class.is-invalid]="productForm.get('price')?.invalid && productForm.get('price')?.touched" />
-      <div *ngIf="productForm.get('price')?.invalid && productForm.get('price')?.touched" class="invalid-feedback">
-        Price must be greater than 0.
-      </div>
-    </div>
-
-    <div class="mb-3">
-      <label class="form-label">Image</label>
-      <input type="file" (change)="onImageChange($event)" accept="image/*" class="form-control" />
-      <div *ngIf="productForm.get('image')?.invalid && productForm.get('image')?.touched" class="text-danger">
-        Image is required.
-      </div>
-      <div *ngIf="imagePreview" class="mt-2">
-        <img [src]="imagePreview" alt="Image preview" class="img-thumbnail" style="max-width: 200px;" />
-        <button type="button" class="btn btn-danger btn-sm mt-1" (click)="removeImage()">Remove Image</button>
-      </div>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Save Product</button>
-  </form>
-
-  <hr />
-
-  <h3>Products List</h3>
-  <ul class="list-group">
-    <li class="list-group-item" *ngFor="let product of userProducts; let i = index">
-      <div class="d-flex align-items-center">
-        <img *ngIf="product.images && product.images.length > 0" 
-            [src]="product.images[0]" 
-            alt="Product Image" 
-            style="height: 50px; width: 50px; object-fit: cover;" 
-            class="me-3" />
-        <div class="flex-grow-1">
-          <strong>{{ product.name }}</strong><br />
-          {{ product.description }}<br />
-          ${{ product.price }}
+    <form [formGroup]="productForm" (ngSubmit)="submitProduct()" novalidate>
+      <div class="mb-3">
+        <label class="form-label">Product Name</label>
+        <input formControlName="name" type="text" class="form-control" [class.is-invalid]="productForm.get('name')?.invalid && productForm.get('name')?.touched" />
+        <div *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched" class="invalid-feedback">
+          Name is required.
         </div>
-        <button class="btn btn-sm btn-warning me-2" (click)="editProduct(i)">Edit</button>
-        <button class="btn btn-sm btn-danger" (click)="deleteProduct(i)">Delete</button>
       </div>
-    </li>
-  </ul>
+
+      <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea formControlName="description" class="form-control" [class.is-invalid]="productForm.get('description')?.invalid && productForm.get('description')?.touched"></textarea>
+        <div *ngIf="productForm.get('description')?.invalid && productForm.get('description')?.touched" class="invalid-feedback">
+          Description is required.
+        </div>
+      </div>
+
+      <div class="mb-3">
+          <label class="form-label">Category</label>
+          <select formControlName="category" class="form-select"
+                  [class.is-invalid]="productForm.get('category')?.invalid && productForm.get('category')?.touched">
+              <option value="" disabled selected>Select category...</option>
+              <option *ngFor="let cat of categories" [value]="cat.id">
+              {{ cat.name }}
+              </option>
+          </select>
+          <div *ngIf="productForm.get('category')?.invalid && productForm.get('category')?.touched" class="invalid-feedback">
+              Category is required.
+          </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Price</label>
+        <input formControlName="price" type="number" class="form-control" [class.is-invalid]="productForm.get('price')?.invalid && productForm.get('price')?.touched" />
+        <div *ngIf="productForm.get('price')?.invalid && productForm.get('price')?.touched" class="invalid-feedback">
+          Price must be greater than 0.
+        </div>
+      </div>
+
+  <div class="mb-3">
+    <label class="form-label">Quantity</label>
+    <input formControlName="quantity" type="number" class="form-control"
+          [class.is-invalid]="productForm.get('quantity')?.invalid && productForm.get('quantity')?.touched" />
+    <div *ngIf="productForm.get('quantity')?.invalid && productForm.get('quantity')?.touched" class="invalid-feedback">
+      Quantity must be at least 1.
+    </div>
+  </div>
+
+
+      <div class="mb-3">
+        <label class="form-label">Image</label>
+        <input type="file" (change)="onImageChange($event)" accept="image/*" class="form-control" />
+        <div *ngIf="productForm.get('image')?.invalid && productForm.get('image')?.touched" class="text-danger">
+          Image is required.
+        </div>
+          <div *ngIf="imageValidationError" class="text-danger">
+              {{ imageValidationError }}
+          </div>
+        <div *ngIf="imagePreview" class="mt-2">
+          <img [src]="imagePreview" alt="Image preview" class="img-thumbnail" style="max-width: 200px;" />
+          <button type="button" class="btn btn-danger btn-sm mt-1" (click)="removeImage()">Remove Image</button>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Save Product</button>
+      <button type="button" class="btn btn-secondary ms-2" (click)="resetForm()">Cancel</button>
+
+    </form>
+
+    <hr />
+
+    <h3>Products List</h3>
+    <ul class="list-group">
+      <li class="list-group-item" *ngFor="let product of userProducts; let i = index">
+        <div class="d-flex align-items-center">
+          <img *ngIf="product.images && product.images.length > 0" 
+              [src]="product.images[0]" 
+              alt="Product Image" 
+              style="height: 50px; width: 50px; object-fit: cover;" 
+              class="me-3" />
+          <div class="flex-grow-1">
+            <strong>{{ product.name }}</strong><br />
+            {{ product.description }}<br />
+            €{{ product.price }}
+          </div>
+          <button class="btn btn-sm btn-warning me-2" (click)="editProduct(i)">Edit</button>
+          <button class="btn btn-sm btn-danger" (click)="deleteProduct(i)">Delete</button>
+        </div>
+      </li>
+    </ul>
+    </div>
+  </div>
 </div>
 

@@ -85,3 +85,43 @@ export const MOCK_PRODUCTS: Product[] = [
     quantity: 3
   }
 ];
+
+/*
+{
+  id: '7',
+  name: 'Sharingan Ninja Tee',
+  description: 'For anime fans and shinobi admirers. Striking eyes and mysterious vibes.',
+  price: 29,
+  images: [
+    'andrea-de-santis-1ZlOGMp6Eu0-unsplash.jpg'
+  ],
+  category: 'anime-pop',
+  sellerId: 'USER-001',
+  quantity: 10
+},
+{
+  id: '8',
+  name: 'Dragon Ball Crew Tee',
+  description: 'Bring the energy with iconic Dragon Ball Z characters on your shirt!',
+  price: 32,
+  images: [
+    'akshay-chauhan-GQ62Gz6-BFg-unsplash.jpg'
+  ],
+  category: 'anime-pop',
+  sellerId: 'USER-001',
+  quantity: 7
+},
+{
+  id: '9',
+  name: 'Meme Cat Pocket Tee',
+  description: 'For meme lovers—cheeky pocket cat with a hidden message.',
+  price: 26,
+  images: [
+    'max-herr-EHyJ7F-8oEQ-unsplash.jpg'
+  ],
+  category: 'geeky-memes',
+  sellerId: 'USER-001',
+  quantity: 15
+}
+
+*/
