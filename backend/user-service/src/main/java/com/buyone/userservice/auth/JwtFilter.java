@@ -1,4 +1,4 @@
-package com.buyone.userservice.security;
+package com.buyone.userservice.auth;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

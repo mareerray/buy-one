@@ -1,4 +1,4 @@
-package com.buyone.userservice.security;
+package com.buyone.userservice.auth;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

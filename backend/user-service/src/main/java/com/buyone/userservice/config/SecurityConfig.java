@@ -1,6 +1,6 @@
 package com.buyone.userservice.config;
 
-import com.buyone.userservice.security.JwtFilter;
+import com.buyone.userservice.auth.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
