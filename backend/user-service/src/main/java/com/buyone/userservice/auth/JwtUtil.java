@@ -15,7 +15,7 @@ import java.util.Date;
 public class JwtUtil {
     
     // Inject from app config/secrets in production!
-    @Value("${jwt.secret:oogabooga123}")
+    @Value("${jwt.secret:oogabooga123oogabooga123oogabooga123!}")
     private String jwtSecret;
     
     // Expiration: 1 day (configurable)
