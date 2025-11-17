@@ -5,6 +5,7 @@ import { AuthService } from '../services/auth.service';
 @Injectable({
     providedIn: 'root'
 })
+
 export class SellerGuard implements CanActivate {
     constructor(
         private authService: AuthService,
@@ -16,6 +17,7 @@ export class SellerGuard implements CanActivate {
         return true;
         }
 
+        // Not a seller, redirect to home or some other page
         this.router.navigate(['/']);
         return false;
     }

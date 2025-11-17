@@ -6,6 +6,8 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { ProductListingComponent } from './components/product-listing/product-listing.component';
 import { ProductCardComponent } from './components/product-card/product-card.component';
 import { CategoriesComponent } from './components/categories/categories.component';
+import { SellerDashboardComponent } from './components/seller-dashboard/seller-dashboard';
+import { SellerGuard } from './guards/seller.guard';
 
 export const routes: Routes = [
   // { path: '', redirectTo: 'signin', pathMatch: 'full' }, // Default to 'signin'
@@ -16,6 +18,7 @@ export const routes: Routes = [
   { path: 'product-listing', component: ProductListingComponent },
   { path: 'product/:id', component: ProductCardComponent },
   { path: 'categories', component: CategoriesComponent },
+  { path: 'seller-dashboard', component: SellerDashboardComponent, canActivate: [SellerGuard] }
 ];
 
 
