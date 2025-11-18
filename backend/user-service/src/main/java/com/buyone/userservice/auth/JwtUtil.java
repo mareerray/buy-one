@@ -15,14 +15,10 @@ import java.util.Date;
 public class JwtUtil {
     
     // Inject from app config/secrets in production!
-    @Value("${jwt.secret:oogabooga123oogabooga123oogabooga123!}")
+    @Value("${jwt.secret}")
     private String jwtSecret;
     
-    // Expiration: 1 day (configurable)
-    // @Value("${jwt.expirationMs:600000}") // 10 min
-    // @Value("${jwt.expirationMs:300000}") // 5 minutes
-    // @Value("${jwt.expirationMs:60000}") // 1 minute
-    @Value("${jwt.expirationMs:86400000}")
+    @Value("${jwt.expirationMs}")
     private long jwtExpirationMs;
     
     private SecretKey getSecretKey() {

@@ -12,14 +12,14 @@ public class SecurityConfig {
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         http
-                .csrf(ServerHttpSecurity.CsrfSpec::disable)
-                .authorizeExchange(exchanges -> exchanges
-                        .pathMatchers("/auth/**").permitAll()   // allow login/register
-                        .anyExchange().authenticated()          // require JWT for all others
-                )
-                .oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt() // Spring Security will validate JWT
-                );
+            .csrf(ServerHttpSecurity.CsrfSpec::disable)
+            .authorizeExchange(exchanges -> exchanges
+                    .pathMatchers("/auth/**").permitAll()   // allow login/register
+                    .anyExchange().authenticated()          // require JWT for all others
+            )
+            .oauth2ResourceServer(oauth2 -> oauth2
+                    .jwt() // Spring Security will validate JWT
+            );
         return http.build();
     }
 }

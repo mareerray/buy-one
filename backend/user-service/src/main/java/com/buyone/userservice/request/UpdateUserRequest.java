@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import jakarta.validation.constraints.*;
+import com.buyone.userservice.model.Role;
 
 @Data
 @NoArgsConstructor
@@ -21,7 +22,7 @@ public class UpdateUserRequest {
     @Size(min = 6, max = 24, message = "Password must be between 6 and 24 characters")
     private String password;
     
-    private String role;
+    private Role role;
     private String avatar;
     // Add more as your model evolves
 }
