@@ -6,7 +6,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { ProductListingComponent } from './components/product-listing/product-listing.component';
 import { ProductCardComponent } from './components/product-card/product-card.component';
 import { CategoriesComponent } from './components/categories/categories.component';
-import { SellerDashboardComponent } from './components/seller-dashboard/seller-dashboard';
+import { SellerDashboardComponent } from './components/seller-dashboard/seller-dashboard.component';
 import { SellerGuard } from './guards/seller.guard';
 
 export const routes: Routes = [

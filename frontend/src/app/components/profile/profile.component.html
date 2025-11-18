@@ -3,22 +3,36 @@
     <div class="row">
       <div class="col-md-5 text-center position-relative">
         <div style="display: inline-block; position: relative;">
-          <img [src]="avatarPreview || 'assets/user-default.png'"
+          <img [src]="avatar || 'assets/avatars/user-default.png'"
               class="rounded-circle border"
               style="width: 120px; height: 120px;" alt="avatar">
-          <input id="avatarUpload" type="file" accept="image/*"
-              (change)="onAvatarSelect($event)" class="d-none">
-          <label for="avatarUpload" class="btn btn-light btn-sm p-1"
-              style="position:absolute; right:0; bottom:0; border-radius:50%; box-shadow:0 1px 4px rgba(33,33,33,0.1);">
-            <i class="bi bi-camera"></i>
-          </label>
+              <!-- Dropdown menu trigger -->
+          <div class="dropdown custom-avatar-dropdown" style="position: absolute; right: 0; bottom: 0;">
+              <button class="btn btn-dark btn-sm p-1 dropdown-toggle"
+                      type="button" id="avatarActions" data-bs-toggle="dropdown" aria-expanded="false"
+                      style="border-radius: 50%; box-shadow: 0 1px 4px rgba(33,33,33,0.1);">
+                <i class="bi bi-camera"></i>
+              </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="avatarActions">
+              <li>
+                <label for="avatarUpload" class="dropdown-item mb-0" style="cursor: pointer;">
+                  Upload
+                  <input id="avatarUpload" type="file" accept="image/*"
+                        (change)="onAvatarSelect($event)" class="d-none" />
+                </label>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              <li><button class="dropdown-item text-danger" type="button" (click)="handleRemoveAvatar()">
+                Remove</button></li>
+            </ul>
+          </div>
         </div>
         <div class="mt-3">
           <div class="fw-bold mb-2">{{ profileForm.value.name }}</div>
           <span class="badge bg-primary mt-2">{{ currentUser?.role }}</span>
           <span class="badge bg-secondary ms-2">{{ currentUser?.id }}</span>
           <small class="text-muted d-block mt-2">400x400px, max 2MB</small>
-        </div>
+        </div> 
       </div>
       <div class="col-md-6">
         <form [formGroup]="profileForm" class="row g-3" (ngSubmit)="saveProfile()">
@@ -56,8 +70,8 @@
               <div class="mb-3">
                 <label class="form-label">Confirm Password</label>
                 <input type="password" class="form-control" formControlName="confirmPassword">
-                <div *ngIf="passwordForm?.errors?.['mismatch'] && passwordForm.get('confirmPassword')?.touched"
-                     class="text-danger small">Passwords do not match.</div>
+                <div *ngIf="passwordForm.errors?.['mismatch'] && passwordForm.get('confirmPassword')?.touched"
+                    class="text-danger small">Passwords do not match.</div>
               </div>
               <div class="d-flex justify-content-end">
                 <button type="submit" class="btn btn-success" [disabled]="!passwordForm.valid">

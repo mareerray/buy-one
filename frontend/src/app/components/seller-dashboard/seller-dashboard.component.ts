@@ -9,8 +9,8 @@ import { AuthService } from '../../services/auth.service';
   selector: 'app-seller-dashboard',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './seller-dashboard.html',
-  styleUrls: ['./seller-dashboard.css'],
+  templateUrl: './seller-dashboard.component.html',
+  styleUrls: ['./seller-dashboard.component.css'],
 })
 
 export class SellerDashboardComponent implements OnInit {
@@ -26,7 +26,7 @@ export class SellerDashboardComponent implements OnInit {
       description: ['', Validators.required],
       price: ['', [Validators.required, Validators.min(1.00)]],
       image: [null, Validators.required],
-      category: ['', Validators.required],
+      category: [this.categories.length > 0 ? this.categories[0].id : '', Validators.required], // default to first category id
       quantity: ['', [Validators.required, Validators.min(1)]],
     });
   }
@@ -38,20 +38,22 @@ export class SellerDashboardComponent implements OnInit {
     }
   }
 
-  maxImageSize = 2 * 1024 * 1024; // 2MB in bytes
-  allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+  maxImageSize = 2 * 1024 * 1024; // 2MB in bytes equals 2,097,152 bytes 
+  allowedTypes = ['image/jpeg', 'image/png'];  // Only allow jpeg and png
   imageValidationError: string | null = null;
 
   onImageChange(event: any) {
     const file = event.target.files[0];
+    console.log('File size in bytes:', file.size);
     this.imageValidationError = null;
 
   if (file) {
     // Validate file type
     if (!this.allowedTypes.includes(file.type)) {
-      this.imageValidationError = 'Only JPG, PNG, and GIF files are allowed.';
+      this.imageValidationError = 'Only JPG and PNG files are allowed.';
       this.productForm.patchValue({ image: null });
       this.imagePreview = null;
+      console.log('Rejected due to type');
       return;
     }
 

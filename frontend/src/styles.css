@@ -91,3 +91,32 @@ body {
     color: var(--link) !important;
 }
 
+/* Target the dropdown menu */
+.custom-avatar-dropdown .dropdown-menu {
+  background-color: #343a40; /* Dark background, adjust as needed */
+  /* color: #f8f9fa;            Light text color */
+  font-size: 0.85rem;         /* Adjust font size */
+  min-width: 100px;          /* Optional: set minimum width */
+}
+
+/* Style dropdown items */
+.custom-avatar-dropdown .dropdown-item {
+  color: #f8f9fa;
+  padding: 0.4rem 1.5rem;   /* Adjust padding for spacing */
+}
+
+/* Hover and active states */
+.custom-avatar-dropdown .dropdown-item:hover,
+.custom-avatar-dropdown .dropdown-item:focus {
+  background-color: #198754;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+/* Optional: style disabled menu items */
+.custom-avatar-dropdown .dropdown-item.disabled,
+.custom-avatar-dropdown .dropdown-item:disabled {
+  color: #6c757d;
+  background-color: transparent;
+}
+

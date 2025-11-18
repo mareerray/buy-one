@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { MediaService } from '../../../services/media.service';
+import { HttpEventType} from '@angular/common/http';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -43,13 +45,14 @@ export class SignUpComponent {
   }>();
     @Output() switchToSignIn = new EventEmitter<void>();
 
+    uploadProgress = 0;
     avatar: string = '';
     avatarError: string = '';
     showAvatar: boolean = false;
 
     form: FormGroup;
 
-    constructor(private fb: FormBuilder) {
+    constructor(private fb: FormBuilder, private mediaService: MediaService) {
     this.form = this.fb.group({
         name: ['', [Validators.required, Validators.minLength(2)]],
         email: ['', [Validators.required, Validators.email]],
@@ -72,14 +75,11 @@ export class SignUpComponent {
   handleAvatarUpload(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    if (file.size > 2 * 1024 * 1024) {
-      this.avatarError = 'Avatar image must be less than 2MB';
-      return;
-    }
-    if (!file.type.startsWith('image/')) {
-      this.avatarError = 'Please upload a valid image file';
-      return;
-    }
+
+    this.avatarError = '';
+    this.uploadProgress = 0;
+
+    // Local preview with FileReader immediately
     const reader = new FileReader();
     reader.onloadend = () => {
       this.avatar = reader.result as string;
@@ -87,12 +87,28 @@ export class SignUpComponent {
       this.avatarError = '';
     };
     reader.readAsDataURL(file);
+
+    // Upload with mediaService
+    this.mediaService.uploadAvatar(file).subscribe({
+      next: (event) => {
+        if (event.type === HttpEventType.UploadProgress && event.total) {
+          this.uploadProgress = Math.round(100 * event.loaded / event.total);
+        } else if (event.type === HttpEventType.Response) {
+          this.uploadProgress = 0;
+        }
+      },
+      error: (err) => {
+        this.avatarError = typeof err === 'string' ? err : err.message || 'Failed to upload avatar. Please try again.';
+        this.uploadProgress = 0;
+      }
+    });
   }
 
   handleRemoveAvatar() {
-    this.avatar = '';
+    this.avatar = 'assets/avatars/user-default.png';
     this.showAvatar = false;
     this.avatarError = '';
+    this.uploadProgress = 0;
   }
 
   submit() {

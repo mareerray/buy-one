@@ -6,6 +6,8 @@ import { UserUpdateDTO } from '../../models/userUpdateDTO.model';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AbstractControl } from '@angular/forms';
+import { MediaService } from '../../services/media.service';
+import { HttpEventType } from '@angular/common/http';
 
 @Component({
     selector: 'app-profile',
@@ -13,15 +15,17 @@ import { AbstractControl } from '@angular/forms';
     styleUrls: ['./profile.component.css'],
     standalone: true,
     imports: [ReactiveFormsModule, CommonModule]
- })
+})
 
 export class ProfileComponent implements OnInit {
   currentUser: UserDTO | null = null;
   profileForm: FormGroup;
   passwordForm: FormGroup;
-  avatarPreview: string | null = null;
+  avatar: string | null = null;
+  avatarError: string = '';
+  uploadProgress = 0;
 
-  constructor(private authService: AuthService, private fb: FormBuilder) {
+  constructor(private authService: AuthService, private fb: FormBuilder, private mediaService: MediaService) {
     this.profileForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -38,7 +42,7 @@ export class ProfileComponent implements OnInit {
       if (user) {
         this.currentUser = user;
         this.profileForm.patchValue({ name: user.name, email: user.email });
-        this.avatarPreview = user.avatar || null;
+        this.avatar = user.avatar || null;
       }
     });
   }
@@ -46,9 +50,37 @@ export class ProfileComponent implements OnInit {
   onAvatarSelect(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
+
+    this.avatarError = '';
+    this.uploadProgress = 0;
+
+    // Preview instantly
     const reader = new FileReader();
-    reader.onload = e => this.avatarPreview = reader.result as string;
-    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      this.avatar = reader.result as string;
+      this.avatarError = '';
+    };    reader.readAsDataURL(file);
+
+    // Upload via MediaService
+    this.mediaService.uploadAvatar(file).subscribe({
+      next: (event) => {
+        if (event.type === HttpEventType.UploadProgress && event.total) {
+          this.uploadProgress = Math.round(100 * event.loaded / event.total);
+        } else if (event.type === HttpEventType.Response) {
+          this.uploadProgress = 0;
+        }
+      },
+      error: (err) => {
+        this.avatarError = typeof err === 'string' ? err : err.message || 'Failed to upload avatar.';
+        this.uploadProgress = 0;
+      }
+    });
+  }
+
+  handleRemoveAvatar() {
+    this.avatar = 'assets/avatars/user-default.png';
+    this.avatarError = '';
+    this.uploadProgress = 0;
   }
 
   saveProfile() {
@@ -57,7 +89,7 @@ export class ProfileComponent implements OnInit {
         id: this.currentUser.id,
         name: this.profileForm.value.name,
         email: this.profileForm.value.email,
-        avatar: this.avatarPreview || this.currentUser.avatar
+        avatar: this.avatar || this.currentUser.avatar
         // password not included here
       };
       this.authService.updateUser(dto);
