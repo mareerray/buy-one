@@ -1,0 +1,13 @@
+server:
+  port: 8567
+
+spring:
+  application:
+    name: product-service
+  data:
+    mongodb:
+      uri: "mongodb+srv://Cluster05093:.qwe.qwe.qwe@cluster05093.dh3rmhg.mongodb.net/buy-one?retryWrites=true&w=majority&appName=Cluster05093"
+  security:
+    user:
+      name: user
+      password: password
