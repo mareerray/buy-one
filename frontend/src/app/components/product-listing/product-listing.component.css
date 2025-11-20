@@ -12,8 +12,8 @@
 }
 
 .btn-outline-secondary {
-    color: var(--text-primary);
-    border-color: var(--border);
+    color: var(--text-secondary);
+    border-color: var(--text-secondary);
 }
 
 .custom-input, .form-select {
@@ -24,4 +24,12 @@
 
 .custom-input::placeholder {
     color: var(--link);
+}
+
+.seller-name {
+  font-size: 1rem;
+}
+
+.price-text {
+  font-size: 1.8rem;
 }

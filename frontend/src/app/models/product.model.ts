@@ -83,6 +83,42 @@ export const MOCK_PRODUCTS: Product[] = [
     category: 'limited-editions',
     sellerId: 'USER-006',
     quantity: 3
+  },
+  {
+    id: '7',
+    name: 'Sharingan Ninja Tee',
+    description: 'For anime fans and shinobi admirers. Striking eyes and mysterious vibes.',
+    price: 29,
+    images: [
+      'https://images.unsplash.com/photo-1651087319658-a1923f85551f?q=80&w=2730&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+    ],
+    category: 'anime-pop',
+    sellerId: 'USER-004',
+    quantity: 10
+  },
+  {
+    id: '8',
+    name: 'Dragon Ball Crew Tee',
+    description: 'Bring the energy with iconic Dragon Ball Z characters on your shirt!',
+    price: 32,
+    images: [
+      'https://images.unsplash.com/photo-1736892740703-92cc9088f2a7?q=80&w=2672&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+    ],
+    category: 'anime-pop',
+    sellerId: 'USER-002',
+    quantity: 7
+  },
+  {
+    id: '9',
+    name: 'Meme Cat Pocket Tee',
+    description: 'For meme lovers—cheeky pocket cat with a hidden message.',
+    price: 26,
+    images: [
+      'https://images.unsplash.com/photo-1704095371948-58d1f95d8064?q=80&w=2674&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+    ],
+    category: 'geeky-memes',
+    sellerId: 'USER-006',
+    quantity: 15
   }
 ];
 

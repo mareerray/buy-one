@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common'; // for ngClass, ngIf, ngFor
 import { Router } from '@angular/router'; // for routerLink
 import { AuthService } from '../../services/auth.service';

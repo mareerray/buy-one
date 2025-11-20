@@ -7,13 +7,13 @@
             <!-- Left: Image -->
             <div class="col-12 col-md-5">
               <img *ngIf="product.images && product.images.length > 0; else noImg"
-                   [src]="product.images[0]"
-                   [alt]="product.name"
-                   class="w-100 product-image rounded"
-                   style="height: 600px; object-fit: cover;">
+                  [src]="product.images[0]"
+                  [alt]="product.name"
+                  class="w-100 product-image rounded"
+                  style="height: 600px; object-fit: cover;">
               <ng-template #noImg>
                 <div class="d-flex align-items-center justify-content-center bg-light text-muted rounded"
-                     style="height:300px;">
+                  style="height:300px;">
                   No image
                 </div>
               </ng-template>
@@ -22,7 +22,7 @@
             <div class="col-12 col-md-7">
               <h2 class="card-title fw-bold mb-2">{{ product.name }}</h2>
               <span class="badge bg-secondary mb-2 fs-6">{{ product.category }}</span>
-              <p class="card-text text-secondary mb-3">{{ product.description }}</p>
+              <p class="card-text text-white mb-3">{{ product.description }}</p>
               <p class="price mb-1">Price: <span class="text-primary fw-bold fs-4">€{{ product.price }}</span></p>
               <p class="mb-1"><span class="fw-semibold">Quantity:</span> {{ product.quantity }}</p>
               <p class="mb-4 ">

@@ -11,7 +11,7 @@
   align-items: center;
   cursor: pointer;
   color: #f8f9fa;
-  background-color: #343a40;
+  /* background-color: #343a40; */
   padding: 0.4rem 0.8rem;
   border-radius: 0.4rem;
   user-select: none;
@@ -21,14 +21,14 @@
 }
 
 .custom-radio-label:hover {
-  background-color: #198754;
+  background-color: var(--link-hover);
   color: white;
-  border-color: #198754;
+  border-color: var(--link-hover);
 }
 
 .custom-radio-label input[type="radio"] {
   margin-right: 0.5rem;
-  accent-color: #198754;
+  accent-color: var(--link-hover);
 }
 
 .custom-radio-label input[type="radio"]:checked + .custom-radio-text {
@@ -36,3 +36,22 @@
   color: #e0e0e0;
 }
 
+.list-group-item {
+  background-color: transparent;
+  color: whitesmoke;
+}
+
+.btn-warning {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: var(--text-primary);
+}
+
+.btn-warning:hover {
+  background-color: var(--link-hover);
+  border-color: var(--link-hover);
+}
+
+.btn-danger {
+  color: var(--text-primary);
+}

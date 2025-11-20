@@ -77,9 +77,9 @@ export class AuthService {
 
     updateUser(update: UserUpdateDTO) {
     const updated = updateUser(update);
-    if (updated) {
-        const { password, ...userDTO } = updated;
-        this.currentUserSubject.next(userDTO as UserDTO);
+        if (updated) {
+            const { password, ...userDTO } = updated;
+            this.currentUserSubject.next(userDTO as UserDTO);
+        }
     }
-  }
 }

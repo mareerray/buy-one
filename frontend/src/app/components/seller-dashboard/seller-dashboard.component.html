@@ -8,7 +8,7 @@
     <form [formGroup]="productForm" (ngSubmit)="submitProduct()" novalidate class="p-4 rounded shadow-sm">
       <div class="mb-3">
         <label class="form-label">Product Name</label>
-        <input formControlName="name" type="text" class="form-control" [class.is-invalid]="productForm.get('name')?.invalid && productForm.get('name')?.touched" />
+        <input formControlName="name" type="text" class="form-control custom-width" [class.is-invalid]="productForm.get('name')?.invalid && productForm.get('name')?.touched" />
         <div *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched" class="invalid-feedback">
           Name is required.
         </div>
@@ -16,7 +16,7 @@
 
       <div class="mb-3">
         <label class="form-label">Description</label>
-        <textarea formControlName="description" class="form-control" 
+        <textarea formControlName="description" class="form-control custom-width" 
           [class.is-invalid]="productForm.get('description')?.invalid && 
           productForm.get('description')?.touched"
           style="width: 100%; height: 120px; resize: none; "></textarea>
@@ -38,42 +38,29 @@
         </div>
       </div>
 
-      <!-- <div class="mb-3 custom-dropdown">
-          <label class="form-label">Category</label>
-          <select formControlName="category" class="form-select"
-                  [class.is-invalid]="productForm.get('category')?.invalid && productForm.get('category')?.touched">
-              <option value="" disabled selected>Select category...</option>
-              <option *ngFor="let cat of categories" [value]="cat.id">
-              {{ cat.name }}
-              </option>
-          </select>
-          <div *ngIf="productForm.get('category')?.invalid && productForm.get('category')?.touched" class="invalid-feedback">
-              Category is required.
+      <div class="form-control-group">
+        <div class="mb-3 d-flex gap-3">
+          <div class="flex-fill">
+            <label class="form-label">Price</label>
+            <input formControlName="price" type="number" class="form-control custom-width" [class.is-invalid]="productForm.get('price')?.invalid && productForm.get('price')?.touched" />
+            <div *ngIf="productForm.get('price')?.invalid && productForm.get('price')?.touched" class="invalid-feedback">
+              Price must be greater than 0.
+            </div>
           </div>
-      </div> -->
 
-      <div class="mb-3 d-flex gap-3">
-
-        <div class="flex-fill">
-          <label class="form-label">Price</label>
-          <input formControlName="price" type="number" class="form-control" [class.is-invalid]="productForm.get('price')?.invalid && productForm.get('price')?.touched" />
-          <div *ngIf="productForm.get('price')?.invalid && productForm.get('price')?.touched" class="invalid-feedback">
-            Price must be greater than 0.
-          </div>
-        </div>
-
-        <div class="flex-fill">
-          <label class="form-label">Quantity</label>
-          <input formControlName="quantity" type="number" class="form-control"
-                [class.is-invalid]="productForm.get('quantity')?.invalid && productForm.get('quantity')?.touched" />
-          <div *ngIf="productForm.get('quantity')?.invalid && productForm.get('quantity')?.touched" class="invalid-feedback">
-            Quantity must be at least 1.
+          <div class="flex-fill">
+            <label class="form-label">Quantity</label>
+            <input formControlName="quantity" type="number" class="form-control custom-width"
+                  [class.is-invalid]="productForm.get('quantity')?.invalid && productForm.get('quantity')?.touched" />
+            <div *ngIf="productForm.get('quantity')?.invalid && productForm.get('quantity')?.touched" class="invalid-feedback">
+              Quantity must be at least 1.
+            </div>
           </div>
         </div>
       </div>
       <div class="mb-3">
         <label class="form-label">Image</label>
-        <input type="file" (change)="onImageChange($event)" accept="image/*" class="form-control" />
+        <input type="file" (change)="onImageChange($event)" accept="image/*" class="form-control custom-width" />
         <div *ngIf="productForm.get('image')?.invalid && productForm.get('image')?.touched" class="text-danger">
           Image is required.
         </div>

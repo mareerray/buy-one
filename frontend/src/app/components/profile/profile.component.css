@@ -1,6 +1,5 @@
 .card {
   border-radius: 1rem;
-  box-shadow: 0 2px 24px rgba(69,85,108,0.08);
   border: none;
 }
 
@@ -26,7 +25,7 @@ img.rounded-circle {
 
 .btn-success:hover {
     color: var(--text-primary);
-    background-color: #198754;
+    background-color: var(--link-hover);
     border: none;
 }
 
@@ -47,8 +46,7 @@ img.rounded-circle {
   font-size: 1rem;
   transition: background 0.2s, color 0.2s;
   text-decoration: none;
-
-  border: 1px solid #8b5cf6;         
+  /* border: 1px solid #8b5cf6;          */
   border-radius: 999px;                 
   padding: 0.5rem 1.25rem;              
   margin-bottom: 0.5rem;                  
