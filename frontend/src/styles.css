@@ -1,15 +1,21 @@
 /* You can add global styles to this file, and also import other style files */
 
-/* html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; } */
 :root {
     --primary: #8b5cf6;
+    /* --primary: #9f0aea; */
     --primary-dark: #7c3aed;
+    --primary-dark: #9f0aea;
     --background: #0f172a;
-    --card-bg: #1e293b;
+    --card-bg: #243145;
     --text-primary: #f1f5f9;
-    --text-secondary: #cbd5e1;
+    --text-secondary: #c71be5;
     --border: #334155;
+    --link: #69f0ae;
+    /* --link: #abed3a; */
+    /* --link: #52ed3a; */
+    --link: #0aeb7e;
+    --link-hover: #198754;
+
 }
 
 *{
@@ -18,22 +24,59 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; } */
     box-sizing: border-box;
 }
 
+html, body {
+    overscroll-behavior: none;
+}
+
 body {
     background-color: var(--background);
+    background-image: radial-gradient(ellipse, #ffffff21 7%, transparent 5%),
+    linear-gradient(180deg, #0f172a 0%, #051b40 50%, #0f172a 100%);
+    background-size: 20px 20px, 100% 100%;
+    /* background-image: radial-gradient(circle, #5c0067 0%, #00d4ff 100%); */
+    /* background-color: #f0f0f0;  */
+    /* background-image: radial-gradient(ellipse, #7c3aed67 7%, transparent 5%); */
     color: var(--text-primary);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     min-height: 100vh;
 }
 
+.custom-width {
+    max-width: 90vw;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    background-color: var(--card-bg) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border);
+    position: relative;
+}
+
 /* Override Material theme colors */
 .mat-mdc-card {
+    width: 500px;
+    max-width: 90vw;
+    margin: 24px auto;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    position: relative;
     background-color: var(--card-bg) !important;
     color: var(--text-primary) !important;
     border: 1px solid var(--border);
 }
 
+.form-control {
+    background-color: transparent;
+    border: 1px solid var(--border);
+}
+
+.mat-mdc-outlined-button {
+    color: var(--link) !important;
+}
+
 .mat-mdc-button.mat-primary {
-    background-color: var(--primary) !important;
+    background-color: var(--) !important;
 }
 
 /* Bootstrap overrides for dark theme */
@@ -43,112 +86,93 @@ body {
     color: var(--text-primary);
 }
 
+.card:hover {
+    box-shadow: 0 8px 24px rgba(69,85,108,.18);
+    /*transform: translateY(-4px) scale(1.03); /*moves the card upwards by 4 pixels (translateY(-4px)) and slightly enlarges it by 3% (scale(1.03))
+    transition: box-shadow 0.2s, transform 0.2s; /*smooth transition for both box-shadow and transform effects*/
+}
+
 .btn-primary {
-    background-color: var(--primary);
-    border-color: var(--primary);
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+.btn-outline-primary {
+    color: var(--link);
+    border-color: var(--link);
+    border: 0.5px solid;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+
+}
+
+.btn-outline-secondary {
+    color: var(--text-secondary);
+    border-color: var(--text-secondary);
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.mat-mdc-button.mat-primary,
+.mat-mdc-raised-button.mat-primary,
+.mat-mdc-button.mat-primary .mat-mdc-button-touch-target,
+.mat-mdc-raised-button.mat-primary .mat-mdc-button-touch-target {
+    background-color: var(--primary-dark) !important;
+    color: var(--text-primary) !important;
+    border-radius: 5px;
+    padding: 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.btn-outline-light {
+    color: var(--link);
+    border: 0.5px solid;
 }
 
 .btn-primary:hover {
-    background-color: var(--primary-dark);
-    border-color: var(--primary-dark);
+    color: var(--link);
 }
 
-
-
-/* html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; } */
-/* :root {
-  --font-size: 16px;
-  --background: #0f0f1a;
-  --foreground: #e5e5f0;
-  --card: #1a1a2e;
-  --card-foreground: #e5e5f0;
-  --popover: #1a1a2e;
-  --popover-foreground: #e5e5f0;
-  --primary: #8b5cf6;
-  --primary-foreground: #ffffff;
-  --secondary: #2d2d44;
-  --secondary-foreground: #e5e5f0;
-  --muted: #252538;
-  --muted-foreground: #a0a0b8;
-  --accent: #7c3aed;
-  --accent-foreground: #ffffff;
-  --destructive: #ef4444;
-  --destructive-foreground: #ffffff;
-  --border: rgba(139, 92, 246, 0.2);
-  --input: transparent;
-  --input-background: #1f1f33;
-  --switch-background: #3d3d5c;
-  --font-weight-medium: 500;
-  --font-weight-normal: 400;
-  --ring: #8b5cf6;
-  --chart-1: #8b5cf6;
-  --chart-2: #06b6d4;
-  --chart-3: #10b981;
-  --chart-4: #f59e0b;
-  --chart-5: #ef4444;
-  --radius: 0.625rem;
-  --sidebar: #1a1a2e;
-  --sidebar-foreground: #e5e5f0;
-  --sidebar-primary: #8b5cf6;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #2d2d44;
-  --sidebar-accent-foreground: #e5e5f0;
-  --sidebar-border: rgba(139, 92, 246, 0.2);
-  --sidebar-ring: #8b5cf6;
+.btn-primary:hover, .btn-outline-light:hover, .btn-outline-primary:hover {
+    color: var(--text-primary);
+    background-color: var(--link-hover);
+    border: none;
 }
 
-/* Dark Mode Variables 
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
-  --font-weight-medium: 500;
-  --font-weight-normal: 400;
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+.text-primary {
+    color: var(--link) !important;
 }
 
-/* Base styles for theme variables 
-html {
-  font-size: var(--font-size);
-  background: var(--background);
-  color: var(--foreground);
+/* Target the dropdown menu */
+.custom-avatar-dropdown .dropdown-menu {
+  background-color: #343a40; 
+  /* color: #f8f9fa; */           
+  font-size: 0.85rem;         
+  min-width: 100px;          
 }
 
-/* Headings and paragraph defaults 
-h1, h2, h3, h4, h5, h6 {
-  color: var(--foreground);
-  font-weight: var(--font-weight-medium);
+/* Style dropdown items */
+.custom-avatar-dropdown .dropdown-item {
+    color: #f8f9fa;
+    padding: 0.4rem 1.5rem;   
 }
-p, label, input, button {
-  color: var(--muted-foreground);
-  font-weight: var(--font-weight-normal);
-} */
+
+/* Hover and active states */
+.custom-avatar-dropdown .dropdown-item:hover,
+.custom-avatar-dropdown .dropdown-item:focus {
+    background-color: var(--link-hover);
+    color: #ffffff;
+    cursor: pointer;
+}
+
+/* Optional: style disabled menu items */
+.custom-avatar-dropdown .dropdown-item.disabled,
+.custom-avatar-dropdown .dropdown-item:disabled {
+    color: #6c757d;
+    background-color: transparent;
+}
+

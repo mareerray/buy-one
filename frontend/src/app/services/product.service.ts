@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Product } from '../models/product.model';
-import { MockUsersService } from '../services/mock-users.service';
+import { Product, MOCK_PRODUCTS } from '../models/product.model';
+import { map } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ProductService {
-    // private productsSubject = new BehaviorSubject<Product[]>(MOCK_PRODUCTS);
-        private productsSubject = new BehaviorSubject<Product[]>([]);
+    // private productsSubject = new BehaviorSubject<Product[]>([]);
+
+    private productsSubject = new BehaviorSubject<Product[]>(MOCK_PRODUCTS); 
 
     public products$: Observable<Product[]> = this.productsSubject.asObservable();
 
@@ -18,8 +19,10 @@ export class ProductService {
         return this.products$;
     }
 
-    getProductById(id: string): Product | undefined {
-        return this.productsSubject.value.find(p => p.id === id);
+    getProductById(id: string): Observable<Product | undefined> {
+        return this.products$.pipe(
+            map(products => products.find(p => p.id === id))
+        );
     }
 
     getProductsBySeller(sellerId: string): Product[] {

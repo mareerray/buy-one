@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../models/user.model';
 import { UserDTO } from '../models/userDTO.model';
-import { MockUsersService } from '../services/mock-users.service';
+import { UserUpdateDTO } from '../models/userUpdateDTO.model';
+import { MOCK_USERS, authenticateUser, getUserByEmail, updateUser } from '../models/user.model';
 
 @Injectable({
     providedIn: 'root'
@@ -13,7 +14,7 @@ export class AuthService {
     );
     public currentUser$: Observable<UserDTO | null> = this.currentUserSubject.asObservable();
 
-    constructor(private mockUsersService: MockUsersService) {}
+    constructor() {}
 
     private loadUserFromStorage(): UserDTO | null {
         const userJson = localStorage.getItem('currentUser');
@@ -21,14 +22,13 @@ export class AuthService {
     }
 
     login(email: string, password: string): { success: boolean; message?: string } {
-        const user = this.mockUsersService.mockUsers.find(
-        u => u.email === email && u.password === password
-        );
+        const user = authenticateUser(email, password);
 
         if (user) {
         const { password, ...userDTO } = user;
         localStorage.setItem('currentUser', JSON.stringify(userDTO));
         this.currentUserSubject.next(userDTO as UserDTO);
+        console.log(userDTO);
         return { success: true };
         }
 
@@ -36,8 +36,7 @@ export class AuthService {
     }
 
     signup(userData: Partial<User>): { success: boolean; message?: string } {
-        const existingUser = this.mockUsersService.mockUsers.find(
-            u => u.email === userData.email);
+        const existingUser = getUserByEmail(userData.email!);
         
         if (existingUser) {
         return { success: false, message: 'Email already registered' };
@@ -49,18 +48,13 @@ export class AuthService {
         password: userData.password!,
         name: userData.name!,
         role: userData.role || 'client',
-        joinedDate: new Date().toISOString(),
         avatar: userData.avatar || '',
-        phone: userData.phone || '',
-        address: userData.address || '',
-        description: userData.description || '',
         };
+        MOCK_USERS.push(newUser);
 
-        this.mockUsersService.mockUsers.push(newUser);
         const { password, ...userDTO } = newUser;
         localStorage.setItem('currentUser', JSON.stringify(userDTO));
         this.currentUserSubject.next(userDTO as UserDTO);
-
         return { success: true };
     }
 
@@ -79,5 +73,13 @@ export class AuthService {
 
     isSeller(): boolean {
         return this.currentUserValue?.role === 'seller';
+    }
+
+    updateUser(update: UserUpdateDTO) {
+    const updated = updateUser(update);
+        if (updated) {
+            const { password, ...userDTO } = updated;
+            this.currentUserSubject.next(userDTO as UserDTO);
+        }
     }
 }

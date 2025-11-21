@@ -1,6 +1,7 @@
-import { Component, Input } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, OnInit} from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-navigation',
@@ -9,8 +10,25 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./navigation.component.css'],
   imports: [RouterModule, CommonModule]
 })
-export class NavigationComponent {
-  @Input() isAuthenticated = false;
-  @Input() userRole: 'client' | 'seller' | null = null;
-  @Input() currentUserName = '';
+
+export class NavigationComponent implements OnInit {
+  isAuthenticated = false;
+  currentUserName: string | null = null;
+  currentUserAvatar: string | null = null;
+
+  constructor(public authService: AuthService, private router: Router) {
+  }
+
+  ngOnInit() {
+    this.authService.currentUser$.subscribe(user => {
+      this.isAuthenticated = !!user;
+      this.currentUserName = user?.name || null;
+      this.currentUserAvatar = user?.avatar || null;
+    });
+  }
+
+  onLogout() {
+    this.authService.logout();
+    this.router.navigate(['/']);
+  }
 }

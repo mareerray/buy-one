@@ -16,6 +16,7 @@ export class SellerGuard implements CanActivate {
         return true;
         }
 
+        // Not a seller, redirect to home or some other page
         this.router.navigate(['/']);
         return false;
     }

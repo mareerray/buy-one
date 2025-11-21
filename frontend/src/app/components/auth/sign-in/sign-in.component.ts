@@ -1,6 +1,8 @@
 import { Component, OnInit, NgModule } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
+
 import { AuthService } from '../../../services/auth.service';
 
 // Import the Material modules you use in this component
@@ -18,6 +20,7 @@ import { NgIf } from '@angular/common';
     styleUrls: ['./sign-in.component.css'],
     standalone: true,
     imports: [
+        RouterModule,
         ReactiveFormsModule,
         MatCardModule,
         MatFormFieldModule,
@@ -62,11 +65,12 @@ export class SignInComponent implements OnInit {
         this.isLoading = false;
 
         if (result.success) {
+            console.log("Login successful");
             const user = this.authService.currentUserValue;
             if (user?.role === 'seller') {
-            this.router.navigate(['/seller/dashboard']);
+            this.router.navigate(['/profile']);
             } else {
-            this.router.navigate(['/']);
+            this.router.navigate(['/profile']);
             }
         } else {
             this.errorMessage = result.message || 'Login failed';

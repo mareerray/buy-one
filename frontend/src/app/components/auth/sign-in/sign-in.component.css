@@ -23,6 +23,6 @@
 }
 
 :host ::ng-deep .mat-mdc-card-header {
-  display: block !important;
+    display: block !important;
 }
 

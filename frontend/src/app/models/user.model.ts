@@ -4,9 +4,65 @@ export interface User {
     password: string;
     name: string;
     role: 'client' | 'seller';
-    joinedDate: string;
     avatar?: string;
-    phone?: string;
-    address?: string;
-    description?: string;
+}
+
+const papaAvatar = 'assets/avatars/papa.jpg';
+const emilyAvatar = 'assets/avatars/emily.jpg'; //002
+const johnAvatar = 'assets/avatars/koaladrinkscoffee.webp'; //004
+const sarahAvatar = 'assets/avatars/panda.webp'; //006
+
+export const MOCK_USERS: User[] = [
+    {
+      id: "USER-001",
+      name: "Papa",
+      email: "papa@papa.com",
+      password: "Papa123!",
+      role: "client",
+      avatar: papaAvatar,
+    },
+    {
+      id: "USER-002",
+      name: "Emily Apple",
+      email: "emily@apple.com",
+      password: "Emily123!",
+      role: "seller",
+      avatar: emilyAvatar,
+    },
+    {
+      id: "USER-004",
+      name: "John Doe",
+      email: "john@doe.com",
+      password: "John123!",
+      role: "seller",
+      avatar: johnAvatar,
+    },
+      {
+      id: "USER-006",
+      name: "Sarah Lee",
+      email: "sarah@lee.com",
+      password: "Sarah123!",
+      role: "seller",
+      avatar: sarahAvatar,
+    }
+  ];
+
+  //helper functions to simulate user operations
+export function authenticateUser(email: string, password: string): User | null {
+  return MOCK_USERS.find(user => user.email === email && user.password === password) || null;
+}
+
+export function getUserByEmail(email: string): User | null {
+  return MOCK_USERS.find(user => user.email === email) || null;
+}
+
+export function updateUser(dto: Partial<User>): User | null {
+  const user = MOCK_USERS.find(u => u.id === dto.id);
+  if (!user) return null;
+  if (dto.name !== undefined) user.name = dto.name;
+  if (dto.email !== undefined) user.email = dto.email;
+  if (dto.avatar !== undefined) user.avatar = dto.avatar;
+  if (dto.password !== undefined) user.password = dto.password;
+  if (dto.role !== undefined) user.role = dto.role;
+  return user;
 }

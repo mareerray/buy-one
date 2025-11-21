@@ -1,5 +1,5 @@
 .navbar {
-  background: #fff;
+  /* background: #fff; */
   border-bottom: 1px solid #eee;
   display: flex;
   align-items: center;
@@ -8,13 +8,29 @@
 }
 .logo-link {
   font-weight: bold;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
+  color: var(--link, #69f0ae);
+  text-decoration: none;
 }
 .nav-links a {
   margin: 0 1rem;
   text-decoration: none;
-  color: #444;
+  color: var(--link, #69f0ae);
 }
 .nav-actions a {
+  color: var(--link, #69f0ae);
   margin: 0 0.5rem;
+}
+.navbar-user {
+  /* display: flex; */
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none !important;
+}
+
+.navbar-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
 }

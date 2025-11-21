@@ -31,5 +31,9 @@ import { FooterComponent } from './components/footer/footer.component';
     // ...other components
   ]
 })
-export class AppComponent { }
+export class AppComponent { 
+  constructor() {
+    console.log('App root loaded');
+  }
+}
 

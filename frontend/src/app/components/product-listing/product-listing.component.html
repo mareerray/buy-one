@@ -1,0 +1,78 @@
+<div class="container py-3">
+  <div class="row gy-2 align-items-center">
+    <div class="col-12 col-md flex-grow-1">
+      <input type="text" class="form-control custom-input" placeholder="Search products..." [(ngModel)]="searchQuery" />
+    </div>
+    <div class="col-6 col-md-2">
+      <select class="form-select" [(ngModel)]="categoryFilter">
+        <option *ngFor="let category of categories" [value]="category">
+          {{ category === 'all' ? 'All Categories' : category }}
+        </option>
+      </select>
+    </div>
+    <div class="col-6 col-md-2">
+      <select class="form-select" [(ngModel)]="sortBy">
+        <option value="name">Name</option>
+        <option value="price-low">Price: Low to High</option>
+        <option value="price-high">Price: High to Low</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="filteredProducts.length === 0" class="text-center py-5 text-muted">
+  No products found matching your criteria.
+</div>
+<div *ngIf="filteredProducts.length > 0">
+    <div class="container py-5">
+      <div class="row g-4">
+        <div *ngFor="let product of filteredProducts" class="col-12 col-md-6 col-lg-4">
+          <div class="card h-100 shadow-sm rounded"
+            (click)="viewProductDetail(product.id)" 
+            style="cursor: pointer;">
+            <!-- Product Image -->
+            <img *ngIf="product.images && product.images.length > 0; else noImg"
+                [src]="product.images[0]"
+                [alt]="product.name"
+                class="card-img-top" 
+                style="height: 300px; object-fit: cover; border-radius: 0.75rem 0.75rem 0 0;">
+            <ng-template #noImg>
+              <div class="d-flex align-items-center justify-content-center bg-light text-muted card-img-top"
+                  style="height: 300px; border-radius: 0.75rem 0.75rem 0 0;">
+                No image
+              </div>
+            </ng-template>
+            <div class="card-body d-flex flex-column">
+              <!-- Product Name -->
+              <h5 class="card-title mb-1 fw-bold">{{ product.name }}</h5>
+              <!-- Category Badge -->
+              <span class="badge bg-secondary mb-2">{{ product.category }}</span>
+              <!-- Seller Info -->
+              <ng-container *ngIf="getSeller(product.sellerId) as seller">
+                <div class="mb-3 d-flex align-items-center">
+                  <!-- <span class="me-2">Seller: </span> -->
+                  <img *ngIf="seller.avatar" [src]="seller.avatar" [alt]="seller.name"
+                      class="rounded-circle me-2" style="width:20px; height:20px; object-fit:cover;">
+                  <span class="fw seller-name">{{ seller.name }}</span>
+                </div>
+              </ng-container>
+              <!-- Description -->
+              <p class="card-text mb-2 flex-grow-1">{{ product.description }}</p>
+              <!-- Price -->
+              <p class="text-primary mb-2 fw-bold text-end price-text">€{{ product.price }}</p>
+              <!-- Buttons -->
+              <div class="mt-auto d-flex gap-2">
+                <button class="btn btn-outline-primary w-50"
+                (click)="viewProductDetail(product.id); $event.stopPropagation()">
+                  <i class="fas fa-eye me-2"></i>View Detail
+                </button>
+                <button class="btn btn-outline-secondary w-50" disabled>
+                  <i class="fas fa-shopping-cart me-2"></i>Add to Cart
+                </button>
+              </div>       
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
