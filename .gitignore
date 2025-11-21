@@ -1,1 +1,26 @@
-node_modules/
+# Node modules
+/node_modules/
+
+# Angular build outputs
+/dist/
+/out-tsc/
+/build/
+/wwwroot/
+
+# Angular cache and temp files
+/.angular/
+/.vscode/
+/.idea/
+/coverage/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+
+# Environment files (you might want to keep .env locally but not push)
+/.env
+/environment.ts
+/environment.prod.ts
