@@ -17,7 +17,8 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 29,
     images: [
       'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=400',
-      'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800'
+      'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800',
+      "assets/images/pixelArt.jpg" 
     ],
     category: 'code-nerd',
     sellerId: 'USER-002',
@@ -30,7 +31,8 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 31,
     images: [
       'https://images.unsplash.com/photo-1724654814378-108c93f5fa54?w=400',
-      'https://images.unsplash.com/photo-1724654814378-108c93f5fa54?w=800'
+      'https://images.unsplash.com/photo-1724654814378-108c93f5fa54?w=800',
+      "assets/images/pixelArt.jpg" 
     ],
     category: 'anime-pop',
     sellerId: 'USER-002',
@@ -42,7 +44,8 @@ export const MOCK_PRODUCTS: Product[] = [
     description: 'A strip of color for the minimalist techie.',
     price: 23,
     images: [
-      'https://images.unsplash.com/photo-1660900506164-9efffc7a4245?w=400'
+      'https://images.unsplash.com/photo-1660900506164-9efffc7a4245?w=400',
+      "assets/images/pixelArt.jpg" 
     ],
     category: 'minimal-tech',
     sellerId: 'USER-004',
@@ -54,7 +57,8 @@ export const MOCK_PRODUCTS: Product[] = [
     description: 'Old school pixel art for modern gamers.',
     price: 27,
     images: [
-      'https://images.unsplash.com/photo-1758179762049-615d9aac58ea?w=400'
+      'https://images.unsplash.com/photo-1758179762049-615d9aac58ea?w=400',
+      "assets/images/pixelArt.jpg" 
     ],
     category: 'gaming-esports',
     sellerId: 'USER-004',
@@ -66,7 +70,8 @@ export const MOCK_PRODUCTS: Product[] = [
     description: 'All your favorite internet memes… on one tee!',
     price: 22,
     images: [
-      'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=401'
+      'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=401',
+      "assets/images/pixelArt.jpg" 
     ],
     category: 'geeky-memes',
     sellerId: 'USER-006',
@@ -78,7 +83,8 @@ export const MOCK_PRODUCTS: Product[] = [
     description: 'A rare collab tee – get it while it lasts!',
     price: 45,
     images: [
-      'https://images.unsplash.com/photo-1724654814378-108c93f5fa54?w=401'
+      'https://images.unsplash.com/photo-1724654814378-108c93f5fa54?w=401',
+      "assets/images/pixelArt.jpg" 
     ],
     category: 'limited-editions',
     sellerId: 'USER-006',
@@ -90,7 +96,8 @@ export const MOCK_PRODUCTS: Product[] = [
     description: 'For anime fans and shinobi admirers. Striking eyes and mysterious vibes.',
     price: 29,
     images: [
-      'https://images.unsplash.com/photo-1651087319658-a1923f85551f?q=80&w=2730&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+      'https://images.unsplash.com/photo-1651087319658-a1923f85551f?q=80&w=2730&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      "assets/images/pixelArt.jpg" 
     ],
     category: 'anime-pop',
     sellerId: 'USER-004',
@@ -102,7 +109,8 @@ export const MOCK_PRODUCTS: Product[] = [
     description: 'Bring the energy with iconic Dragon Ball Z characters on your shirt!',
     price: 32,
     images: [
-      'https://images.unsplash.com/photo-1736892740703-92cc9088f2a7?q=80&w=2672&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+      'https://images.unsplash.com/photo-1736892740703-92cc9088f2a7?q=80&w=2672&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      "assets/images/pixelArt.jpg" 
     ],
     category: 'anime-pop',
     sellerId: 'USER-002',
@@ -114,7 +122,8 @@ export const MOCK_PRODUCTS: Product[] = [
     description: 'For meme lovers—cheeky pocket cat with a hidden message.',
     price: 26,
     images: [
-      'https://images.unsplash.com/photo-1704095371948-58d1f95d8064?q=80&w=2674&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+      'https://images.unsplash.com/photo-1704095371948-58d1f95d8064?q=80&w=2674&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      "assets/images/pixelArt.jpg" 
     ],
     category: 'geeky-memes',
     sellerId: 'USER-006',

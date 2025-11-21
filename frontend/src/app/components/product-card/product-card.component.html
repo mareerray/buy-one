@@ -6,11 +6,17 @@
           <div class="row g-4 align-items-center">
             <!-- Left: Image -->
             <div class="col-12 col-md-5">
-              <img *ngIf="product.images && product.images.length > 0; else noImg"
+              <!-- Product Image with navigation control using Bootstrap Carousel Component -->
+              <app-product-image-carousel
+                [images]="product.images"
+                [carouselId]="'carousel-' + product.id"
+                [altText]="product.name">
+              </app-product-image-carousel>
+              <!-- <img *ngIf="product.images && product.images.length > 0; else noImg"
                   [src]="product.images[0]"
                   [alt]="product.name"
                   class="w-100 product-image rounded"
-                  style="height: 600px; object-fit: cover;">
+                  style="height: 600px; object-fit: cover;"> -->
               <ng-template #noImg>
                 <div class="d-flex align-items-center justify-content-center bg-light text-muted rounded"
                   style="height:300px;">
