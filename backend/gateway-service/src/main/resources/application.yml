@@ -26,6 +26,10 @@ spring:
           uri: lb://USER-SERVICE
           predicates:
             - Path=/users/**
+        - id: product-service
+          uri: lb://PRODUCT-SERVICE
+          predicates:
+            - Path=/products/**
 
 eureka:
   client:
@@ -34,5 +38,8 @@ eureka:
     fetch-registry: true
     register-with-eureka: true
 
+logging:
+  level:
+    org.springframework.security: DEBUG
 
 

@@ -6,9 +6,12 @@ import com.buyone.productservice.request.CreateProductRequest;
 import com.buyone.productservice.request.UpdateProductRequest;
 import com.buyone.productservice.response.ProductResponse;
 import com.buyone.productservice.exception.ProductNotFoundException;
+import com.buyone.productservice.exception.BadRequestException;
+import com.buyone.productservice.exception.ConflictException;
 import com.buyone.productservice.exception.ForbiddenException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.kafka.core.KafkaTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +21,7 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
     
     private final ProductRepository productRepository;
+//    private final KafkaTemplate<String, Object> kafkaTemplate;
     
     public ProductServiceImpl(ProductRepository productRepository) {
         this.productRepository = productRepository;

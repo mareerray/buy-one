@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: product-service
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
   data:
     mongodb:
       uri: "mongodb+srv://Cluster05093:.qwe.qwe.qwe@cluster05093.dh3rmhg.mongodb.net/buy-one?retryWrites=true&w=majority&appName=Cluster05093"
@@ -11,3 +13,13 @@ spring:
     user:
       name: user
       password: password
+
+
+app:
+  kafka:
+    topic:
+      product-created: product.created
+
+logging:
+  level:
+    org.springframework.security: DEBUG

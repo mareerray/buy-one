@@ -1,5 +1,6 @@
 package com.buyone.productservice.response;
 
+import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Builder;

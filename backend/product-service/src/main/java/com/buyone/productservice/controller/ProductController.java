@@ -3,13 +3,15 @@ package com.buyone.productservice.controller;
 import com.buyone.productservice.request.CreateProductRequest;
 import com.buyone.productservice.request.UpdateProductRequest;
 import com.buyone.productservice.response.ProductResponse;
+import com.buyone.productservice.response.ApiResponse;
 import com.buyone.productservice.exception.ForbiddenException;
 import com.buyone.productservice.service.ProductService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 
-import javax.validation.Valid;
+import jakarta.validation.*;
 import java.util.List;
 
 @RestController
@@ -40,7 +42,7 @@ public class ProductController {
     
     // POST /products (seller only)
     @PostMapping
-    public ResponseEntity<ProductResponse> createProduct(
+    public ResponseEntity<ApiResponse<ProductResponse>> createProduct(
             @Valid @RequestBody CreateProductRequest request,
             @RequestHeader("X-USER-ID") String sellerId,
             @RequestHeader("X-USER-ROLE") String role
@@ -49,12 +51,19 @@ public class ProductController {
             throw new ForbiddenException("Only sellers can create products.");
         }
         ProductResponse product = productService.createProduct(request, sellerId);
-        return ResponseEntity.ok(product);
+        
+        ApiResponse<ProductResponse> response = ApiResponse.<ProductResponse>builder()
+                .success(true)
+                .message("Product created successfully")
+                .data(product)
+                .build();
+        
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
     
     // PUT /products/{id} (seller only & must own)
     @PutMapping("/{id}")
-    public ResponseEntity<ProductResponse> updateProduct(
+    public ResponseEntity<ApiResponse<ProductResponse>> updateProduct(
             @PathVariable String id,
             @Valid @RequestBody UpdateProductRequest request,
             @RequestHeader("X-USER-ID") String sellerId,
@@ -64,12 +73,17 @@ public class ProductController {
             throw new ForbiddenException("Only sellers can update products.");
         }
         ProductResponse product = productService.updateProduct(id, request, sellerId);
-        return ResponseEntity.ok(product);
+        ApiResponse<ProductResponse> response = ApiResponse.<ProductResponse>builder()
+                .success(true)
+                .message("Product updated successfully")
+                .data(product)
+                .build();
+        return ResponseEntity.ok(response);
     }
     
     // DELETE /products/{id} (seller only & must own)
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(
+    public ResponseEntity<ApiResponse<Void>> deleteProduct(
             @PathVariable String id,
             @RequestHeader("X-USER-ID") String sellerId,
             @RequestHeader("X-USER-ROLE") String role
@@ -78,6 +92,10 @@ public class ProductController {
             throw new ForbiddenException("Only sellers can delete products.");
         }
         productService.deleteProduct(id, sellerId);
-        return ResponseEntity.noContent().build();
+        ApiResponse<Void> response = ApiResponse.<Void>builder()
+                .success(true)
+                .message("Product deleted successfully")
+                .build();
+        return ResponseEntity.ok(response);
     }
 }

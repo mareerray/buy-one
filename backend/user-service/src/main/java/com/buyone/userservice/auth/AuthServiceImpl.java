@@ -50,7 +50,8 @@ public class AuthServiceImpl implements AuthService {
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             throw new AuthException("Invalid email or password");
         }
-        String token = jwtUtil.generateToken(user.getEmail(), user.getRole());
+        String roleType = user.getRole().name(); // changing role (enum) to string
+        String token = jwtUtil.generateToken(user.getEmail(), roleType);
         return new LoginResponse("Login successful", token,
                 new UserResponse(user.getId(), user.getName(), user.getEmail(), user.getRole(), user.getAvatar()));
     }
