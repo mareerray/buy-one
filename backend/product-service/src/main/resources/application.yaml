@@ -19,6 +19,8 @@ app:
   kafka:
     topic:
       product-created: product.created
+      product-updated: product.updated
+      product-deleted: product.deleted
 
 logging:
   level:

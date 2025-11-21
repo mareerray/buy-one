@@ -9,6 +9,9 @@ import com.buyone.productservice.exception.ProductNotFoundException;
 import com.buyone.productservice.exception.BadRequestException;
 import com.buyone.productservice.exception.ConflictException;
 import com.buyone.productservice.exception.ForbiddenException;
+import com.buyone.productservice.event.ProductCreatedEvent;
+import com.buyone.productservice.event.ProductUpdatedEvent;
+import com.buyone.productservice.event.ProductDeletedEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -21,10 +24,18 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
     
     private final ProductRepository productRepository;
-//    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
     
-    public ProductServiceImpl(ProductRepository productRepository) {
+    @Value("${app.kafka.topic.product-created}")
+    private String productCreatedTopic;
+    @Value("${app.kafka.topic.product-updated}")
+    private String productUpdatedTopic;
+    @Value("${app.kafka.topic.product-deleted}")
+    private String productDeletedTopic;
+    
+    public ProductServiceImpl(ProductRepository productRepository, KafkaTemplate<String, Object> kafkaTemplate) {
         this.productRepository = productRepository;
+        this.kafkaTemplate = kafkaTemplate;
     }
     
     // Create Product (seller only, enforce at controller)
@@ -58,6 +69,18 @@ public class ProductServiceImpl implements ProductService {
                 .build();
         
         Product savedProduct = productRepository.save(product);
+        ProductCreatedEvent event = ProductCreatedEvent.builder()
+                .productId(savedProduct.getId())
+                .sellerId(sellerId)
+                .name(savedProduct.getName())
+                .price(savedProduct.getPrice())
+                .build();
+        // Publish event
+        kafkaTemplate.send(productCreatedTopic, event)
+                .addCallback(
+                    success -> log.info("Event published: " + event),
+                    failure -> log.error("Failed to publish event", failure)
+                );
         return toProductResponse(savedProduct);
     }
     
@@ -121,6 +144,17 @@ public class ProductServiceImpl implements ProductService {
         if (request.getQuantity() != null) product.setQuantity(request.getQuantity());
         
         Product updatedProduct = productRepository.save(product);
+        ProductUpdatedEvent event = ProductUpdatedEvent.builder()
+                .productId(updatedProduct.getId())
+                .sellerId(sellerId)
+                .name(updatedProduct.getName())
+                .price(updatedProduct.getPrice())
+                .build();
+        kafkaTemplate.send(productUpdatedTopic, event)
+                .addCallback(
+                    success -> log.info("Event published: " + event),
+                    failure -> log.error("Failed to publish event", failure)
+                );
         return toProductResponse(updatedProduct);
     }
     
@@ -136,6 +170,15 @@ public class ProductServiceImpl implements ProductService {
             throw new ForbiddenException("Unauthorized: You do not own this product");
         }
         productRepository.deleteById(id);
+        ProductDeletedEvent event = ProductDeletedEvent.builder()
+                .productId(product.getId())
+                .sellerId(sellerId)
+                .build();
+        kafkaTemplate.send(productDeletedTopic, event)
+                .addCallback(
+                    success -> log.info("Event published: " + event),
+                    failure -> log.error("Failed to publish event", failure)
+                );
     }
     
     // Get all products by seller (for seller dashboard)
