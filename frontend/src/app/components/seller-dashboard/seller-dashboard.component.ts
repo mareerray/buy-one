@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { Product, MOCK_PRODUCTS } from '../../models/product.model';
 import { CATEGORIES } from '../../models/categories.model';
 import { AuthService } from '../../services/auth.service';
@@ -9,7 +9,7 @@ import { MediaService } from '../../services/media.service';
 @Component({
   selector: 'app-seller-dashboard',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, NgIf],
   templateUrl: './seller-dashboard.component.html',
   styleUrls: ['./seller-dashboard.component.css'],
 })
@@ -102,6 +102,10 @@ export class SellerDashboardComponent implements OnInit {
     if (event.dataTransfer?.files) {
       this.onFilesSelected({ target: { files: event.dataTransfer.files } });
     }
+  }
+
+  get selectedCategoryId(): string {
+    return this.productForm.get('category')?.value;
   }
 
   submitProduct() {

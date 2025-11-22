@@ -36,6 +36,12 @@
   color: #e0e0e0;
 }
 
+.selected-category {
+  background-color: var(--link-hover);
+  color: white;
+}
+
+
 .drop-zone {
   border: 2px dashed var(--primary, #7c3aed);
   border-radius: 12px;

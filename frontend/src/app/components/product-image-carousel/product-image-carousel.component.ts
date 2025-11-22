@@ -5,7 +5,8 @@ import { CommonModule } from '@angular/common';
   selector: 'app-product-image-carousel',
   imports: [CommonModule],
   templateUrl: './product-image-carousel.component.html',
-  styleUrls: ['./product-image-carousel.component.css']
+  styleUrls: ['./product-image-carousel.component.css'],
+  standalone: true
 })
 export class ProductImageCarouselComponent {
   @Input() images: string[] = [];

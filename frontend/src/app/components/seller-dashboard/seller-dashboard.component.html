@@ -28,7 +28,10 @@
       <div class="mb-3 custom-radio-group">
         <label class="form-label d-block mb-2">Category</label>
         <div class="d-flex flex-wrap gap-3">
-          <label *ngFor="let cat of categories" class="custom-radio-label" style="min-width: 120px;">
+          <label *ngFor="let cat of categories" 
+            class="custom-radio-label" 
+            [ngClass]="{'selected-category': selectedCategoryId === cat.id}"
+            style="min-width: 120px;">
             <input type="radio" formControlName="category" [value]="cat.id" />
             <span class="custom-radio-text">{{ cat.name }}</span>
           </label>
