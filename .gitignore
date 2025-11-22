@@ -8,8 +8,8 @@ node_modules/
 /build/
 /wwwroot/
 
-# Angular cache and temp files
-/.angular/
+# Angular cache and temp files (ignore any .angular folders in subfolders)
+.angular/
 /.vscode/
 /.idea/
 /coverage/
