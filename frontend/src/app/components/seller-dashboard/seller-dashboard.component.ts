@@ -74,39 +74,6 @@ export class SellerDashboardComponent implements OnInit {
     });
   }
 
-
-  // onImageChange(event: any) {
-  //   const file = event.target.files[0];
-  //   console.log('File size in bytes:', file.size);
-  //   this.imageValidationError = null;
-
-  // if (file) {
-  //   // Validate file type
-  //   if (!this.allowedTypes.includes(file.type)) {
-  //     this.imageValidationError = 'Only JPG and PNG files are allowed.';
-  //     this.productForm.patchValue({ image: null });
-  //     this.imagePreview = null;
-  //     console.log('Rejected due to type');
-  //     return;
-  //   }
-
-  //   // Validate file size
-  //   if (file.size > this.maxImageSize) {
-  //     this.imageValidationError = 'Image size must be under 2MB.';
-  //     this.productForm.patchValue({ image: null });
-  //     this.imagePreview = null;
-  //     return;
-  //   }
-
-  //   // If valid, update form and preview
-  //   this.productForm.patchValue({ image: file });
-
-  //   const reader = new FileReader();
-  //   reader.onload = () => this.imagePreview = reader.result;
-  //   reader.readAsDataURL(file);
-  //   }
-  // }
-
   removeImage(index: number): void {
     this.imagePreviews.splice(index, 1);
   }
