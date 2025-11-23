@@ -111,7 +111,7 @@ export const MOCK_PRODUCTS: Product[] = [
       "assets/images/pixelArt.jpg" 
     ],
     category: 'anime-pop',
-    sellerId: 'USER-002',
+    sellerId: 'USER-004',
     quantity: 7
   },
   {
@@ -124,7 +124,7 @@ export const MOCK_PRODUCTS: Product[] = [
       "assets/images/pixelArt.jpg" 
     ],
     category: 'geeky-memes',
-    sellerId: 'USER-006',
+    sellerId: 'USER-004',
     quantity: 15
   },
   {
