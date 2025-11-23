@@ -169,4 +169,53 @@ export const MOCK_PRODUCTS: Product[] = [
   quantity: 15
 }
 
+{
+  id: '1',
+  name: 'Esports Champion Tee',
+  description: 'Unleash your gaming spirit with this esports-inspired design!',
+  price: 29,
+  images: [
+    'assets/images/1.jpg'
+  ],
+  category: 'Gaming & Esports',
+  sellerId: 'USER-002',
+  quantity: 10
+},
+{
+  id: '2',
+  name: 'Cyber Shooter Tee',
+  description: 'Level up with futuristic style! Perfect for FPS fans.',
+  price: 32,
+  images: [
+    'assets/images/2.jpg'
+  ],
+  category: 'Gaming & Esports',
+  sellerId: 'USER-002',
+  quantity: 8
+},
+{
+  id: '3',
+  name: 'Pro League Tee',
+  description: 'Declare yourself a winner—bold, sharp, and ready for action!',
+  price: 30,
+  images: [
+    'assets/images/3.jpg'
+  ],
+  category: 'Gaming & Esports',
+  sellerId: 'USER-002',
+  quantity: 6
+},
+{
+  id: '4',
+  name: 'Bot Coder Tee',
+  description: 'Geek out in style with this coding robot design!',
+  price: 28,
+  images: [
+    'assets/images/5.jpg'
+  ],
+  category: 'Code & Nerd Humor',
+  sellerId: 'USER-002',
+  quantity: 12
+},
+
 */
