@@ -21,6 +21,8 @@ public class MediaServiceImpl implements MediaService {
     private final MediaRepository mediaRepository;
     private final StorageService storageService;
     
+    private static final int MAX_IMAGES_PER_PRODUCT = 5;
+    
     @Override
     public MediaResponse uploadImage(MultipartFile file, String productId) {
         if (file == null || file.isEmpty()) {
@@ -32,7 +34,11 @@ public class MediaServiceImpl implements MediaService {
         if (file.getContentType() == null || !file.getContentType().startsWith("image/")) {
             throw new InvalidFileException("Only image files are allowed!");
         }
-        // You may want to check for duplicate storage here if needed—throw ConflictException
+        
+        long imageCount = mediaRepository.countByProductId(productId);
+        if (imageCount >= MAX_IMAGES_PER_PRODUCT) {
+            throw new ConflictException("This product already has the maximum number of images (" + MAX_IMAGES_PER_PRODUCT + ").");
+        }
         
         Media media = Media.builder()
                 .productId(productId)
@@ -55,7 +61,6 @@ public class MediaServiceImpl implements MediaService {
                 media.getCreatedAt()
         );
     }
-    
     
     @Override
     public MediaResponse getMedia(String id) {
@@ -82,7 +87,15 @@ public class MediaServiceImpl implements MediaService {
         Media media = mediaRepository.findById(mediaId)
                 .orElseThrow(() -> new MediaNotFoundException(mediaId));
         // Optionally: check productId matches (to prevent mix-ups)
+        if (!media.getProductId().equals(expectedProductId)) {
+            throw new ForbiddenException("This media does not belong to the specified product.");
+        }
         // Optionally: check ownership (seller can only modify own images)
+        // Suppose you pass or inject currentUserId somehow
+        if (!currentUserId.equals(ownerUserId)) {
+            throw new ForbiddenException("You do not have permission to modify this media.");
+        }
+        
         
         // Delete old file
         storageService.delete(media.getImagePath());
@@ -100,14 +113,13 @@ public class MediaServiceImpl implements MediaService {
         
         return new MediaResponse(media.getId(), media.getProductId(), url, media.getCreatedAt());
     }
-
     
     @Override
-    public void deleteMedia(String id) {
+    public DeleteMediaResponse deleteMedia(String id) {
         Media media = mediaRepository.findById(id)
                 .orElseThrow(() -> new MediaNotFoundException(id));
-        // Optionally, check authorization (ownership)
         storageService.delete(media.getImagePath());
         mediaRepository.deleteById(id);
+        return new DeleteMediaResponse(id, "Deleted successfully");
     }
 }
