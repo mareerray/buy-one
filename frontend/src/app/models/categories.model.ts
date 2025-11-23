@@ -6,3 +6,13 @@ export const CATEGORIES = [
   { id: 'geeky-memes', name: 'Geeky Memes/Quotes', icon: 'fa fa-laugh', description: 'Internet memes and legendary geek quotes', color: 'from-orange-500 to-red-500' },
   { id: 'limited-editions', name: 'Limited Editions', icon: 'fa fa-star', description: 'Exclusive collabs and limited-run designs', color: 'from-purple-500 to-indigo-500' }
 ];
+
+
+/*
+'Code & Nerd Humor'
+'Anime & Pop Culture'
+'Minimal Tech'
+'Gaming & Esports'
+'Geeky Memes/Quotes'
+'Limited Editions'
+*/

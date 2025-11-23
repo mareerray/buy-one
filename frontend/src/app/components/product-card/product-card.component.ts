@@ -5,12 +5,13 @@ import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/product.service';
 import { Observable, of } from 'rxjs';
 import { MOCK_USERS, User } from '../../models/user.model'; 
+import { ProductImageCarouselComponent } from '../product-image-carousel/product-image-carousel.component';
 
 @Component({
     selector: 'app-product-card',
     templateUrl: './product-card.component.html',
     styleUrls: ['./product-card.component.css'],
-    imports: [CommonModule],
+    imports: [CommonModule, ProductImageCarouselComponent],
 })
 export class ProductCardComponent implements OnInit {
     productId: string | null = null;

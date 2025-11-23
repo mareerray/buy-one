@@ -1,5 +1,6 @@
-# Node modules
-/node_modules/
+# Node modules (ignore in any subfolder)
+# Use a relative pattern so nested `node_modules/` (e.g. frontend/node_modules/) are ignored
+node_modules/
 
 # Angular build outputs
 /dist/
@@ -7,8 +8,8 @@
 /build/
 /wwwroot/
 
-# Angular cache and temp files
-/.angular/
+# Angular cache and temp files (ignore any .angular folders in subfolders)
+.angular/
 /.vscode/
 /.idea/
 /coverage/
@@ -24,3 +25,4 @@ Thumbs.db
 /.env
 /environment.ts
 /environment.prod.ts
+

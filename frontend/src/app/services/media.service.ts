@@ -23,14 +23,25 @@ export class MediaService {
     }
 
   // Mock upload for product images (could be multiple)
-    uploadProductImage(file: File): Observable<HttpEvent<any>> {
+    uploadProductImage(file: File, previewList: { file: File, dataUrl: string }[]): Observable<HttpEvent<any>> {
         if (!this.allowedProductImageTypes.includes(file.type)) {
-            return throwError (()=>  new Error ('Invalid product image file type'));
+            return throwError(() => new Error('Invalid product image file type'));
         }
         if (file.size > this.maxImageSize) {
-            return throwError (()=>  new Error ('Product image file size must be less than 2MB'));
+            return throwError(() => new Error('Product image file size must be less than 2MB'));
+        }
+        if (this.isAlreadySelected(file, previewList)) {
+            return throwError(() => new Error('This image has already been selected.'));
         }
         return this.mockUpload(file);
+    }
+
+    isAlreadySelected(file: File, previewList: {file: File | null, dataUrl: string}[]): boolean {
+        return previewList.some(img =>
+            img.file !== null && img.file !== undefined &&
+            img.file.name === file.name &&
+            img.file.size === file.size
+        );
     }
 
   // Mock upload method simulating progress and completion

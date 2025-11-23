@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common'; // for ngClass, ngIf, ngFor
 import { FormsModule } from '@angular/forms';  // for ngModel (template-driven forms)
 import { MOCK_PRODUCTS, Product } from '../../models/product.model';
 import { MOCK_USERS, User } from '../../models/user.model'; 
+import { ProductImageCarouselComponent } from '../product-image-carousel/product-image-carousel.component';
 import { Router } from '@angular/router';
 
 @Component({
@@ -10,7 +11,7 @@ import { Router } from '@angular/router';
   templateUrl: './product-listing.component.html',
   styleUrls: ['./product-listing.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule, ProductImageCarouselComponent]
 })
 export class ProductListingComponent implements OnInit {
 
