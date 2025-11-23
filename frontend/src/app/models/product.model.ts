@@ -16,9 +16,8 @@ export const MOCK_PRODUCTS: Product[] = [
     description: 'For devs who love stylish, clever code jokes.',
     price: 29,
     images: [
-      'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=400',
-      'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800',
-      "assets/images/pixelArt.jpg" 
+      "assets/images/CodeWizardTee1.png",
+      "assets/images/CodeWizardTee2.jpeg",
     ],
     category: 'code-nerd',
     sellerId: 'USER-002',
@@ -26,17 +25,16 @@ export const MOCK_PRODUCTS: Product[] = [
   },
   {
     id: '2',
-    name: 'Anime Power Tee',
-    description: 'Channel your favorite anime heroes with this bold tee!',
-    price: 31,
+    name: 'Classic Portrait Tee',
+    description: 'Wear timeless art—this tee features a mysterious portrait with vintage colors, made for art lovers!',
+    price: 45,
     images: [
-      'https://images.unsplash.com/photo-1724654814378-108c93f5fa54?w=400',
-      'https://images.unsplash.com/photo-1724654814378-108c93f5fa54?w=800',
-      "assets/images/pixelArt.jpg" 
+      "assets/images/MarkusClassicPortraitTee1.png",
+      "assets/images/MarkusClassicPortraitTee2.jpeg",
     ],
-    category: 'anime-pop',
-    sellerId: 'USER-002',
-    quantity: 7
+    category: 'limited-editions',
+    sellerId: 'USER-006',
+    quantity: 1
   },
   {
     id: '3',
@@ -53,42 +51,42 @@ export const MOCK_PRODUCTS: Product[] = [
   },
   {
     id: '4',
-    name: 'Pixel Gamer Tee',
-    description: 'Old school pixel art for modern gamers.',
-    price: 27,
-    images: [
-      'https://images.unsplash.com/photo-1758179762049-615d9aac58ea?w=400',
-      "assets/images/pixelArt.jpg" 
-    ],
-    category: 'gaming-esports',
-    sellerId: 'USER-004',
-    quantity: 12
-  },
-  {
-    id: '5',
-    name: 'Geek Meme Mashup',
-    description: 'All your favorite internet memes… on one tee!',
-    price: 22,
-    images: [
-      'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=401',
-      "assets/images/pixelArt.jpg" 
-    ],
-    category: 'geeky-memes',
-    sellerId: 'USER-006',
-    quantity: 16
-  },
-  {
-    id: '6',
-    name: 'Limited Collab Edition',
-    description: 'A rare collab tee – get it while it lasts!',
+    name: 'Urban Legends Tee',
+    description: 'Stand out with a statement—this tee features two icons against a glowing city backdrop, perfect for those who set their own rules.',
     price: 45,
     images: [
-      'https://images.unsplash.com/photo-1724654814378-108c93f5fa54?w=401',
-      "assets/images/pixelArt.jpg" 
+      "assets/images/UrbanLegendsTee1.png",
+      "assets/images/UrbanLegendsTee2.jpeg"
     ],
     category: 'limited-editions',
     sellerId: 'USER-006',
-    quantity: 3
+    quantity: 1
+  },
+  {
+    id: '5',
+    name: 'Martial Arts Promo Tee',
+    description:'Show off power and skill—a tee inspired by martial arts legends, perfect for those with fighting spirit.',
+    price: 45,
+    images: [
+      "assets/images/AllenMartialArtsPromoTee1.png",
+      "assets/images/AllenMartialArtsPromoTee2.jpeg"
+    ],
+    category: 'limited-editions',
+    sellerId: 'USER-006',
+    quantity: 1
+  },
+  {
+    id: '6',
+    name: 'Action Noir Tee',
+    description: 'Make a statement—bold, fearless, and ready for the night. Action-movie vibes in every thread!',
+    price: 45,
+    images: [
+      "assets/images/OlegActionNoirTee1.png",
+      "assets/images/OlegActionNoirTee2.jpeg"
+    ],
+    category: 'limited-editions',
+    sellerId: 'USER-006',
+    quantity: 1
   },
   {
     id: '7',
@@ -128,10 +126,73 @@ export const MOCK_PRODUCTS: Product[] = [
     category: 'geeky-memes',
     sellerId: 'USER-006',
     quantity: 15
-  }
+  },
+  {
+  id: '10',
+  name: 'Esports Champion Tee',
+  description: 'Unleash your gaming spirit with this esports-inspired design!',
+  price: 29,
+  images: [
+    'assets/images/EsportsChampionTee1.png',
+    'assets/images/EsportsChampionTee2.png'
+  ],
+  category: 'Gaming & Esports',
+  sellerId: 'USER-002',
+  quantity: 10
+},
+{
+  id: '11',
+  name: 'Cyber Shooter Tee',
+  description: 'Level up with futuristic style! Perfect for FPS fans.',
+  price: 32,
+  images: [
+    'assets/images/CyberShooterTee1.png',
+    'assets/images/CyberShooterTee2.png'
+  ],
+  category: 'Gaming & Esports',
+  sellerId: 'USER-002',
+  quantity: 8
+},
+{
+  id: '12',
+  name: 'Pro League Tee',
+  description: 'Declare yourself a winner—bold, sharp, and ready for action!',
+  price: 30,
+  images: [
+    'assets/images/ProLeagueTee1.png',
+    'assets/images/ProLeagueTee2.png'
+  ],
+  category: 'Gaming & Esports',
+  sellerId: 'USER-002',
+  quantity: 6
+}
 ];
 
 /*
+{
+  id: '14',
+  name: 'Action Noir Tee',
+  description: 'Make a statement—bold, fearless, and ready for the night. Action-movie vibes in every thread!',
+  price: 30,
+  images: [
+    'assets/images/10.jpg'
+  ],
+  category: 'limited-editions',
+  sellerId: 'USER-002',
+  quantity: 6
+},
+{
+  id: '15',
+  name: 'Martial Arts Promo Tee',
+  description: 'Show off power and skill—a tee inspired by martial arts legends, perfect for those with fighting spirit.',
+  price: 30,
+  images: [
+    'assets/images/9.jpg'
+  ],
+  category: 'limited-editions',
+  sellerId: 'USER-002',
+  quantity: 6
+}
 {
   id: '7',
   name: 'Sharingan Ninja Tee',
@@ -170,7 +231,7 @@ export const MOCK_PRODUCTS: Product[] = [
 }
 
 {
-  id: '1',
+  id: '10',
   name: 'Esports Champion Tee',
   description: 'Unleash your gaming spirit with this esports-inspired design!',
   price: 29,
@@ -182,7 +243,7 @@ export const MOCK_PRODUCTS: Product[] = [
   quantity: 10
 },
 {
-  id: '2',
+  id: '11',
   name: 'Cyber Shooter Tee',
   description: 'Level up with futuristic style! Perfect for FPS fans.',
   price: 32,
@@ -194,56 +255,7 @@ export const MOCK_PRODUCTS: Product[] = [
   quantity: 8
 },
 {
-  id: '3',
-  name: 'Pro League Tee',
-  description: 'Declare yourself a winner—bold, sharp, and ready for action!',
-  price: 30,
-  images: [
-    'assets/images/3.jpg'
-  ],
-  category: 'Gaming & Esports',
-  sellerId: 'USER-002',
-  quantity: 6
-},
-{
-  id: '4',
-  name: 'Bot Coder Tee',
-  description: 'Geek out in style with this coding robot design!',
-  price: 28,
-  images: [
-    'assets/images/5.jpg'
-  ],
-  category: 'Code & Nerd Humor',
-  sellerId: 'USER-002',
-  quantity: 12
-},
-
-{
-  id: '1',
-  name: 'Esports Champion Tee',
-  description: 'Unleash your gaming spirit with this esports-inspired design!',
-  price: 29,
-  images: [
-    'assets/images/1.jpg'
-  ],
-  category: 'Gaming & Esports',
-  sellerId: 'USER-002',
-  quantity: 10
-},
-{
-  id: '2',
-  name: 'Cyber Shooter Tee',
-  description: 'Level up with futuristic style! Perfect for FPS fans.',
-  price: 32,
-  images: [
-    'assets/images/2.jpg'
-  ],
-  category: 'Gaming & Esports',
-  sellerId: 'USER-002',
-  quantity: 8
-},
-{
-  id: '3',
+  id: '12',
   name: 'Pro League Tee',
   description: 'Declare yourself a winner—bold, sharp, and ready for action!',
   price: 30,

@@ -1,3 +1,4 @@
-.carousel-control-next-icon, .carousel-control-prev-icon {
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
     color: var(--link) !important;
 }
