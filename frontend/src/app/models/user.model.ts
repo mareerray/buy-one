@@ -11,6 +11,7 @@ const papaAvatar = 'assets/avatars/papa.jpg';
 const emilyAvatar = 'assets/avatars/emily.jpg'; //002
 const johnAvatar = 'assets/avatars/koaladrinkscoffee.webp'; //004
 const sarahAvatar = 'assets/avatars/panda.webp'; //006
+const mamaAvatar = 'assets/avatars/mama.jpg'; //008
 
 export const MOCK_USERS: User[] = [
     {
@@ -44,6 +45,14 @@ export const MOCK_USERS: User[] = [
       password: "Sarah123!",
       role: "seller",
       avatar: sarahAvatar,
+    },
+    {
+      id: "USER-008",
+      name: "Mama Blues",
+      email: "mama@blues.com",
+      password: "Mama123!",
+      role: "seller",
+      avatar: mamaAvatar,
     }
   ];
 

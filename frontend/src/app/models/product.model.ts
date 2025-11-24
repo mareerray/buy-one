@@ -38,16 +38,16 @@ export const MOCK_PRODUCTS: Product[] = [
   },
   {
     id: '3',
-    name: 'Minimal Tech Shirt',
-    description: 'A strip of color for the minimalist techie.',
-    price: 23,
+    name: 'Pop Code Queen Tee',
+    description: 'Stand out with bold code and bold color! This wearable artwork is for vibrant, confident women in tech, ready to code and conquer.',
+    price: 30,
     images: [
-      'https://images.unsplash.com/photo-1660900506164-9efffc7a4245?w=400',
-      "assets/images/pixelArt.jpg" 
+      'assets/images/PopCodeQueenTee1.png',
+      'assets/images/PopCodeQueenTee2.png'
     ],
-    category: 'minimal-tech',
-    sellerId: 'USER-004',
-    quantity: 25
+    category: 'code-queen',
+    sellerId: 'USER-008',
+    quantity: 6
   },
   {
     id: '4',
@@ -100,7 +100,7 @@ export const MOCK_PRODUCTS: Product[] = [
     sellerId: 'USER-004',
     quantity: 10
   },
-   {
+  {
     id: '8',
     name: 'Little Warrior Manga Tee',
     description: 'Power up your style! Featuring a bold manga hero ready for adventure—this tee brings iconic action and nostalgia straight from classic anime pages.',
@@ -217,7 +217,99 @@ export const MOCK_PRODUCTS: Product[] = [
     category: 'anime-pop',
     sellerId: 'USER-002',
     quantity: 6
-  }
+  },
+  {
+  id: '17',
+  name: 'Not Bad Meme Tee',
+  description: 'Bring meme culture to real life! This “Not Bad” stamp tee is perfect for showing off your chill approval at any moment. Bright, bold, and limited edition.',
+  price: 45,
+  images: [
+    'assets/images/OppaNotBadMemeTee1.png',
+    'assets/images/OppaNotBadMemeTee2.jpeg'
+  ],
+  category: 'limited-editions',
+  sellerId: 'USER-006',
+  quantity: 1
+},
+{
+  id: '18',
+  name: 'Bim! Coder Win Tee',
+  description: 'Celebrate your coding victories! Featuring the iconic “Bim!” message and a check mark, this geeky-memes shirt lets everyone know your code passed the test.',
+  price: 30,
+  images: [
+    'assets/images/Bim!CoderWinTee1.png',
+    'assets/images/Bim!CoderWinTee2.png'
+  ],
+  category: 'geeky-memes',
+  sellerId: 'USER-002',
+  quantity: 6
+},
+{
+  id: '13',
+  name: 'Night Owl Coder Tee',
+  description: 'Celebrate late-night hacking and creativity! This tee captures the energy of a passionate coder working under glowing code screens.',
+  price: 40,
+  images: [
+    'assets/images/NightOwlCoderTee1.png',
+    'assets/images/NightOwlCoderTee2.png'
+  ],
+  category: 'code-queen',
+  sellerId: 'USER-008',
+  quantity: 6
+},
+{
+  id: '14',
+  name: 'Flow State SPM Tee',
+  description: 'Feel the rhythm of deep coding sessions! A stylish shirt for women coders who hit their stride with smart tech, focus, and headphones.',
+  price: 30,
+  images: [
+    'assets/images/FlowStateSPMTee1.png',
+    'assets/images/FlowStateSPMTee2.png'
+  ],
+  category: 'code-queen',
+  sellerId: 'USER-008',
+  quantity: 6
+},
+{
+  id: '15',
+  name: 'Zen Dev Moment Tee',
+  description: 'Embrace calm and concentration. Featuring a coder in a peaceful workspace, this tee is perfect for anyone who finds harmony in their code.',
+  price: 30,
+  images: [
+    'assets/images/ZenDevMomentTee1.png',
+    'assets/images/ZenDevMomentTee2.png'
+  ],
+  category: 'code-queen',
+  sellerId: 'USER-008',
+  quantity: 6
+},
+{
+  id: '16',
+  name: 'Bright Ideas Tee',
+  description: 'Channel the spark of code creativity! This design celebrates women problem-solvers, idea makers, and developers with a burst of colorful inspiration.',
+  price: 30,
+  images: [
+    'assets/images/BrightIdeasTee1.png',
+    'assets/images/BrightIdeasTee2.png'
+  ],
+  category: 'code-queen',
+  sellerId: 'USER-008',
+  quantity: 6
+},
+{
+  id: '17',
+  name: 'Messy Bun Dev Tee',
+  description: 'Show off your coding style! This tee features a creative coder rocking the iconic messy bun—perfect for those late nights, deep thinking, and breakthrough moments.',
+  price: 30,
+  images: [
+    'assets/images/MessyBunDevTee1.png',
+    'assets/images/MessyBunDevTee2.png'
+  ],
+  category: 'code-queen',
+  sellerId: 'USER-008',
+  quantity: 6
+}
+
 ];
 
 /*
