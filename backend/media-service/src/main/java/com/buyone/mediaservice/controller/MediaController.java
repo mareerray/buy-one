@@ -3,6 +3,7 @@ package com.buyone.mediaservice.controller;
 import com.buyone.mediaservice.response.MediaResponse;
 import com.buyone.mediaservice.response.MediaListResponse;
 import com.buyone.mediaservice.response.DeleteMediaResponse;
+import com.buyone.mediaservice.response.ApiResponse;
 import com.buyone.mediaservice.service.MediaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -21,34 +22,62 @@ public class MediaController {
     private static final int MAX_IMAGES_PER_PRODUCT = 5;
     
     @GetMapping("/product/{productId}")
-    public MediaListResponse listMediaForProduct(@PathVariable String productId) {
+    public ResponseEntity<ApiResponse<MediaListResponse>> listMediaForProduct(@PathVariable String productId) {
         List<MediaResponse> responses = mediaService.mediaListForProduct(productId);
-        return new MediaListResponse(responses, responses.size(), MAX_IMAGES_PER_PRODUCT);
+        MediaListResponse payload = new MediaListResponse(responses, responses.size(), MAX_IMAGES_PER_PRODUCT);
+        ApiResponse<MediaListResponse> response = ApiResponse.<MediaListResponse>builder()
+                .success(true)
+                .data(payload)
+                .build();
+        return ResponseEntity.ok(response);
     }
     // get metadata for specific media file
     @GetMapping("/{mediaId}")
-    public MediaResponse getMedia(@PathVariable String mediaId) {
-        return mediaService.getMedia(mediaId);
+    public ResponseEntity<ApiResponse<MediaResponse>> getMedia(@PathVariable String mediaId) {
+        MediaResponse media = mediaService.getMedia(mediaId);
+        ApiResponse<MediaResponse> response = ApiResponse.<MediaResponse>builder()
+                .success(true)
+                .data(media)
+                .build();
+        return ResponseEntity.ok(response);
     }
     
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public MediaResponse uploadImage(
+    public ResponseEntity<ApiResponse<MediaResponse>> uploadImage(
             @RequestParam("file") MultipartFile file,
             @RequestParam("productId") String productId
     ) {
-        return mediaService.uploadImage(file, productId);
+        MediaResponse media = mediaService.uploadImage(file, productId);
+        ApiResponse<MediaResponse> response = ApiResponse.<MediaResponse>builder()
+                .success(true)
+                .message("Image uploaded successfully")
+                .data(media)
+                .build();
+        return ResponseEntity.status(201).body(response);
     }
     
     @PutMapping(value = "/{mediaId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public MediaResponse updateMedia(
+    public ResponseEntity<ApiResponse<MediaResponse>> updateMedia(
             @PathVariable String mediaId,
             @RequestParam("file") MultipartFile file
     ) {
-        return mediaService.updateMedia(file, mediaId);
+        MediaResponse media = mediaService.updateMedia(file, mediaId);
+        ApiResponse<MediaResponse> response = ApiResponse.<MediaResponse>builder()
+                .success(true)
+                .message("Image updated successfully")
+                .data(media)
+                .build();
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{mediaId}")
-    public DeleteMediaResponse deleteMedia(@PathVariable String mediaId) {
-        return mediaService.deleteMedia(mediaId);
+    public ResponseEntity<ApiResponse<DeleteMediaResponse>>  deleteMedia(@PathVariable String mediaId) {
+        DeleteMediaResponse deleted = mediaService.deleteMedia(mediaId);
+        ApiResponse<DeleteMediaResponse> response = ApiResponse.<DeleteMediaResponse>builder()
+                .success(true)
+                .message("Deleted successfully")
+                .data(deleted)
+                .build();
+        return ResponseEntity.ok(response);
     }
 }
