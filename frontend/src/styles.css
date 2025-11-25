@@ -181,3 +181,7 @@ body {
   color: #6c757d;
   background-color: transparent;
 }
+
+.fw-bold {
+  color: var(--link);
+}

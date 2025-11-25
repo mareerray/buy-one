@@ -1,3 +1,41 @@
+.square-image {
+  width: 100px;
+  height: 160px;
+  object-fit: cover;
+  display: block;
+}
+
+.custom-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1040;
+}
+.custom-modal-absolute {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  margin: 0 !important;
+}
+
+.modal-dialog {
+  margin-top: 40vh;
+}
+
+.modal-content {
+  background-color: var(--background);
+  /* background-color: #5F9EA0; */
+  color: white;
+
+}
+
 .custom-radio-group > div {
   display: flex;
   flex-wrap: wrap;
@@ -33,12 +71,11 @@
 
 .custom-radio-label input[type='radio']:checked + .custom-radio-text {
   font-weight: 600;
-  color: #e0e0e0;
+  color: white;
 }
 
 .selected-category {
   background-color: var(--link-hover);
-  color: white;
 }
 
 .drop-zone {
@@ -48,8 +85,8 @@
   padding: 32px;
   position: relative;
   transition:
-    border-color 0.2s,
-    background 0.2s;
+  border-color 0.2s,
+  background 0.2s;
   cursor: pointer;
 }
 
@@ -61,20 +98,6 @@
 .drop-zone-content {
   pointer-events: auto;
 }
-
-/* .btn-small-x {
-  color: #dc3545 !important;
-  font-size: 1.5rem;        
-  padding: 0.1rem 0.3rem;   
-  line-height: 1;           
-  width: 20px;              
-  height: 20px;             
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: transparent;
-  border: none;
-} */
 
 .btn-small-x {
   width: 20px;

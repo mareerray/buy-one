@@ -14,6 +14,10 @@ import { MediaService } from '../../services/media.service';
   styleUrls: ['./seller-dashboard.component.css'],
 })
 export class SellerDashboardComponent implements OnInit {
+  sellerName: string = '';
+  sellerAvatar: string = '';
+
+  editIndex: number | null = null;
   userProducts: Product[] = [];
   productForm: FormGroup;
   categories = CATEGORIES;
@@ -37,10 +41,16 @@ export class SellerDashboardComponent implements OnInit {
   }
 
   ngOnInit() {
-    const currentUserId = this.authService.currentUserValue?.id;
-    if (currentUserId) {
-      this.userProducts = MOCK_PRODUCTS.filter((product) => product.sellerId === currentUserId);
+    const currentUser = this.authService.currentUserValue;
+    if (currentUser) {
+      this.userProducts = MOCK_PRODUCTS.filter((product) => product.sellerId === currentUser.id);
+      this.sellerName = currentUser.name;
+      this.sellerAvatar = currentUser.avatar || 'assets/avatars/default-user.jpg'; // or whatever field holds avatar url
     }
+    // const currentUserId = this.authService.currentUserValue?.id;
+    // if (currentUserId) {
+    //   this.userProducts = MOCK_PRODUCTS.filter((product) => product.sellerId === currentUserId);
+    // }
   }
 
   maxImageSize = 2 * 1024 * 1024; // 2MB in bytes equals 2,097,152 bytes
@@ -113,6 +123,10 @@ export class SellerDashboardComponent implements OnInit {
     return this.productForm.get('category')?.value;
   }
 
+  getCategoryById(id: string) {
+    return this.categories.find((cat) => cat.id === id);
+  }
+
   submitProduct() {
     if (this.productForm.invalid) {
       this.productForm.markAllAsTouched();
@@ -121,25 +135,43 @@ export class SellerDashboardComponent implements OnInit {
     const currentUserId = this.authService.currentUserValue?.id;
     if (!currentUserId) return;
 
-    const newProduct: Product = {
-      id: (MOCK_PRODUCTS.length + 1).toString(),
+    // Gather form data
+    const productData: Product = {
+      id: (MOCK_PRODUCTS.length + 1).toString(), // Will only use for new products
       name: this.productForm.value.name,
       description: this.productForm.value.description,
       price: this.productForm.value.price,
       images: this.imagePreviews.length ? this.imagePreviews.map((p) => p.dataUrl) : [],
-      category: 'uncategorized',
+      category: this.productForm.value.category || 'uncategorized',
       sellerId: currentUserId,
-      quantity: 1,
+      quantity: this.productForm.value.quantity ?? 1,
     };
-    this.userProducts.push(newProduct);
+
+    if (this.editIndex !== null) {
+      // Edit mode: update existing product
+      // Keep the product's original ID and sellerId
+      const oldProduct = this.userProducts[this.editIndex];
+      this.userProducts[this.editIndex] = {
+        ...oldProduct,
+        ...productData,
+        id: oldProduct.id, // Ensure ID stays consistent
+        sellerId: oldProduct.sellerId,
+      };
+      this.editIndex = null;
+    } else {
+      // Add new product
+      this.userProducts.push(productData);
+    }
+
     this.productForm.reset();
     this.imagePreviews = [];
   }
 
-  resetForm() {
+  cancelEdit() {
     this.productForm.reset();
     this.imagePreviews = [];
     this.imageValidationError = null;
+    this.editIndex = null;
     // (Optionally, cancel editing state if you track edited index)
   }
 
@@ -150,8 +182,11 @@ export class SellerDashboardComponent implements OnInit {
       description: product.description,
       price: product.price,
       image: null,
+      category: product.category,
+      quantity: product.quantity,
     });
     this.imagePreviews = product.images?.map((url) => ({ file: null, dataUrl: url })) || [];
+    this.editIndex = index;
   }
 
   deleteProduct(index: number) {
