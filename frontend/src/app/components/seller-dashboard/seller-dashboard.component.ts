@@ -13,21 +13,23 @@ import { MediaService } from '../../services/media.service';
   templateUrl: './seller-dashboard.component.html',
   styleUrls: ['./seller-dashboard.component.css'],
 })
-
 export class SellerDashboardComponent implements OnInit {
-
   userProducts: Product[] = [];
   productForm: FormGroup;
   categories = CATEGORIES;
   // imagePreview: string | ArrayBuffer | null = null;
-  imagePreviews: { file: File | null, dataUrl: string}[] = [];
+  imagePreviews: { file: File | null; dataUrl: string }[] = [];
   isDragActive: boolean = false;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private mediaService: MediaService) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private mediaService: MediaService,
+  ) {
     this.productForm = this.fb.group({
       name: ['', Validators.required],
       description: ['', Validators.required],
-      price: ['', [Validators.required, Validators.min(1.00)]],
+      price: ['', [Validators.required, Validators.min(1.0)]],
       image: [null, Validators.required],
       category: [this.categories.length > 0 ? this.categories[0].id : '', Validators.required], // default to first category id
       quantity: ['', [Validators.required, Validators.min(1)]],
@@ -37,39 +39,38 @@ export class SellerDashboardComponent implements OnInit {
   ngOnInit() {
     const currentUserId = this.authService.currentUserValue?.id;
     if (currentUserId) {
-      this.userProducts = MOCK_PRODUCTS.filter(product => product.sellerId === currentUserId);
+      this.userProducts = MOCK_PRODUCTS.filter((product) => product.sellerId === currentUserId);
     }
   }
 
-  maxImageSize = 2 * 1024 * 1024; // 2MB in bytes equals 2,097,152 bytes 
-  allowedTypes = ['image/jpeg', 'image/png'];  // Only allow jpeg and png
+  maxImageSize = 2 * 1024 * 1024; // 2MB in bytes equals 2,097,152 bytes
+  allowedTypes = ['image/jpeg', 'image/png']; // Only allow jpeg and png
   imageValidationError: string | null = null;
 
   onFilesSelected(event: any): void {
     const files: FileList = event.target.files;
-    Array.from(files).forEach(file => {
+    Array.from(files).forEach((file) => {
       // Duplicate? Ask service!
       if (this.mediaService.isAlreadySelected(file, this.imagePreviews)) {
         this.imageValidationError = 'This image has already been selected.';
-        setTimeout(() => this.imageValidationError = null, 3000);
+        setTimeout(() => (this.imageValidationError = null), 3000);
         return;
       }
       // Validate type
       if (!this.mediaService.allowedProductImageTypes.includes(file.type)) {
         this.imageValidationError = 'Only JPG and PNG files are allowed.';
-        setTimeout(() => this.imageValidationError = null, 3000);
+        setTimeout(() => (this.imageValidationError = null), 3000);
         return;
       }
       // Validate size
       if (file.size > this.mediaService.maxImageSize) {
         this.imageValidationError = 'Image size must be under 2MB.';
-        setTimeout(() => this.imageValidationError = null, 3000);
+        setTimeout(() => (this.imageValidationError = null), 3000);
         return;
       }
       // If all good, show preview
       const reader = new FileReader();
-      reader.onload = () =>
-        this.imagePreviews.push({ file, dataUrl: reader.result as string });
+      reader.onload = () => this.imagePreviews.push({ file, dataUrl: reader.result as string });
       reader.readAsDataURL(file);
     });
   }
@@ -79,15 +80,19 @@ export class SellerDashboardComponent implements OnInit {
   }
 
   moveImageUp(index: number): void {
-  if (index === 0) return;
-  [this.imagePreviews[index-1], this.imagePreviews[index]] =
-    [this.imagePreviews[index], this.imagePreviews[index-1]];
+    if (index === 0) return;
+    [this.imagePreviews[index - 1], this.imagePreviews[index]] = [
+      this.imagePreviews[index],
+      this.imagePreviews[index - 1],
+    ];
   }
 
   moveImageDown(index: number): void {
-    if (index === this.imagePreviews.length-1) return;
-    [this.imagePreviews[index+1], this.imagePreviews[index]] =
-      [this.imagePreviews[index], this.imagePreviews[index+1]];
+    if (index === this.imagePreviews.length - 1) return;
+    [this.imagePreviews[index + 1], this.imagePreviews[index]] = [
+      this.imagePreviews[index],
+      this.imagePreviews[index + 1],
+    ];
   }
 
   // For drag & drop
@@ -121,7 +126,7 @@ export class SellerDashboardComponent implements OnInit {
       name: this.productForm.value.name,
       description: this.productForm.value.description,
       price: this.productForm.value.price,
-      images: this.imagePreviews.length ? this.imagePreviews.map(p => p.dataUrl) : [],
+      images: this.imagePreviews.length ? this.imagePreviews.map((p) => p.dataUrl) : [],
       category: 'uncategorized',
       sellerId: currentUserId,
       quantity: 1,
@@ -144,9 +149,9 @@ export class SellerDashboardComponent implements OnInit {
       name: product.name,
       description: product.description,
       price: product.price,
-      image: null
+      image: null,
     });
-    this.imagePreviews = product.images?.map(url => ({ file: null, dataUrl: url })) || [];
+    this.imagePreviews = product.images?.map((url) => ({ file: null, dataUrl: url })) || [];
   }
 
   deleteProduct(index: number) {

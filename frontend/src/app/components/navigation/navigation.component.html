@@ -10,14 +10,18 @@
     <ng-container *ngIf="isAuthenticated; else guestLinks">
       <a routerLink="/profile">
         <span class="navbar-user">
-          <img *ngIf="currentUserAvatar" [src]="currentUserAvatar" alt="avatar" class="navbar-avatar" />
-            {{ currentUserName }}
+          <img
+            *ngIf="currentUserAvatar"
+            [src]="currentUserAvatar"
+            alt="avatar"
+            class="navbar-avatar"
+          />
+          {{ currentUserName }}
         </span>
       </a>
-      <a (click)="onLogout()" style="cursor:pointer">
+      <a (click)="onLogout()" style="cursor: pointer">
         <i class="fas fa-sign-out-alt me-2" aria-label="Logout"></i> Logout
       </a>
-
     </ng-container>
     <ng-template #guestLinks>
       <a routerLink="/signin">Sign In</a>

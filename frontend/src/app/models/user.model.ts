@@ -1,10 +1,10 @@
 export interface User {
-    id: string;
-    email: string;
-    password: string;
-    name: string;
-    role: 'client' | 'seller';
-    avatar?: string;
+  id: string;
+  email: string;
+  password: string;
+  name: string;
+  role: 'client' | 'seller';
+  avatar?: string;
 }
 
 const papaAvatar = 'assets/avatars/papa.jpg';
@@ -14,59 +14,59 @@ const sarahAvatar = 'assets/avatars/panda.webp'; //006
 const mamaAvatar = 'assets/avatars/mama.jpg'; //008
 
 export const MOCK_USERS: User[] = [
-    {
-      id: "USER-001",
-      name: "Papa",
-      email: "papa@papa.com",
-      password: "Papa123!",
-      role: "client",
-      avatar: papaAvatar,
-    },
-    {
-      id: "USER-002",
-      name: "Emily Apple",
-      email: "emily@apple.com",
-      password: "Emily123!",
-      role: "seller",
-      avatar: emilyAvatar,
-    },
-    {
-      id: "USER-004",
-      name: "John Doe",
-      email: "john@doe.com",
-      password: "John123!",
-      role: "seller",
-      avatar: johnAvatar,
-    },
-      {
-      id: "USER-006",
-      name: "Sarah Lee",
-      email: "sarah@lee.com",
-      password: "Sarah123!",
-      role: "seller",
-      avatar: sarahAvatar,
-    },
-    {
-      id: "USER-008",
-      name: "Mama Blues",
-      email: "mama@blues.com",
-      password: "Mama123!",
-      role: "seller",
-      avatar: mamaAvatar,
-    }
-  ];
+  {
+    id: 'USER-001',
+    name: 'Papa',
+    email: 'papa@papa.com',
+    password: 'Papa123!',
+    role: 'client',
+    avatar: papaAvatar,
+  },
+  {
+    id: 'USER-002',
+    name: 'Emily Apple',
+    email: 'emily@apple.com',
+    password: 'Emily123!',
+    role: 'seller',
+    avatar: emilyAvatar,
+  },
+  {
+    id: 'USER-004',
+    name: 'John Doe',
+    email: 'john@doe.com',
+    password: 'John123!',
+    role: 'seller',
+    avatar: johnAvatar,
+  },
+  {
+    id: 'USER-006',
+    name: 'Sarah Lee',
+    email: 'sarah@lee.com',
+    password: 'Sarah123!',
+    role: 'seller',
+    avatar: sarahAvatar,
+  },
+  {
+    id: 'USER-008',
+    name: 'Mama Blues',
+    email: 'mama@blues.com',
+    password: 'Mama123!',
+    role: 'seller',
+    avatar: mamaAvatar,
+  },
+];
 
-  //helper functions to simulate user operations
+//helper functions to simulate user operations
 export function authenticateUser(email: string, password: string): User | null {
-  return MOCK_USERS.find(user => user.email === email && user.password === password) || null;
+  return MOCK_USERS.find((user) => user.email === email && user.password === password) || null;
 }
 
 export function getUserByEmail(email: string): User | null {
-  return MOCK_USERS.find(user => user.email === email) || null;
+  return MOCK_USERS.find((user) => user.email === email) || null;
 }
 
 export function updateUser(dto: Partial<User>): User | null {
-  const user = MOCK_USERS.find(u => u.id === dto.id);
+  const user = MOCK_USERS.find((u) => u.id === dto.id);
   if (!user) return null;
   if (dto.name !== undefined) user.name = dto.name;
   if (dto.email !== undefined) user.email = dto.email;

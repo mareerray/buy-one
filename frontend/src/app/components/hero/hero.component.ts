@@ -1,8 +1,7 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'; // for ngClass, ngIf, ngFor
 import { Router } from '@angular/router'; // for routerLink
 import { AuthService } from '../../services/auth.service';
-
 
 interface HeroSlide {
   id: string;
@@ -17,16 +16,19 @@ interface HeroSlide {
   templateUrl: './hero.component.html',
   styleUrls: ['./hero.component.css'],
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule],
 })
 export class HeroComponent implements OnInit {
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+  ) {}
 
   shopNow() {
     this.router.navigate(['/product-listing']);
   }
   registerSeller() {
-    this.authService.logout(); 
+    this.authService.logout();
     this.router.navigate(['/signup']);
   }
 
@@ -35,10 +37,32 @@ export class HeroComponent implements OnInit {
   }
 
   heroSlides: HeroSlide[] = [
-    { id: '1', title: 'Quirky Tees, Curated for You', subtitle: 'Where creators sell bold designs. Where fans discover unique styles.', image: 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=1200', badge: 'Marketplace' },
-    { id: '2', title: 'Shop from Creative Sellers', subtitle: 'Browse unique tees from talented designers worldwide', image: 'https://images.unsplash.com/photo-1724654814378-108c93f5fa54?w=1200' },
-    { id: '3', title: 'Sell Your Designs', subtitle: 'Join our marketplace and reach fans looking for quirky, premium tees', image: 'https://images.unsplash.com/photo-1660900506164-9efffc7a4245?w=1200', badge: 'Start Selling' },
-    { id: '4', title: 'Where Creators & Fans Connect', subtitle: 'A curated marketplace for bold, tech-inspired designs', image: 'https://images.unsplash.com/photo-1758179762049-615d9aac58ea?w=1200' },
+    {
+      id: '1',
+      title: 'Quirky Tees, Curated for You',
+      subtitle: 'Where creators sell bold designs. Where fans discover unique styles.',
+      image: 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=1200',
+      badge: 'Marketplace',
+    },
+    {
+      id: '2',
+      title: 'Shop from Creative Sellers',
+      subtitle: 'Browse unique tees from talented designers worldwide',
+      image: 'https://images.unsplash.com/photo-1724654814378-108c93f5fa54?w=1200',
+    },
+    {
+      id: '3',
+      title: 'Sell Your Designs',
+      subtitle: 'Join our marketplace and reach fans looking for quirky, premium tees',
+      image: 'https://images.unsplash.com/photo-1660900506164-9efffc7a4245?w=1200',
+      badge: 'Start Selling',
+    },
+    {
+      id: '4',
+      title: 'Where Creators & Fans Connect',
+      subtitle: 'A curated marketplace for bold, tech-inspired designs',
+      image: 'https://images.unsplash.com/photo-1758179762049-615d9aac58ea?w=1200',
+    },
   ];
   currentSlide = 0;
   slideInterval: any;

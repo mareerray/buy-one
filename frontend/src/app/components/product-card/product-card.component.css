@@ -24,19 +24,19 @@
 */
 
 .card-title {
-    color: var(--link);
+  color: var(--link);
 }
 
 .card-text {
-    color: var(--text-secondary);
-} 
+  color: var(--text-secondary);
+}
 
 .btn-outline-primary {
-    color: var(--link);
-    border-color: var(--link);
+  color: var(--link);
+  border-color: var(--link);
 }
 
 .btn-outline-secondary {
-    color: var(--text-secondary);
-    border-color: var(--text-secondary);
+  color: var(--text-secondary);
+  border-color: var(--text-secondary);
 }

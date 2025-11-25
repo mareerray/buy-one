@@ -15,74 +15,74 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NgIf } from '@angular/common';
 
 @Component({
-    selector: 'app-sign-in',
-    templateUrl: './sign-in.component.html',
-    styleUrls: ['./sign-in.component.css'],
-    standalone: true,
-    imports: [
-        RouterModule,
-        ReactiveFormsModule,
-        MatCardModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        MatIconModule,
-        MatProgressSpinnerModule,
-        NgIf
-    ]
+  selector: 'app-sign-in',
+  templateUrl: './sign-in.component.html',
+  styleUrls: ['./sign-in.component.css'],
+  standalone: true,
+  imports: [
+    RouterModule,
+    ReactiveFormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    NgIf,
+  ],
 })
 export class SignInComponent implements OnInit {
-    signInForm: FormGroup;
-    errorMessage: string = '';
-    isLoading: boolean = false;
+  signInForm: FormGroup;
+  errorMessage: string = '';
+  isLoading: boolean = false;
 
-    constructor(
-        private fb: FormBuilder,
-        private authService: AuthService,
-        private router: Router
-    ) {
-        this.signInForm = this.fb.group({
-        email: ['', [Validators.required, Validators.email]],
-        password: ['', [Validators.required, Validators.minLength(6)]]
-        });
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router,
+  ) {
+    this.signInForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+    });
+  }
+
+  ngOnInit(): void {
+    // Redirect if already logged in
+    if (this.authService.isAuthenticated()) {
+      this.router.navigate(['/']);
     }
+  }
 
-    ngOnInit(): void {
-        // Redirect if already logged in
-        if (this.authService.isAuthenticated()) {
-        this.router.navigate(['/']);
-        }
-    }
+  onSubmit(): void {
+    if (this.signInForm.valid) {
+      this.isLoading = true;
+      this.errorMessage = '';
 
-    onSubmit(): void {
-        if (this.signInForm.valid) {
-        this.isLoading = true;
-        this.errorMessage = '';
+      const { email, password } = this.signInForm.value;
+      const result = this.authService.login(email, password);
 
-        const { email, password } = this.signInForm.value;
-        const result = this.authService.login(email, password);
+      this.isLoading = false;
 
-        this.isLoading = false;
-
-        if (result.success) {
-            console.log("Login successful");
-            const user = this.authService.currentUserValue;
-            if (user?.role === 'seller') {
-            this.router.navigate(['/profile']);
-            } else {
-            this.router.navigate(['/profile']);
-            }
+      if (result.success) {
+        console.log('Login successful');
+        const user = this.authService.currentUserValue;
+        if (user?.role === 'seller') {
+          this.router.navigate(['/profile']);
         } else {
-            this.errorMessage = result.message || 'Login failed';
+          this.router.navigate(['/profile']);
         }
-        }
+      } else {
+        this.errorMessage = result.message || 'Login failed';
+      }
     }
+  }
 
-    get email() {
-        return this.signInForm.get('email');
-    }
+  get email() {
+    return this.signInForm.get('email');
+  }
 
-    get password() {
-        return this.signInForm.get('password');
-    }
+  get password() {
+    return this.signInForm.get('password');
+  }
 }

@@ -3,21 +3,21 @@ import { CanActivate, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
 export class SellerGuard implements CanActivate {
-    constructor(
-        private authService: AuthService,
-        private router: Router
-    ) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
 
-    canActivate(): boolean {
-        if (this.authService.isSeller()) {
-        return true;
-        }
-
-        // Not a seller, redirect to home or some other page
-        this.router.navigate(['/']);
-        return false;
+  canActivate(): boolean {
+    if (this.authService.isSeller()) {
+      return true;
     }
+
+    // Not a seller, redirect to home or some other page
+    this.router.navigate(['/']);
+    return false;
+  }
 }

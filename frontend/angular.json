@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "quirk-cotton-angular": {
+    "grit-tee": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -64,10 +64,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "quirk-cotton-angular:build:production"
+              "buildTarget": "grit-tee:build:production"
             },
             "development": {
-              "buildTarget": "quirk-cotton-angular:build:development"
+              "buildTarget": "grit-tee:build:development"
             }
           },
           "defaultConfiguration": "development"

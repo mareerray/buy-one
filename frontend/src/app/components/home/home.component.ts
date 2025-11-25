@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HeroComponent } from '../hero/hero.component';           
-import { CategoriesComponent } from '../categories/categories.component'; 
-import { ProductListingComponent } from '../product-listing/product-listing.component'; 
+import { HeroComponent } from '../hero/hero.component';
+import { CategoriesComponent } from '../categories/categories.component';
+import { ProductListingComponent } from '../product-listing/product-listing.component';
 import { Product, MOCK_PRODUCTS } from '../../models/product.model';
 
 @Component({

@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
@@ -8,19 +8,20 @@ import { AuthService } from '../../services/auth.service';
   standalone: true,
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.css'],
-  imports: [RouterModule, CommonModule]
+  imports: [RouterModule, CommonModule],
 })
-
 export class NavigationComponent implements OnInit {
   isAuthenticated = false;
   currentUserName: string | null = null;
   currentUserAvatar: string | null = null;
 
-  constructor(public authService: AuthService, private router: Router) {
-  }
+  constructor(
+    public authService: AuthService,
+    private router: Router,
+  ) {}
 
   ngOnInit() {
-    this.authService.currentUser$.subscribe(user => {
+    this.authService.currentUser$.subscribe((user) => {
       this.isAuthenticated = !!user;
       this.currentUserName = user?.name || null;
       this.currentUserAvatar = user?.avatar || null;

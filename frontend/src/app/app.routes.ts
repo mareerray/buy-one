@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { HomeComponent} from './components/home/home.component';
+import { HomeComponent } from './components/home/home.component';
 import { SignInComponent } from './components/auth/sign-in/sign-in.component';
 import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
 import { ProfileComponent } from './components/profile/profile.component';
@@ -18,7 +18,5 @@ export const routes: Routes = [
   { path: 'product-listing', component: ProductListingComponent },
   { path: 'product/:id', component: ProductCardComponent },
   { path: 'categories', component: CategoriesComponent },
-  { path: 'seller-dashboard', component: SellerDashboardComponent, canActivate: [SellerGuard] }
+  { path: 'seller-dashboard', component: SellerDashboardComponent, canActivate: [SellerGuard] },
 ];
-
-

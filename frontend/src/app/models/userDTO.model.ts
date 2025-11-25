@@ -1,7 +1,7 @@
 export interface UserDTO {
-    id: string;
-    name: string;
-    email: string;
-    role: 'client' | 'seller';
-    avatar?: string;
+  id: string;
+  name: string;
+  email: string;
+  role: 'client' | 'seller';
+  avatar?: string;
 }
