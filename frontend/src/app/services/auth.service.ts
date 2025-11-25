@@ -23,7 +23,7 @@ export class AuthService {
     const user = authenticateUser(email, password);
 
     if (user) {
-      const { password, ...userDTO } = user;
+      const { ...userDTO } = user;
       localStorage.setItem('currentUser', JSON.stringify(userDTO));
       this.currentUserSubject.next(userDTO as UserDTO);
       console.log(userDTO);
@@ -50,7 +50,7 @@ export class AuthService {
     };
     MOCK_USERS.push(newUser);
 
-    const { password, ...userDTO } = newUser;
+    const { ...userDTO } = newUser;
     localStorage.setItem('currentUser', JSON.stringify(userDTO));
     this.currentUserSubject.next(userDTO as UserDTO);
     return { success: true };
@@ -76,7 +76,7 @@ export class AuthService {
   updateUser(update: UserUpdateDTO) {
     const updated = updateUser(update);
     if (updated) {
-      const { password, ...userDTO } = updated;
+      const { ...userDTO } = updated;
       this.currentUserSubject.next(userDTO as UserDTO);
     }
   }

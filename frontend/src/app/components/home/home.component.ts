@@ -13,15 +13,6 @@ import { Product, MOCK_PRODUCTS } from '../../models/product.model';
 })
 export class HomeComponent {
   products: Product[] = MOCK_PRODUCTS;
-  onCategoryClick(categoryId: string) {
-    // Optionally filter products or perform navigation
-  }
-  onProductClick(product: Product) {
-    // Show product details
-  }
-  onSellerClick(sellerId: string) {
-    // Show seller info
-  }
   shopNow() {}
   registerSeller() {}
   browseCreators() {}

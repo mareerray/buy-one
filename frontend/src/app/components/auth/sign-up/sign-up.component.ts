@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -51,10 +51,10 @@ export class SignUpComponent {
 
   form: FormGroup;
 
-  constructor(
-    private fb: FormBuilder,
-    private mediaService: MediaService,
-  ) {
+  private fb = inject(FormBuilder);
+  private mediaService = inject(MediaService);
+
+  constructor() {
     this.form = this.fb.group(
       {
         name: ['', [Validators.required, Validators.minLength(2)]],

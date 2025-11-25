@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
@@ -15,10 +15,8 @@ export class NavigationComponent implements OnInit {
   currentUserName: string | null = null;
   currentUserAvatar: string | null = null;
 
-  constructor(
-    public authService: AuthService,
-    private router: Router,
-  ) {}
+  public authService: AuthService = inject(AuthService);
+  private router: Router = inject(Router);
 
   ngOnInit() {
     this.authService.currentUser$.subscribe((user) => {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common'; // for ngClass, ngIf, ngFor
 import { FormsModule } from '@angular/forms'; // for ngModel (template-driven forms)
 import { MOCK_PRODUCTS, Product } from '../../models/product.model';
@@ -18,8 +18,6 @@ export class ProductListingComponent implements OnInit {
   searchQuery: string = '';
   categoryFilter: string = 'all';
   sortBy: string = 'name';
-
-  constructor(private router: Router) {}
 
   ngOnInit() {
     this.products = MOCK_PRODUCTS;
@@ -59,10 +57,7 @@ export class ProductListingComponent implements OnInit {
   }
 
   viewProductDetail(productId: string) {
-    this.router.navigate(['/product', productId]);
-  }
-
-  handleAddToCart(product: Product) {
-    alert(`${product.name} added to cart!`);
+    const router = inject(Router);
+    router.navigate(['/product', productId]);
   }
 }

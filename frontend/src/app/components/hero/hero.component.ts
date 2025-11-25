@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common'; // for ngClass, ngIf, ngFor
 import { Router } from '@angular/router'; // for routerLink
 import { AuthService } from '../../services/auth.service';
@@ -18,11 +18,9 @@ interface HeroSlide {
   standalone: true,
   imports: [CommonModule],
 })
-export class HeroComponent implements OnInit {
-  constructor(
-    private router: Router,
-    private authService: AuthService,
-  ) {}
+export class HeroComponent implements OnInit, OnDestroy {
+  private router = inject(Router);
+  private authService = inject(AuthService);
 
   shopNow() {
     this.router.navigate(['/product-listing']);

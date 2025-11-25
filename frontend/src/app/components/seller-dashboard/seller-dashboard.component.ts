@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule, NgIf } from '@angular/common';
 import { Product, MOCK_PRODUCTS } from '../../models/product.model';
@@ -21,11 +21,11 @@ export class SellerDashboardComponent implements OnInit {
   imagePreviews: { file: File | null; dataUrl: string }[] = [];
   isDragActive: boolean = false;
 
-  constructor(
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private mediaService: MediaService,
-  ) {
+  mediaService = inject(MediaService);
+  authService = inject(AuthService);
+  fb = inject(FormBuilder);
+
+  constructor() {
     this.productForm = this.fb.group({
       name: ['', Validators.required],
       description: ['', Validators.required],

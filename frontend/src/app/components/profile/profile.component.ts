@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { UserDTO } from '../../models/userDTO.model';
@@ -24,11 +24,12 @@ export class ProfileComponent implements OnInit {
   avatarError: string = '';
   uploadProgress = 0;
 
-  constructor(
-    private authService: AuthService,
-    private fb: FormBuilder,
-    private mediaService: MediaService,
-  ) {
+  authService = inject(AuthService);
+  mediaService = inject(MediaService);
+
+  fb = inject(FormBuilder);
+
+  constructor() {
     this.profileForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],

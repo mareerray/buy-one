@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Product } from '../../models/product.model';
 import { CommonModule } from '@angular/common';
@@ -17,10 +17,9 @@ export class ProductCardComponent implements OnInit {
   productId: string | null = null;
   product$: Observable<Product | undefined> = of(undefined);
 
-  constructor(
-    private route: ActivatedRoute,
-    private productService: ProductService,
-  ) {}
+  private route: ActivatedRoute = inject(ActivatedRoute);
+
+  private productService: ProductService = inject(ProductService);
 
   ngOnInit() {
     this.productId = this.route.snapshot.paramMap.get('id');
