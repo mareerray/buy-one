@@ -15,11 +15,10 @@ interface Category {
   templateUrl: './categories.component.html',
   styleUrls: ['./categories.component.css'],
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule],
 })
 export class CategoriesComponent {
   @Input() onCategoryClick: (categoryId: string) => void = () => {};
 
   categories = CATEGORIES;
 }
-

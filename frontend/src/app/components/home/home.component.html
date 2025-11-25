@@ -1,12 +1,12 @@
 <app-hero
   (shopNow)="shopNow()"
   (registerSeller)="registerSeller()"
-  (browseCreators)="browseCreators()">
+  (browseCreators)="browseCreators()"
+>
 </app-hero>
 
-<app-categories
-[onCategoryClick]="onCategoryClick"> 
-</app-categories>
+<app-categories> </app-categories>
+<!-- [onCategoryClick]="onCategoryClick" -->
 
-<app-product-listing> 
-</app-product-listing>
+<app-infinite-slider [sellers]="sliderSellers" [products]="sliderProducts"></app-infinite-slider>
+

@@ -1,7 +1,7 @@
 Angular Project Structure (Mirroring Your React App)
 
 ```
-quirk-cotton-angular/
+grit-tee/
 ├── src/
 │   ├── app/
 │   │   ├── components/

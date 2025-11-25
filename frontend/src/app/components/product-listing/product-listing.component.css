@@ -7,23 +7,24 @@
 }
 
 .btn-outline-primary {
-    color: var(--link);
-    border-color: var(--link);
+  color: var(--link);
+  border-color: var(--link);
 }
 
 .btn-outline-secondary {
-    color: var(--text-secondary);
-    border-color: var(--text-secondary);
+  color: var(--text-secondary);
+  border-color: var(--text-secondary);
 }
 
-.custom-input, .form-select {
-    background-color: transparent;
-    color: var(--link);
-    border-color: var(--border);
-} 
+.custom-input,
+.form-select {
+  background-color: transparent;
+  color: var(--link);
+  border-color: var(--border);
+}
 
 .custom-input::placeholder {
-    color: var(--link);
+  color: var(--link);
 }
 
 .seller-name {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { UserDTO } from '../../models/userDTO.model';
@@ -10,13 +10,12 @@ import { MediaService } from '../../services/media.service';
 import { HttpEventType } from '@angular/common/http';
 
 @Component({
-    selector: 'app-profile',
-    templateUrl: './profile.component.html',
-    styleUrls: ['./profile.component.css'],
-    standalone: true,
-    imports: [ReactiveFormsModule, CommonModule]
+  selector: 'app-profile',
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.css'],
+  standalone: true,
+  imports: [ReactiveFormsModule, CommonModule],
 })
-
 export class ProfileComponent implements OnInit {
   currentUser: UserDTO | null = null;
   profileForm: FormGroup;
@@ -25,20 +24,28 @@ export class ProfileComponent implements OnInit {
   avatarError: string = '';
   uploadProgress = 0;
 
-  constructor(private authService: AuthService, private fb: FormBuilder, private mediaService: MediaService) {
+  authService = inject(AuthService);
+  mediaService = inject(MediaService);
+
+  fb = inject(FormBuilder);
+
+  constructor() {
     this.profileForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
     });
-    this.passwordForm = this.fb.group({
-      currentPassword: ['', Validators.required],
-      newPassword: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', Validators.required]
-    }, { validator: this.passwordsMatch });
+    this.passwordForm = this.fb.group(
+      {
+        currentPassword: ['', Validators.required],
+        newPassword: ['', [Validators.required, Validators.minLength(8)]],
+        confirmPassword: ['', Validators.required],
+      },
+      { validator: this.passwordsMatch },
+    );
   }
 
   ngOnInit() {
-    this.authService.currentUser$.subscribe(user => {
+    this.authService.currentUser$.subscribe((user) => {
       if (user) {
         this.currentUser = user;
         this.profileForm.patchValue({ name: user.name, email: user.email });
@@ -59,21 +66,23 @@ export class ProfileComponent implements OnInit {
     reader.onloadend = () => {
       this.avatar = reader.result as string;
       this.avatarError = '';
-    };    reader.readAsDataURL(file);
+    };
+    reader.readAsDataURL(file);
 
     // Upload via MediaService
     this.mediaService.uploadAvatar(file).subscribe({
       next: (event) => {
         if (event.type === HttpEventType.UploadProgress && event.total) {
-          this.uploadProgress = Math.round(100 * event.loaded / event.total);
+          this.uploadProgress = Math.round((100 * event.loaded) / event.total);
         } else if (event.type === HttpEventType.Response) {
           this.uploadProgress = 0;
         }
       },
       error: (err) => {
-        this.avatarError = typeof err === 'string' ? err : err.message || 'Failed to upload avatar.';
+        this.avatarError =
+          typeof err === 'string' ? err : err.message || 'Failed to upload avatar.';
         this.uploadProgress = 0;
-      }
+      },
     });
   }
 
@@ -89,12 +98,12 @@ export class ProfileComponent implements OnInit {
         id: this.currentUser.id,
         name: this.profileForm.value.name,
         email: this.profileForm.value.email,
-        avatar: this.avatar || this.currentUser.avatar
+        avatar: this.avatar || this.currentUser.avatar,
         // password not included here
       };
       this.authService.updateUser(dto);
     }
-}
+  }
 
   changePassword() {
     if (this.passwordForm.valid && this.currentUser) {
@@ -103,7 +112,7 @@ export class ProfileComponent implements OnInit {
         name: this.currentUser.name, // keep unchanged
         email: this.currentUser.email, // keep unchanged
         avatar: this.currentUser.avatar,
-        password: this.passwordForm.value.newPassword
+        password: this.passwordForm.value.newPassword,
       };
       this.authService.updateUser(dto);
     }
