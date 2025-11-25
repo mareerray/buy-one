@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common'; // for ngClass, ngIf, ngFor
 import { FormsModule } from '@angular/forms'; // for ngModel (template-driven forms)
 import { MOCK_PRODUCTS, Product } from '../../models/product.model';
 import { MOCK_USERS, User } from '../../models/user.model';
-import { ProductImageCarouselComponent } from '../product-image-carousel/product-image-carousel.component';
+import { ProductImageCarouselComponent } from '../ui/product-image-carousel/product-image-carousel.component';
 import { Router } from '@angular/router';
 
 @Component({

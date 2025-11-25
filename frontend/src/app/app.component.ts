@@ -10,8 +10,8 @@ import { CommonModule } from '@angular/common';
 // ...import other material modules as needed
 
 // ...import other components as needed
-import { NavigationComponent } from './components/navigation/navigation.component';
-import { FooterComponent } from './components/footer/footer.component';
+import { NavigationComponent } from './components/ui/navigation/navigation.component';
+import { FooterComponent } from './components/ui/footer/footer.component';
 
 @Component({
   selector: 'app-root',

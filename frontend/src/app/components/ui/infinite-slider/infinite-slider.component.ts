@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-infinite-slider',
@@ -11,6 +12,7 @@ import { CommonModule } from '@angular/common';
 export class InfiniteSliderComponent {
   @Input() sellers: { avatar: string; name: string }[] = [];
   @Input() products: { image: string }[] = [];
+  private router = inject(Router);
 
   // Make a new array that repeats sellers, e.g. 3x
   get extendedSellers() {
@@ -18,5 +20,13 @@ export class InfiniteSliderComponent {
   }
   get extendedProducts() {
     return [...this.products, ...this.products, ...this.products, ...this.products];
+  }
+
+  shopNow() {
+    this.router.navigate(['/product-listing']);
+  }
+
+  browseCollections() {
+    this.router.navigate(['/categories']);
   }
 }

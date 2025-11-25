@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HeroComponent } from '../hero/hero.component';
+import { HeroComponent } from '../ui/hero/hero.component';
 import { CategoriesComponent } from '../categories/categories.component';
 // import { ProductListingComponent } from '../product-listing/product-listing.component';
 import { Product, MOCK_PRODUCTS } from '../../models/product.model';
 import { MOCK_USERS } from '../../models/user.model';
-import { InfiniteSliderComponent } from '../infinite-slider/infinite-slider.component';
+import { InfiniteSliderComponent } from '../ui/infinite-slider/infinite-slider.component';
 
 @Component({
   selector: 'app-home',

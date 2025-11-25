@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common'; // for ngClass, ngIf, ngFor
 import { Router } from '@angular/router'; // for routerLink
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../../services/auth.service';
 
 interface HeroSlide {
   id: string;
@@ -30,8 +30,8 @@ export class HeroComponent implements OnInit, OnDestroy {
     this.router.navigate(['/signup']);
   }
 
-  browseCreators() {
-    this.router.navigate(['/product-listing']);
+  browseCollections() {
+    this.router.navigate(['/categories']);
   }
 
   heroSlides: HeroSlide[] = [
@@ -40,29 +40,28 @@ export class HeroComponent implements OnInit, OnDestroy {
       title: 'Quirky Tees, Curated for You',
       subtitle: 'Where creators sell bold designs. Where fans discover unique styles.',
       image: 'assets/images/MarkusClassicPortraitTee1.png',
-      // image: 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=1200',
       badge: 'Marketplace',
     },
     {
       id: '2',
       title: 'Shop from Creative Sellers',
       subtitle: 'Browse unique tees from talented designers worldwide',
-      image: 'assets/images/OppaNotBadMemeTee1.png',
-      // image: 'https://images.unsplash.com/photo-1724654814378-108c93f5fa54?w=1200',
+      image:
+        'https://i.etsystatic.com/44936127/r/il/96cced/5115358786/il_fullxfull.5115358786_9e3l.jpg',
     },
     {
       id: '3',
       title: 'Sell Your Designs',
       subtitle: 'Join our marketplace and reach fans looking for quirky, premium tees',
       image: 'assets/images/GroupieTrackerTee1.png',
-      // image: 'https://images.unsplash.com/photo-1660900506164-9efffc7a4245?w=1200',
       badge: 'Start Selling',
     },
     {
       id: '4',
       title: 'Where Creators & Fans Connect',
       subtitle: 'A curated marketplace for bold, tech-inspired designs',
-      image: 'https://images.unsplash.com/photo-1758179762049-615d9aac58ea?w=1200',
+      image:
+        'https://images.unsplash.com/photo-1533835825768-478d38555d95?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8dCUyMHNoaXJ0JTIwZGVzaWdufGVufDB8fDB8fHwww=1200',
     },
   ];
   currentSlide = 0;

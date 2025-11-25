@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/product.service';
 import { Observable, of } from 'rxjs';
 import { MOCK_USERS, User } from '../../models/user.model';
-import { ProductImageCarouselComponent } from '../product-image-carousel/product-image-carousel.component';
+import { ProductImageCarouselComponent } from '../ui/product-image-carousel/product-image-carousel.component';
 
 @Component({
   selector: 'app-product-card',
