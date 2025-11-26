@@ -12,6 +12,10 @@
   width: 100vw;
   height: 100vh;
   z-index: 1040;
+  background: rgba(0,0,0,1);   /* subtle gray overlay */
+  z-index: 1040;
+  backdrop-filter: none;             /* <--- THE BLUR EFFECT! */
+  -webkit-backdrop-filter: none;     /* For Safari support */
 }
 .custom-modal-absolute {
   position: fixed;
@@ -26,14 +30,44 @@
 }
 
 .modal-dialog {
-  margin-top: 40vh;
+  max-width: 1000px;       /* Or desired max width */
+  width: 100%;
+  /* Optional: max-height so it fits smaller screens */
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .modal-content {
-  background-color: var(--background);
+  background-color: var(--border);
+  border: 1px solid var(--border);
   /* background-color: #5F9EA0; */
   color: white;
+  min-height: 500px;
+  max-height: 85vh;
+  overflow-y: auto;        /* Allow scrolling INSIDE modal if content is tall */
+  display: flex;
+  flex-direction: column;
+  scrollbar-width: thin;
+  scrollbar-color: var(--link-hover) #222831;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(69, 85, 108, 0.18);
 
+}
+
+/* Chrome, Edge, Safari */
+.modal-content::-webkit-scrollbar {
+  width: 8px;                   /* Width of the scrollbar */
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: var(--link-hover);          /* The thumb color */
+  border-radius: 8px;            /* Rounded thumb */
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: #222831;          /* The background/track color */
+  border-radius: 8px;
 }
 
 .custom-radio-group > div {

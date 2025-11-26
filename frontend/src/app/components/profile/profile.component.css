@@ -15,12 +15,12 @@ img.rounded-circle {
 }
 
 .badge.bg-primary {
-  background-color: var(--primary-dark) !important;
+  background-color: var(--link-complementary) !important;
 }
 
 .btn-success {
-  background-color: var(--primary-dark);
-  border-color: var(--primary-dark);
+  background-color: var(--link-complementary);
+  border-color: var(--link-complementary);
 }
 
 .btn-success:hover {

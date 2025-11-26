@@ -18,6 +18,7 @@ export class ProductListingComponent implements OnInit {
   searchQuery: string = '';
   categoryFilter: string = 'all';
   sortBy: string = 'name';
+  private router = inject(Router); //
 
   ngOnInit() {
     this.products = MOCK_PRODUCTS;
@@ -57,7 +58,6 @@ export class ProductListingComponent implements OnInit {
   }
 
   viewProductDetail(productId: string) {
-    const router = inject(Router);
-    router.navigate(['/product', productId]);
+    this.router.navigate(['/product', productId]);
   }
 }

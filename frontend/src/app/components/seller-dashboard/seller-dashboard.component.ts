@@ -16,7 +16,7 @@ import { MediaService } from '../../services/media.service';
 export class SellerDashboardComponent implements OnInit {
   sellerName: string = '';
   sellerAvatar: string = '';
-
+  showModal: boolean = false;
   editIndex: number | null = null;
   userProducts: Product[] = [];
   productForm: FormGroup;
@@ -56,6 +56,14 @@ export class SellerDashboardComponent implements OnInit {
   maxImageSize = 2 * 1024 * 1024; // 2MB in bytes equals 2,097,152 bytes
   allowedTypes = ['image/jpeg', 'image/png']; // Only allow jpeg and png
   imageValidationError: string | null = null;
+
+  openAddProductModal() {
+    this.editIndex = null; // Null means "add mode" (not editing)
+    this.productForm.reset(); // Blank form
+    this.imagePreviews = []; // Clear any images
+    this.imageValidationError = null; // Clear any errors
+    this.showModal = true;
+  }
 
   onFilesSelected(event: any): void {
     const files: FileList = event.target.files;
@@ -172,6 +180,7 @@ export class SellerDashboardComponent implements OnInit {
     this.imagePreviews = [];
     this.imageValidationError = null;
     this.editIndex = null;
+    this.showModal = false;
     // (Optionally, cancel editing state if you track edited index)
   }
 
@@ -187,6 +196,7 @@ export class SellerDashboardComponent implements OnInit {
     });
     this.imagePreviews = product.images?.map((url) => ({ file: null, dataUrl: url })) || [];
     this.editIndex = index;
+    this.showModal = true;
   }
 
   deleteProduct(index: number) {

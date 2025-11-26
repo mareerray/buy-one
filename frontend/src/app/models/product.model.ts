@@ -215,7 +215,7 @@ export const MOCK_PRODUCTS: Product[] = [
     quantity: 6,
   },
   {
-    id: '13',
+    id: '19',
     name: 'Night Owl Coder Tee',
     description:
       'Celebrate late-night hacking and creativity! This tee captures the energy of a passionate coder working under glowing code screens.',
@@ -226,7 +226,7 @@ export const MOCK_PRODUCTS: Product[] = [
     quantity: 6,
   },
   {
-    id: '14',
+    id: '20',
     name: 'Flow State SPM Tee',
     description:
       'Feel the rhythm of deep coding sessions! A stylish shirt for women coders who hit their stride with smart tech, focus, and headphones.',
@@ -237,7 +237,7 @@ export const MOCK_PRODUCTS: Product[] = [
     quantity: 6,
   },
   {
-    id: '15',
+    id: '21',
     name: 'Zen Dev Moment Tee',
     description:
       'Embrace calm and concentration. Featuring a coder in a peaceful workspace, this tee is perfect for anyone who finds harmony in their code.',
@@ -248,7 +248,7 @@ export const MOCK_PRODUCTS: Product[] = [
     quantity: 6,
   },
   {
-    id: '16',
+    id: '22',
     name: 'Bright Ideas Tee',
     description:
       'Channel the spark of code creativity! This design celebrates women problem-solvers, idea makers, and developers with a burst of colorful inspiration.',
@@ -259,7 +259,7 @@ export const MOCK_PRODUCTS: Product[] = [
     quantity: 6,
   },
   {
-    id: '17',
+    id: '23',
     name: 'Messy Bun Dev Tee',
     description:
       'Show off your coding style! This tee features a creative coder rocking the iconic messy bun—perfect for those late nights, deep thinking, and breakthrough moments.',
