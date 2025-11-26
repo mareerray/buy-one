@@ -1,3 +1,11 @@
+export interface Category {
+  id: string;
+  name: string;
+  icon: string; // Instead of ReactNode, pass SVG or CSS class
+  description: string;
+  color: string;
+}
+
 export const CATEGORIES = [
   {
     id: 'code-nerd',

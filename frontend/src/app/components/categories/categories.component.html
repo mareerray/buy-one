@@ -1,4 +1,100 @@
 <div class="container py-5">
+  <div class="row">
+    <!-- Sidebar on large, top on small -->
+    <nav 
+      class="col-12 d-md-none mb-3"
+      *ngIf="categories.length">
+      <!-- Mobile: Horizontal scrollable list -->
+      <ul class="nav nav-pills flex-row overflow-auto">
+        <li class="nav-item" *ngFor="let cat of categories">
+          <a
+            class="nav-link"
+            [class.active]="cat.id === selectedCategoryId"
+            (click)="selectCategory(cat.id)">
+            <i [ngClass]="cat.icon"></i>
+            {{ cat.name }}
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="col-md-3 col-lg-2 d-none d-md-block">
+      <!-- Sidebar with categories -->
+      <aside class="sidebar">
+        <ul>
+          <li *ngFor="let cat of categories"
+              (click)="selectCategory(cat.id)"
+              [class.active]="cat.id === selectedCategoryId">
+            <i [ngClass]="cat.icon"></i>
+            <span>{{ cat.name }}</span>
+          </li>
+        </ul>
+      </aside>
+    </div>
+    <!-- Main grid area -->
+    <!-- <div class="container py-3"> -->
+    <div class="col-12 col-md-9 col-lg-10 ps-md-4 ps-lg-5">
+      <div class="row g-4">
+        <div *ngFor="let product of filteredProducts" class="col-12 col-sm-6 col-lg-4">
+          <div class="card h-100 shadow-sm rounded">
+            <!-- Product Image (or carousel, if you have <app-product-image-carousel>) -->
+            <app-product-image-carousel
+              [images]="product.images"
+              [carouselId]="'carousel-' + product.id"
+              [altText]="product.name"
+            ></app-product-image-carousel>
+
+            <!-- Fallback for no images -->
+            <ng-template #noImg>
+              <div
+                class="d-flex align-items-center justify-content-center bg-light text-white card-img-top"
+                style="height: 300px; border-radius: 0.75rem 0.75rem 0 0"
+              >
+                No image
+              </div>
+            </ng-template>
+
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title mb-1 fw-bold">{{ product.name }}</h5>
+              <span class="badge bg-secondary mb-3">{{ product.category }}</span>
+              <p class="card-text mb-2 flex-grow-1">{{ product.description }}</p>
+              <p class="text-primary mb-2 fw-bold text-end price-text">€{{ product.price }}</p>
+
+              <div class="mt-auto d-flex gap-2">
+                <button
+                  class="btn btn-outline-primary w-50"
+                  (click)="viewProductDetail(product.id); $event.stopPropagation()"
+                >
+                  <i class="fas fa-eye me-2"></i>View Detail
+                </button>
+                <button 
+                  class="btn btn-outline-secondary w-50"
+                  (click)="addToCart(); $event.stopPropagation()"
+                >
+                  <i class="fas fa-shopping-cart me-2"></i>Add to Cart
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- <section class="product-grid">
+    <div *ngFor="let product of filteredProducts" class="card">
+      <img [src]="product.images[0]" alt="{{ product.name }}">
+      <div class="card-title">{{ product.name }}</div>
+      <div class="price-text">${{ product.price }}</div>
+      <div class="seller-name">{{ product.sellerId }}</div>
+      <p>{{ product.description }}</p>
+    </div>
+  </section> -->
+<!-- </div> -->
+
+
+<!-- <div class="container py-5">
   <div class="text-center mb-4">
     <h2 class="mb-3 fw-bold">Explore Our Collections</h2>
     <p class="text-secondary mx-auto" style="max-width: 600px">
@@ -8,7 +104,7 @@
   <div class="row g-4">
     <div class="col-12 col-md-6 col-lg-4" *ngFor="let category of categories">
       <div
-        class="card h-100 shadow-sm border-0 cursor-pointer"
+        class="card h-100 shadow-sm border-0 cursor-pointer cat-bg"
         (click)="onCategoryClick(category.id)"
       >
         <div class="card-body text-center">
@@ -25,4 +121,4 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
