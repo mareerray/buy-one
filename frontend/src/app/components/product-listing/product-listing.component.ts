@@ -4,14 +4,14 @@ import { FormsModule } from '@angular/forms'; // for ngModel (template-driven fo
 import { MOCK_PRODUCTS, Product } from '../../models/product.model';
 import { MOCK_USERS, User } from '../../models/user.model';
 import { ProductImageCarouselComponent } from '../ui/product-image-carousel/product-image-carousel.component';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-product-listing',
   templateUrl: './product-listing.component.html',
   styleUrls: ['./product-listing.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, ProductImageCarouselComponent],
+  imports: [CommonModule, FormsModule, ProductImageCarouselComponent, RouterLink],
 })
 export class ProductListingComponent implements OnInit {
   products: Product[] = [];
@@ -59,5 +59,9 @@ export class ProductListingComponent implements OnInit {
 
   viewProductDetail(productId: string) {
     this.router.navigate(['/product', productId]);
+  }
+
+  addToCart() {
+    alert('Add to Cart feature coming soon!');
   }
 }

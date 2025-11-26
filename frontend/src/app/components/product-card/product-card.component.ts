@@ -6,12 +6,13 @@ import { ProductService } from '../../services/product.service';
 import { Observable, of } from 'rxjs';
 import { MOCK_USERS, User } from '../../models/user.model';
 import { ProductImageCarouselComponent } from '../ui/product-image-carousel/product-image-carousel.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-product-card',
   templateUrl: './product-card.component.html',
   styleUrls: ['./product-card.component.css'],
-  imports: [CommonModule, ProductImageCarouselComponent],
+  imports: [CommonModule, ProductImageCarouselComponent, RouterLink],
 })
 export class ProductCardComponent implements OnInit {
   productId: string | null = null;
@@ -33,6 +34,10 @@ export class ProductCardComponent implements OnInit {
 
   getSeller(sellerId: string): User | undefined {
     return MOCK_USERS.find((user) => user.id === sellerId && user.role === 'seller');
+  }
+
+  addToCart() {
+    alert('Add to Cart feature coming soon!');
   }
 
   goBack() {

@@ -5,6 +5,7 @@ import { Product, MOCK_PRODUCTS } from '../../models/product.model';
 import { CATEGORIES } from '../../models/categories.model';
 import { AuthService } from '../../services/auth.service';
 import { MediaService } from '../../services/media.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-seller-dashboard',
@@ -28,6 +29,7 @@ export class SellerDashboardComponent implements OnInit {
   mediaService = inject(MediaService);
   authService = inject(AuthService);
   fb = inject(FormBuilder);
+  router = inject(Router);
 
   constructor() {
     this.productForm = this.fb.group({
@@ -57,6 +59,12 @@ export class SellerDashboardComponent implements OnInit {
   allowedTypes = ['image/jpeg', 'image/png']; // Only allow jpeg and png
   imageValidationError: string | null = null;
 
+  viewMyShop() {
+    const currentUser = this.authService.currentUserValue;
+    if (currentUser && currentUser.role === 'seller') {
+      this.router.navigate(['/seller-shop', currentUser.id]);
+    }
+  }
   openAddProductModal() {
     this.editIndex = null; // Null means "add mode" (not editing)
     this.productForm.reset(); // Blank form

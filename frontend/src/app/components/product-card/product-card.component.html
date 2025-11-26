@@ -14,14 +14,9 @@
                   [altText]="product.name"
                 >
                 </app-product-image-carousel>
-                <!-- <img *ngIf="product.images && product.images.length > 0; else noImg"
-                    [src]="product.images[0]"
-                    [alt]="product.name"
-                    class="w-100 product-image rounded"
-                    style="height: 600px; object-fit: cover;"> -->
                 <ng-template #noImg>
                   <div
-                    class="d-flex align-items-center justify-content-center bg-light text-muted rounded"
+                    class="d-flex align-items-center justify-content-center bg-light text-white rounded"
                     style="height: 300px"
                   >
                     No image
@@ -49,11 +44,19 @@
                         class="rounded-circle me-2"
                         style="width: 25px; height: 25px; object-fit: cover"
                       />
-                      <span class="fw seller-name">{{ seller.name }}</span>
+                      <a [routerLink]="['/seller-shop', seller.id]" class="fw seller-name">
+                        {{ seller.name }}
+                      </a>
+
+                      <!-- <span class="fw seller-name">{{ seller.name }}</span> -->
                     </div>
                   </ng-container>
                 </p>
-                <button class="btn btn-outline-secondary mb-2 w-100" disabled>
+                <button 
+                  class="btn btn-outline-secondary mb-2 w-100"
+                  (click)="addToCart();
+                  $event.stopPropagation()"
+                >
                   <i class="fas fa-shopping-cart me-2"></i> Add to Cart
                 </button>
               </div>
@@ -76,5 +79,5 @@
   </div>
 </div>
 <ng-template #loading>
-  <div class="text-center py-5 text-muted">Loading product details...</div>
+  <div class="text-center py-5 text-white">Loading product details...</div>
 </ng-template>

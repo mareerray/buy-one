@@ -1,0 +1,99 @@
+<!-- Seller Info Section -->
+<div class="container py-4">
+  <div *ngIf="seller" class="seller-info-card card shadow-sm p-4 mb-4">
+    <div class="d-flex flex-column align-items-center">
+      <!-- Avatar and Name Row -->
+      <div class="d-flex align-items-center mb-3">
+        <!-- Seller Avatar -->
+        <img
+          *ngIf="seller.avatar"
+          [src]="seller.avatar"
+          [alt]="seller.name"
+          class="seller-avatar rounded-circle me-3"
+        />
+        <div *ngIf="!seller.avatar" class="seller-avatar-placeholder rounded-circle me-3">
+          <i class="fas fa-user"></i>
+        </div>
+        
+        <!-- Seller Name and Badge -->
+        <div>
+          <h3 class="seller-name mb-1">{{ seller.name }}</h3>
+          <span class="badge bg-primary seller-badge">
+            <i class="fas fa-store me-1"></i>Verified Seller
+          </span>
+        </div>
+      </div>
+      
+      <!-- Message Button centered below -->
+      <button class="btn btn-outline-primary" (click)="sendMessage()">
+        <i class="fas fa-envelope me-2"></i>Send Message
+      </button>
+    </div>
+  </div>
+
+  <!-- No seller found message -->
+  <div *ngIf="!seller" class="alert alert-warning text-center">
+    Seller not found.
+  </div>
+</div>
+
+
+<!-- Products Section -->
+<div *ngIf="seller && sellerProducts.length === 0" class="text-center py-5 text-white">
+  This seller has no products listed yet.
+</div>
+
+<div *ngIf="seller && sellerProducts.length > 0">
+  <div class="container py-3">
+    <h4 class="mb-4">Products by {{ seller.name }}</h4>
+    <div class="row g-4">
+      <div *ngFor="let product of sellerProducts" class="col-12 col-md-6 col-lg-4">
+        <div class="card h-100 shadow-sm rounded">
+          <!-- Product Image with navigation control using Bootstrap Carousel -->
+          <app-product-image-carousel
+            [images]="product.images"
+            [carouselId]="'carousel-' + product.id"
+            [altText]="product.name"
+          >
+          </app-product-image-carousel>
+
+          <ng-template #noImg>
+            <div
+              class="d-flex align-items-center justify-content-center bg-light text-white card-img-top"
+              style="height: 300px; border-radius: 0.75rem 0.75rem 0 0"
+            >
+              No image
+            </div>
+          </ng-template>
+
+          <div class="card-body d-flex flex-column">
+            <!-- Product Name -->
+            <h5 class="card-title mb-1 fw-bold">{{ product.name }}</h5>
+            <!-- Category Badge -->
+            <span class="badge bg-secondary mb-3">{{ product.category }}</span>
+            <!-- Description -->
+            <p class="card-text mb-2 flex-grow-1">{{ product.description }}</p>
+            <!-- Price -->
+            <p class="text-primary mb-2 fw-bold text-end price-text">€{{ product.price }}</p>
+            <!-- Buttons -->
+            <div class="mt-auto d-flex gap-2">
+              <button
+                class="btn btn-outline-primary w-50"
+                (click)="viewProductDetail(product.id); $event.stopPropagation()"
+              >
+                <i class="fas fa-eye me-2"></i>View Detail
+              </button>
+              <button 
+                class="btn btn-outline-secondary w-50"
+                (click)="addToCart(); 
+                $event.stopPropagation()"
+              >
+                <i class="fas fa-shopping-cart me-2"></i>Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

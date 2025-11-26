@@ -184,6 +184,6 @@ body {
   background-color: transparent;
 }
 
-.fw-bold {
+.fw-bold, .seller-name {
   color: var(--link);
 }

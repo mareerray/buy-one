@@ -20,22 +20,22 @@ import { InfiniteSliderComponent } from '../ui/infinite-slider/infinite-slider.c
   templateUrl: './home.component.html',
 })
 export class HomeComponent implements OnInit {
-  sellers = MOCK_USERS.filter((user) => user.role === 'seller');
-  products: Product[] = MOCK_PRODUCTS;
-
-  // Format sellers for the slider
-  sliderSellers = this.sellers.map((seller) => ({
+  // Format sellers for the slider - INCLUDE ID
+  sliderSellers = MOCK_USERS.filter((user) => user.role === 'seller').map((seller) => ({
+    id: seller.id,
     avatar: seller.avatar ?? 'assets/avatars/user-default.png',
     name: seller.name,
   }));
 
-  // Format products for the slider (use the FIRST image for each product)
-  sliderProducts = this.products.map((product) => ({
+  // Format products for the slider - INCLUDE ID
+  sliderProducts = MOCK_PRODUCTS.map((product) => ({
+    id: product.id,
     image: Array.isArray(product.images) ? product.images[0] : product.images,
   }));
 
   ngOnInit() {
     console.log('sliderSellers in HomeComponent:', this.sliderSellers);
+    console.log('sliderProducts in HomeComponent:', this.sliderProducts);
   }
 
   shopNow() {}
