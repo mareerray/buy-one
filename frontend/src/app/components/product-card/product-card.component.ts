@@ -13,7 +13,6 @@ import { ProductImageCarouselComponent } from '../ui/product-image-carousel/prod
   styleUrls: ['./product-card.component.css'],
   imports: [CommonModule, ProductImageCarouselComponent],
 })
-
 export class ProductCardComponent implements OnInit {
   productId: string | null = null;
   product$: Observable<Product | undefined> = of(undefined);
@@ -48,7 +47,7 @@ export class ProductCardComponent implements OnInit {
     this.isFading = true;
     setTimeout(() => {
       this.isFading = false;
-        this.productService.getProducts().subscribe((products) => {
+      this.productService.getProducts().subscribe((products) => {
         const currentIndex = products.findIndex((p) => p.id === currentProductId);
         const nextIndex = (currentIndex + 1) % products.length;
         const nextProductId = products[nextIndex].id;
