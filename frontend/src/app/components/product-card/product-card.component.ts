@@ -13,6 +13,7 @@ import { ProductImageCarouselComponent } from '../ui/product-image-carousel/prod
   styleUrls: ['./product-card.component.css'],
   imports: [CommonModule, ProductImageCarouselComponent],
 })
+
 export class ProductCardComponent implements OnInit {
   productId: string | null = null;
   product$: Observable<Product | undefined> = of(undefined);
@@ -20,6 +21,8 @@ export class ProductCardComponent implements OnInit {
   private route: ActivatedRoute = inject(ActivatedRoute);
 
   private productService: ProductService = inject(ProductService);
+
+  isFading = false;
 
   ngOnInit() {
     this.productId = this.route.snapshot.paramMap.get('id');
@@ -34,16 +37,24 @@ export class ProductCardComponent implements OnInit {
   }
 
   goBack() {
-    window.history.back();
+    this.isFading = true;
+    setTimeout(() => {
+      this.isFading = false;
+      window.history.back();
+    }, 350);
   }
 
   nextProduct(currentProductId: string) {
-    this.productService.getProducts().subscribe((products) => {
-      const currentIndex = products.findIndex((p) => p.id === currentProductId);
-      const nextIndex = (currentIndex + 1) % products.length;
-      const nextProductId = products[nextIndex].id;
-      // Navigate to the next product
-      window.location.href = `/product/${nextProductId}`;
-    });
+    this.isFading = true;
+    setTimeout(() => {
+      this.isFading = false;
+        this.productService.getProducts().subscribe((products) => {
+        const currentIndex = products.findIndex((p) => p.id === currentProductId);
+        const nextIndex = (currentIndex + 1) % products.length;
+        const nextProductId = products[nextIndex].id;
+        // Navigate to the next product
+        window.location.href = `/product/${nextProductId}`;
+      });
+    }, 350);
   }
 }
