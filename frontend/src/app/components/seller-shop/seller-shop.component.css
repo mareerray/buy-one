@@ -56,6 +56,11 @@
   border-color: var(--link);
 }
 
+.btn-outline-primary:hover {
+  color: white;
+  border-color: var(--link);
+}
+
 .btn-outline-secondary {
   color: var(--text-secondary);
   border-color: var(--text-secondary);

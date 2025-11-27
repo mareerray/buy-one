@@ -1,87 +1,79 @@
-<div class="container py-5">
-  <div class="row">
-    <!-- Sidebar on large, top on small -->
-    <nav 
-      class="col-12 d-md-none mb-3"
-      *ngIf="categories.length">
-      <!-- Mobile: Horizontal scrollable list -->
-      <ul class="nav nav-pills flex-row overflow-auto">
-        <li class="nav-item" *ngFor="let cat of categories">
-          <a
-            class="nav-link"
-            [class.active]="cat.id === selectedCategoryId"
-            (click)="selectCategory(cat.id)">
-            <i [ngClass]="cat.icon"></i>
-            {{ cat.name }}
-          </a>
-        </li>
-      </ul>
-    </nav>
+<div class="container py-5 categories-page">
+    <div class="row">
+      <!-- Mobile nav -->
+      <nav 
+        class="col-12 d-md-none mb-3"
+        *ngIf="categories.length">
+        <!-- Mobile: title + divider -->
+        <h5 class="sidebar-title text-uppercase text-white mb-2">
+          Browse categories
+        </h5>
+        <div class="sidebar-divider mb-2"></div>
 
-    <div class="col-md-3 col-lg-2 d-none d-md-block">
-      <!-- Sidebar with categories -->
-      <aside class="sidebar">
-        <ul>
-          <li *ngFor="let cat of categories"
-              (click)="selectCategory(cat.id)"
-              [class.active]="cat.id === selectedCategoryId">
-            <i [ngClass]="cat.icon"></i>
-            <span>{{ cat.name }}</span>
+        <!-- Mobile: Horizontal scrollable list -->
+        <ul class="nav nav-pills flex-row overflow-auto">
+          <li class="nav-item" *ngFor="let cat of categories">
+            <a
+              class="nav-link"
+              [class.active]="cat.id === selectedCategoryId"
+              (click)="selectCategory(cat.id)">
+              <i [ngClass]="cat.icon"></i>
+              {{ cat.name }}
+            </a>
           </li>
         </ul>
-      </aside>
-    </div>
-    <!-- Main grid area -->
-    <!-- <div class="container py-3"> -->
-    <div class="col-12 col-md-9 col-lg-10 ps-md-4 ps-lg-5">
-      <div class="row g-4">
-        <div *ngFor="let product of filteredProducts" class="col-12 col-sm-6 col-lg-4">
-          <div class="card h-100 shadow-sm rounded">
-            <!-- Product Image (or carousel, if you have <app-product-image-carousel>) -->
-            <app-product-image-carousel
-              [images]="product.images"
-              [carouselId]="'carousel-' + product.id"
-              [altText]="product.name"
-            ></app-product-image-carousel>
-
-            <!-- Fallback for no images -->
-            <ng-template #noImg>
-              <div
-                class="d-flex align-items-center justify-content-center bg-light text-white card-img-top"
-                style="height: 300px; border-radius: 0.75rem 0.75rem 0 0"
-              >
-                No image
-              </div>
-            </ng-template>
-
-            <div class="card-body d-flex flex-column">
-              <h5 class="card-title mb-1 fw-bold">{{ product.name }}</h5>
-              <span class="badge bg-secondary mb-3">{{ product.category }}</span>
-              <p class="card-text mb-2 flex-grow-1">{{ product.description }}</p>
-              <p class="text-primary mb-2 fw-bold text-end price-text">€{{ product.price }}</p>
-
-              <div class="mt-auto d-flex gap-2">
-                <button
-                  class="btn btn-outline-primary w-50"
-                  (click)="viewProductDetail(product.id); $event.stopPropagation()"
-                >
-                  <i class="fas fa-eye me-2"></i>View Detail
-                </button>
-                <button 
-                  class="btn btn-outline-secondary w-50"
-                  (click)="addToCart(); $event.stopPropagation()"
-                >
-                  <i class="fas fa-shopping-cart me-2"></i>Add to Cart
-                </button>
-              </div>
+      </nav>
+      <!-- Sidebar (md+) -->
+      <div class="col-md-3 col-lg-2 d-none d-md-block">
+        <!-- Sidebar with categories -->
+        <aside class="sidebar">
+          <h5 class="sidebar-title text-uppercase text-white mb-3">
+            Browse categories
+          </h5>
+          <!-- Divider under title -->
+          <div class="sidebar-divider"></div>
+          <ul>
+            <li *ngFor="let cat of categories"
+                (click)="selectCategory(cat.id)"
+                [class.active]="cat.id === selectedCategoryId">
+              <i [ngClass]="cat.icon"></i>
+              <span>{{ cat.name }}</span>
+            </li>
+          </ul>
+        </aside>
+      </div>
+      <!-- Main grid area -->
+      <div class="col-12 col-md-9 col-lg-10 product-grid-wrapper">
+        <!-- Category header -->
+        <header class="category-header mb-4" *ngIf="selectedCategory">
+          <div class="d-flex align-items-center gap-3 mb-2">
+            <!-- <div class="category-header-icon d-flex align-items-center justify-content-center">
+              <i [ngClass]="selectedCategory.icon"></i>
+            </div> -->
+            <div>
+              <h2 class="mb-1 fw-bold">{{ selectedCategory.name }}</h2>
+              <p class="mb-0 text-white">
+                {{ selectedCategory.description }}
+              </p>
             </div>
+          </div>
+        </header>
+        <!-- existing product grid -->
+        <div class="row g-4">
+          <div *ngFor="let product of filteredProducts" class="col-12 col-sm-6 col-lg-4">
+            <app-product-grid-card
+              [product]="product"
+              [seller]="getSeller(product.sellerId)"
+              [showSeller]="true"
+              [showCategory]="false"
+              (view)="viewProductDetail($event)"
+              (addToCartClick)="addToCart()">
+            </app-product-grid-card>
           </div>
         </div>
       </div>
     </div>
-  </div>
 </div>
-
   <!-- <section class="product-grid">
     <div *ngFor="let product of filteredProducts" class="card">
       <img [src]="product.images[0]" alt="{{ product.name }}">

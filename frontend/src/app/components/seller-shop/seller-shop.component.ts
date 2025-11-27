@@ -3,14 +3,14 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MOCK_PRODUCTS, Product } from '../../models/product.model';
 import { MOCK_USERS, User } from '../../models/user.model';
-import { ProductImageCarouselComponent } from '../ui/product-image-carousel/product-image-carousel.component';
+import { ProductGridCardComponent } from '../product-grid-card/product-grid-card.component';
 
 @Component({
   selector: 'app-seller-shop',
   templateUrl: './seller-shop.component.html',
   styleUrls: ['./seller-shop.component.css'],
   standalone: true,
-  imports: [CommonModule, ProductImageCarouselComponent],
+  imports: [CommonModule, ProductGridCardComponent],
 })
 export class SellerShopComponent implements OnInit {
   seller: User | undefined;
@@ -37,6 +37,11 @@ export class SellerShopComponent implements OnInit {
 
   addToCart() {
     alert('Add to Cart feature coming soon!');
+  }
+
+  getSeller(sellerId: string): User | undefined {
+    // Returns the User object for the seller
+    return MOCK_USERS.find((user) => user.id === sellerId && user.role === 'seller');
   }
 
   sendMessage() {

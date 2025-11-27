@@ -22,13 +22,13 @@
         Products List
         <div class="d-flex gap-2">
           <button
-            class="btn btn-outline-primary"
+            class="btn btn-outline-primary hover-lift"
             (click)="viewMyShop()"
           >
             <i class="fas fa-store me-2"></i>View My Shop
           </button>
         </div>
-        <button class="btn btn-success" (click)="openAddProductModal()">
+        <button class="btn btn-success hover-lift" (click)="openAddProductModal()">
           <i class="fa fa-plus me-1"></i> Add New Product
         </button>
       </h3>
@@ -58,8 +58,8 @@
               €{{ product.price }}<br />
               {{ product.quantity }} pc
             </div>
-            <button class="btn btn-sm btn-warning me-2" (click)="editProduct(i)">Edit</button>
-            <button class="btn btn-sm btn-danger" (click)="deleteProduct(i)">Delete</button>
+            <button class="btn btn-sm btn-warning me-2 hover-lift" (click)="editProduct(i)">Edit</button>
+            <button class="btn btn-sm btn-danger hover-lift" (click)="deleteProduct(i)">Delete</button>
           </div>
         </li>
       </ul>
@@ -85,7 +85,7 @@
         <h5 class="modal-title">
             {{ editIndex === null ? "Add Product" : "Edit Product" }}
         </h5>
-        <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="cancelEdit()"></button>
+        <button type="button" class="btn-close btn-close-white hover-lift" aria-label="Close" (click)="cancelEdit()"></button>
       </div>
       <div class="modal-body">
         <form [formGroup]="productForm" (ngSubmit)="submitProduct()" novalidate>
@@ -202,7 +202,7 @@
                 (dragleave)="isDragActive = false"
               >
                 <div class="drop-zone-content text-center">
-                  <i class="fas fa-upload fa-2x text-primary mb-2"></i>
+                  <i class="fas fa-upload fa-2x text-primary mb-2 hover-lift"></i>
                   <div>Drag & drop images here or click to select files</div>
                   <input
                     #fileInput
@@ -224,20 +224,20 @@
                 <div *ngFor="let img of imagePreviews; let i = index" class="position-relative">
                   <img [src]="img.dataUrl" class="img-thumbnail" width="120" />
                   <button
-                    class="btn btn-danger btn-sm position-absolute top-0 end-0 btn-small-x"
+                    class="btn btn-danger btn-sm position-absolute top-0 end-0 btn-small-x hover-lift"
                     (click)="removeImage(i)"
                   >
                     ✖
                   </button>
                   <button
-                    class="btn btn-secondary btn-sm position-absolute bottom-0 end-0"
+                    class="btn btn-secondary btn-sm position-absolute bottom-0 end-0 hover-lift"
                     (click)="moveImageUp(i)"
                     *ngIf="i > 0"
                   >
                     ↑
                   </button>
                   <button
-                    class="btn btn-secondary btn-sm position-absolute bottom-0 start-0"
+                    class="btn btn-secondary btn-sm position-absolute bottom-0 start-0 hover-lift"
                     (click)="moveImageDown(i)"
                     *ngIf="i < imagePreviews.length - 1"
                   >
@@ -248,8 +248,8 @@
             </div>
           </div>
 <!-- ...all your form fields here... -->
-          <button type="submit" class="btn btn-primary">Save Product</button>
-          <button type="button" class="btn btn-secondary ms-2" (click)="cancelEdit()">Cancel</button>
+          <button type="submit" class="btn btn-primary hover-lift">Save Product</button>
+          <button type="button" class="btn btn-secondary ms-2 hover-lift" (click)="cancelEdit()">Cancel</button>
         </form>
       </div>
     </div>

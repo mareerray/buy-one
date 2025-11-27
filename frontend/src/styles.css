@@ -140,7 +140,7 @@ body {
 }
 
 .btn-primary:hover {
-  color: var(--link);
+  color: white;
 }
 
 .btn-primary:hover,
@@ -149,6 +149,20 @@ body {
   color: var(--text-primary);
   background-color: var(--link-hover);
   border: none;
+}
+
+/* Reusable hover-lift style */
+.hover-lift {
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    box-shadow 0.2s,
+    transform 0.2s;
+}
+
+.hover-lift:hover {
+  box-shadow: 0 8px 24px rgba(69, 85, 108, 0.18);
+  transform: translateY(-4px) scale(1.03);
 }
 
 .text-primary {
@@ -186,4 +200,19 @@ body {
 
 .fw-bold, .seller-name {
   color: var(--link);
+}
+
+/* Scale card to ~2/3 of its size while keeping it centered */
+.product-card {
+  transform: scale(0.95);
+  transform-origin: top center;
+}
+
+.product-description {
+  font-size: 0.9rem;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3; /* number of lines */
+  overflow: hidden;
+  line-clamp: 3;
 }
