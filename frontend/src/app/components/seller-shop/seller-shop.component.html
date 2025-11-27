@@ -1,0 +1,62 @@
+<!-- Seller Info Section -->
+<div class="container py-4">
+  <div *ngIf="seller" class="seller-info-card card shadow-sm p-4 mb-4">
+    <div class="d-flex flex-column align-items-center">
+      <!-- Avatar and Name Row -->
+      <div class="d-flex align-items-center mb-3">
+        <!-- Seller Avatar -->
+        <img
+          *ngIf="seller.avatar"
+          [src]="seller.avatar"
+          [alt]="seller.name"
+          class="seller-avatar rounded-circle me-3"
+        />
+        <div *ngIf="!seller.avatar" class="seller-avatar-placeholder rounded-circle me-3">
+          <i class="fas fa-user"></i>
+        </div>
+        
+        <!-- Seller Name and Badge -->
+        <div>
+          <h3 class="seller-name mb-1">{{ seller.name }}</h3>
+          <span class="badge bg-primary seller-badge">
+            <i class="fas fa-store me-1"></i>Verified Seller
+          </span>
+        </div>
+      </div>
+      
+      <!-- Message Button centered below -->
+      <button class="btn btn-outline-primary hover-lift" (click)="sendMessage()">
+        <i class="fas fa-envelope me-2"></i>Send Message
+      </button>
+    </div>
+  </div>
+
+  <!-- No seller found message -->
+  <div *ngIf="!seller" class="alert alert-warning text-center">
+    Seller not found.
+  </div>
+</div>
+
+
+<!-- Products Section -->
+<div *ngIf="seller && sellerProducts.length === 0" class="text-center py-5 text-white">
+  This seller has no products listed yet.
+</div>
+
+<div *ngIf="seller && sellerProducts.length > 0">
+  <div class="container py-3">
+    <h4 class="mb-4">Products by {{ seller.name }}</h4>
+    <div class="row g-4">
+      <div *ngFor="let product of sellerProducts" class="col-12 col-md-6 col-lg-4">
+        <app-product-grid-card
+          [product]="product"
+          [seller]="getSeller(product.sellerId)"
+          [showSeller]="true"
+          [showCategory]="false"
+          (view)="viewProductDetail($event)"
+          (addToCartClick)="addToCart()">
+        </app-product-grid-card>      
+      </div>
+    </div>
+  </div>
+</div>

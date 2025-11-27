@@ -3,21 +3,22 @@ import { CommonModule } from '@angular/common'; // for ngClass, ngIf, ngFor
 import { FormsModule } from '@angular/forms'; // for ngModel (template-driven forms)
 import { MOCK_PRODUCTS, Product } from '../../models/product.model';
 import { MOCK_USERS, User } from '../../models/user.model';
-import { ProductImageCarouselComponent } from '../ui/product-image-carousel/product-image-carousel.component';
 import { Router } from '@angular/router';
+import { ProductGridCardComponent } from '../product-grid-card/product-grid-card.component';
 
 @Component({
   selector: 'app-product-listing',
   templateUrl: './product-listing.component.html',
   styleUrls: ['./product-listing.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, ProductImageCarouselComponent],
+  imports: [CommonModule, FormsModule, ProductGridCardComponent],
 })
 export class ProductListingComponent implements OnInit {
   products: Product[] = [];
   searchQuery: string = '';
   categoryFilter: string = 'all';
   sortBy: string = 'name';
+  private router = inject(Router); //
 
   ngOnInit() {
     this.products = MOCK_PRODUCTS;
@@ -57,7 +58,11 @@ export class ProductListingComponent implements OnInit {
   }
 
   viewProductDetail(productId: string) {
-    const router = inject(Router);
-    router.navigate(['/product', productId]);
+    this.router.navigate(['/product', productId]);
+  }
+
+  addToCart(productId: string) {
+    alert('Add to Cart feature coming soon!');
+    console.log('add to cart', productId);
   }
 }

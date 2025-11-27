@@ -6,12 +6,13 @@ import { ProductService } from '../../services/product.service';
 import { Observable, of } from 'rxjs';
 import { MOCK_USERS, User } from '../../models/user.model';
 import { ProductImageCarouselComponent } from '../ui/product-image-carousel/product-image-carousel.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-product-card',
   templateUrl: './product-card.component.html',
   styleUrls: ['./product-card.component.css'],
-  imports: [CommonModule, ProductImageCarouselComponent],
+  imports: [CommonModule, ProductImageCarouselComponent, RouterLink],
 })
 export class ProductCardComponent implements OnInit {
   productId: string | null = null;
@@ -20,6 +21,8 @@ export class ProductCardComponent implements OnInit {
   private route: ActivatedRoute = inject(ActivatedRoute);
 
   private productService: ProductService = inject(ProductService);
+
+  isFading = false;
 
   ngOnInit() {
     this.productId = this.route.snapshot.paramMap.get('id');
@@ -33,17 +36,29 @@ export class ProductCardComponent implements OnInit {
     return MOCK_USERS.find((user) => user.id === sellerId && user.role === 'seller');
   }
 
+  addToCart() {
+    alert('Add to Cart feature coming soon!');
+  }
+
   goBack() {
-    window.history.back();
+    this.isFading = true;
+    setTimeout(() => {
+      this.isFading = false;
+      window.history.back();
+    }, 350);
   }
 
   nextProduct(currentProductId: string) {
-    this.productService.getProducts().subscribe((products) => {
-      const currentIndex = products.findIndex((p) => p.id === currentProductId);
-      const nextIndex = (currentIndex + 1) % products.length;
-      const nextProductId = products[nextIndex].id;
-      // Navigate to the next product
-      window.location.href = `/product/${nextProductId}`;
-    });
+    this.isFading = true;
+    setTimeout(() => {
+      this.isFading = false;
+      this.productService.getProducts().subscribe((products) => {
+        const currentIndex = products.findIndex((p) => p.id === currentProductId);
+        const nextIndex = (currentIndex + 1) % products.length;
+        const nextProductId = products[nextIndex].id;
+        // Navigate to the next product
+        window.location.href = `/product/${nextProductId}`;
+      });
+    }, 350);
   }
 }

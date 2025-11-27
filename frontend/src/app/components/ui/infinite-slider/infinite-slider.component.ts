@@ -10,8 +10,8 @@ import { Router } from '@angular/router';
   standalone: true,
 })
 export class InfiniteSliderComponent {
-  @Input() sellers: { avatar: string; name: string }[] = [];
-  @Input() products: { image: string }[] = [];
+  @Input() sellers: { id: string; avatar: string; name: string }[] = [];
+  @Input() products: { id: string; image: string }[] = [];
   private router = inject(Router);
 
   // Make a new array that repeats sellers, e.g. 3x
@@ -20,6 +20,16 @@ export class InfiniteSliderComponent {
   }
   get extendedProducts() {
     return [...this.products, ...this.products, ...this.products, ...this.products];
+  }
+
+  // Navigate to seller shop
+  viewSellerShop(sellerId: string) {
+    this.router.navigate(['/seller-shop', sellerId]);
+  }
+
+  // Navigate to product detail
+  viewProductDetail(productId: string) {
+    this.router.navigate(['/product', productId]);
   }
 
   shopNow() {

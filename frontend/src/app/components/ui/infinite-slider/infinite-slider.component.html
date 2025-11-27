@@ -2,10 +2,21 @@
     <div class="slider-row sellers-row">
         <div class="text-center mb-4">
             <h2 class="mb-3 fw-bold"> Our Sellers & Products </h2>
+            <p class="text-white mb-3">
+                <i class="fas fa-hand-pointer me-2"></i>
+                    Click a seller to visit their shop, or a product to see its details.
+            </p>
+            <!-- <p class="text-white">
+                <i class="fas fa-hand-pointer me-2"></i>Click on any seller to visit their shop
+            </p> -->
         </div>
         <div class="slider-list sellers-list">
             <ng-container *ngFor="let seller of extendedSellers">
-            <div class="slider-item">
+            <div 
+                class="slider-item seller-item"
+                (click)="viewSellerShop(seller.id)"
+                style="cursor: pointer;"
+            >
                 <img class="avatar" [src]="seller.avatar" alt="Seller avatar" />
                 <div class="seller-name">{{ seller.name }}</div>
             </div>
@@ -15,15 +26,23 @@
         <div class="slider-row products-row" >
         <div class="slider-list products-list">
             <ng-container *ngFor="let product of extendedProducts">
-            <div class="slider-item">
+            <div 
+                class="slider-item product-item"
+                (click)="viewProductDetail(product.id)"
+                style="cursor: pointer;"
+            >
                 <img class="product-image" [src]="product.image" alt="Product" />
             </div>
             </ng-container>
         </div>
+    
         <div class="text-center mb-4">
             <h2 class="mb-3 fw-bold"></h2>
-            <button class="btn btn-primary me-2" (click)="shopNow()">Browse Products</button>
-            <button class="btn btn-primary me-2" (click)="browseCollections()">Browse Collections</button>
+            <!-- <p class="text-white mb-3">
+                <i class="fas fa-hand-pointer me-2"></i>Click on any product to see details
+            </p>  -->
+            <button class="btn btn-primary me-2 hover-lift" (click)="shopNow()">Browse Products</button>
+            <button class="btn btn-primary me-2 hover-lift" (click)="browseCollections()">Browse Collections</button>
         </div>
     </div>
 </div>
