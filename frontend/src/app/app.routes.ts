@@ -8,6 +8,7 @@ import { ProductCardComponent } from './components/product-card/product-card.com
 import { CategoriesComponent } from './components/categories/categories.component';
 import { SellerDashboardComponent } from './components/seller-dashboard/seller-dashboard.component';
 import { SellerShopComponent } from './components/seller-shop/seller-shop.component';
+import { AboutComponent } from './components/about/about.component';
 import { SellerGuard } from './guards/seller.guard';
 
 export const routes: Routes = [
@@ -21,4 +22,5 @@ export const routes: Routes = [
   { path: 'categories', component: CategoriesComponent },
   { path: 'seller-dashboard', component: SellerDashboardComponent, canActivate: [SellerGuard] },
   { path: 'seller-shop/:id', component: SellerShopComponent },
+  { path: 'about', component: AboutComponent },
 ];

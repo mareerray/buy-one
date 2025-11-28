@@ -1,7 +1,7 @@
 export interface Category {
   id: string;
   name: string;
-  icon: string; // Instead of ReactNode, pass SVG or CSS class
+  icon: string;
   description: string;
 }
 
