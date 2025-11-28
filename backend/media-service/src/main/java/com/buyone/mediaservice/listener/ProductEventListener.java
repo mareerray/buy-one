@@ -11,12 +11,13 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ProductEventListener {
     
-    @Autowired
     private final MediaRepository mediaRepository;
-    @Autowired
     private final StorageService storageService;
     
-    @KafkaListener(topics = "product-events", groupId = "media-service")
+    @KafkaListener(
+            topics = "${app.kafka.topic.product-deleted}",
+            groupId = "media-service"
+    )
     public void onProductDeleted(ProductDeletedEvent event) {
         // Find all media for this product
         var medias = mediaRepository.findAllByProductId(event.getProductId());

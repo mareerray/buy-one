@@ -1,6 +1,7 @@
 package com.buyone.mediaservice.service;
 
 import com.buyone.mediaservice.response.MediaResponse;
+import com.buyone.mediaservice.response.MediaListResponse;
 import com.buyone.mediaservice.response.DeleteMediaResponse;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -9,4 +10,5 @@ public interface MediaService {
     MediaResponse getMedia(String id);
     MediaResponse updateMedia(MultipartFile file, String mediaId);
     DeleteMediaResponse deleteMedia(String id);
+    MediaListResponse mediaListForProduct(String productId);
 }

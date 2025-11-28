@@ -3,6 +3,7 @@ package com.buyone.mediaservice.service.impl;
 import com.buyone.mediaservice.model.Media;
 import com.buyone.mediaservice.repository.MediaRepository;
 import com.buyone.mediaservice.response.MediaResponse;
+import com.buyone.mediaservice.response.DeleteMediaResponse;
 import com.buyone.mediaservice.service.MediaService;
 import com.buyone.mediaservice.service.StorageService;
 import com.buyone.mediaservice.exception.MediaNotFoundException;

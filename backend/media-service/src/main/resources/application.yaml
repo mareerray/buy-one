@@ -1,3 +1,18 @@
 spring:
   application:
     name: Media Service
+
+
+app:
+  kafka:
+    topic:
+      product-deleted: product.deleted
+
+cloudflare:
+  r2:
+    account-id: "ed2494a6dd015fe932f0eb26102d514d"
+    access-key-id: "${R2_ACCESS_KEY_ID}"
+    secret-access-key: "${R2_SECRET_ACCESS_KEY}"
+    bucket: "buyone-images"
+    endpoint: "https://ed2494a6dd015fe932f0eb26102d514d.r2.cloudflarestorage.com"
+    region: "auto"
