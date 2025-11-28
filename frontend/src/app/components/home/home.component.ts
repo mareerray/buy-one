@@ -1,25 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeroComponent } from '../ui/hero/hero.component';
-// import { CategoriesComponent } from '../categories/categories.component';
-// import { ProductListingComponent } from '../product-listing/product-listing.component';
 import { MOCK_PRODUCTS } from '../../models/product.model';
 import { MOCK_USERS } from '../../models/user.model';
+import { CATEGORIES } from '../../models/categories.model';
 import { InfiniteSliderComponent } from '../ui/infinite-slider/infinite-slider.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [
-    CommonModule,
-    HeroComponent,
-    // CategoriesComponent,
-    // ProductListingComponent,
-    InfiniteSliderComponent,
-  ],
+  imports: [CommonModule, HeroComponent, InfiniteSliderComponent],
   templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
+  private router = inject(Router);
+  categories = CATEGORIES;
+
   // Format sellers for the slider - INCLUDE ID
   sliderSellers = MOCK_USERS.filter((user) => user.role === 'seller').map((seller) => ({
     id: seller.id,
@@ -36,6 +34,11 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     console.log('sliderSellers in HomeComponent:', this.sliderSellers);
     console.log('sliderProducts in HomeComponent:', this.sliderProducts);
+  }
+  onCategoryClick(categoryId: string): void {
+    this.router.navigate(['/categories'], {
+      queryParams: { category: categoryId },
+    });
   }
 
   shopNow() {}

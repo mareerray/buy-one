@@ -47,10 +47,12 @@
         <!-- Category header -->
         <header class="category-header mb-4" *ngIf="selectedCategory">
           <div class="d-flex align-items-center gap-3 mb-2">
-            <!-- <div class="category-header-icon d-flex align-items-center justify-content-center">
-              <i [ngClass]="selectedCategory.icon"></i>
-            </div> -->
-            <div>
+            <div
+              class="d-flex align-items-center justify-content-center rounded-circle category-icon"
+              style="width: 48px; height: 48px">
+              <i [ngClass]="selectedCategory.icon" style="font-size: 1.4rem"></i>
+            </div>
+            <div>           
               <h2 class="mb-1 fw-bold">{{ selectedCategory.name }}</h2>
               <p class="mb-0 text-white">
                 {{ selectedCategory.description }}
