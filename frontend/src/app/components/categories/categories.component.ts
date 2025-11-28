@@ -4,7 +4,7 @@ import { CATEGORIES } from '../../models/categories.model';
 import { MOCK_PRODUCTS } from '../../models/product.model';
 import { MOCK_USERS, User } from '../../models/user.model';
 import { ProductGridCardComponent } from '../product-grid-card/product-grid-card.component';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-categories',
@@ -18,7 +18,17 @@ export class CategoriesComponent {
   categories = CATEGORIES;
   products = MOCK_PRODUCTS;
   selectedCategoryId = this.categories[0].id;
-  private rauter = inject(Router);
+  // private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
+  constructor() {
+    this.route.queryParamMap.subscribe((params) => {
+      const categoryFromUrl = params.get('category');
+      if (categoryFromUrl && this.categories.some((cat) => cat.id === categoryFromUrl)) {
+        this.selectedCategoryId = categoryFromUrl;
+      }
+    });
+  }
 
   selectCategory(id: string) {
     this.selectedCategoryId = id;
