@@ -11,3 +11,8 @@ color: #f9fafb;
 border-radius: 0.75rem;
 padding: 2.5rem 2rem;
 }
+
+.narrow-text {
+    color: var(--link);
+    font-size: 2rem;
+}
