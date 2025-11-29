@@ -25,9 +25,20 @@ export class HeroComponent implements OnInit, OnDestroy {
   shopNow() {
     this.router.navigate(['/product-listing']);
   }
-  registerSeller() {
+  onSellWithUsClick(): void {
+    const user = this.authService.currentUserValue; // or however you read it
+    const isSeller = user?.role === 'seller';
+
+    if (isSeller) {
+      this.router.navigate(['/seller-dashboard']);
+    } else {
+      this.registerSeller(); // uses your existing method
+    }
+  }
+
+  registerSeller(): void {
     this.authService.logout();
-    this.router.navigate(['/signup']);
+    this.router.navigate(['/signup']); // seller sign-up page
   }
 
   browseCollections() {
