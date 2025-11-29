@@ -9,11 +9,14 @@ import com.buyone.mediaservice.service.StorageService;
 import com.buyone.mediaservice.exception.MediaNotFoundException;
 import com.buyone.mediaservice.exception.InvalidFileException;
 import com.buyone.mediaservice.exception.ConflictException;
+import com.buyone.mediaservice.exception.ForbiddenException;
+import com.buyone.mediaservice.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Instant;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,20 +24,14 @@ public class MediaServiceImpl implements MediaService {
     
     private final MediaRepository mediaRepository;
     private final StorageService storageService;
+    private final SecurityUtils securityUtils;
     
     private static final int MAX_IMAGES_PER_PRODUCT = 5;
+    private static final long MAX_FILE_SIZE_BYTES = 2L * 1024 * 1024;
     
     @Override
     public MediaResponse uploadImage(MultipartFile file, String productId) {
-        if (file == null || file.isEmpty()) {
-            throw new InvalidFileException("No file provided!");
-        }
-        if (file.getSize() > 2 * 1024 * 1024) {
-            throw new InvalidFileException("File exceeds 2MB size limit!");
-        }
-        if (file.getContentType() == null || !file.getContentType().startsWith("image/")) {
-            throw new InvalidFileException("Only image files are allowed!");
-        }
+        validateImageFile(file);
         
         long imageCount = mediaRepository.countByProductId(productId);
         if (imageCount >= MAX_IMAGES_PER_PRODUCT) {
@@ -68,59 +65,79 @@ public class MediaServiceImpl implements MediaService {
         Media media = mediaRepository.findById(id)
                 .orElseThrow(() -> new MediaNotFoundException(id));
         String url = "/media/images/" + media.getId();
-        return new MediaResponse(media.getId(), media.getProductId(), url, media.getCreatedAt());
+        return new MediaResponse(
+                media.getId(),
+                media.getProductId(),
+                url,
+                media.getCreatedAt()
+        );
     }
     
     @Override
     public MediaResponse updateMedia(MultipartFile file, String mediaId) {
-        // Validate file
-        if (file == null || file.isEmpty()) {
-            throw new InvalidFileException("No file provided!");
-        }
-        if (file.getSize() > 2 * 1024 * 1024) {
-            throw new InvalidFileException("File exceeds 2MB size limit!");
-        }
-        if (file.getContentType() == null || !file.getContentType().startsWith("image/")) {
-            throw new InvalidFileException("Only image files are allowed!");
-        }
+        validateImageFile(file);
         
-        // Find the existing Media entity
         Media media = mediaRepository.findById(mediaId)
                 .orElseThrow(() -> new MediaNotFoundException(mediaId));
-        // Optionally: check productId matches (to prevent mix-ups)
-        if (!media.getProductId().equals(expectedProductId)) {
-            throw new ForbiddenException("This media does not belong to the specified product.");
-        }
-        // Optionally: check ownership (seller can only modify own images)
-        // Suppose you pass or inject currentUserId somehow
-        if (!currentUserId.equals(ownerUserId)) {
-            throw new ForbiddenException("You do not have permission to modify this media.");
-        }
         
+        // TODO: later – read current user from SecurityUtils and enforce ownership.
         
-        // Delete old file
         storageService.delete(media.getImagePath());
         
-        // Store new file
         String newImagePath = storageService.store(file, media.getId());
         
-        // Update media metadata
         media.setImagePath(newImagePath);
-        media.setCreatedAt(Instant.now()); // if you want to track updates
+        media.setCreatedAt(Instant.now());
         
         media = mediaRepository.save(media);
         
         String url = "/media/images/" + media.getId();
         
-        return new MediaResponse(media.getId(), media.getProductId(), url, media.getCreatedAt());
+        return new MediaResponse(
+                media.getId(),
+                media.getProductId(),
+                url,
+                media.getCreatedAt()
+        );
     }
     
     @Override
     public DeleteMediaResponse deleteMedia(String id) {
         Media media = mediaRepository.findById(id)
                 .orElseThrow(() -> new MediaNotFoundException(id));
+        
+        // TODO: later – enforce ownership with SecurityUtils
+        
         storageService.delete(media.getImagePath());
         mediaRepository.deleteById(id);
         return new DeleteMediaResponse(id, "Deleted successfully");
     }
+    
+    @Override
+    public List<MediaResponse> mediaListForProduct(String productId) {
+        var medias = mediaRepository.findAllByProductId(productId);
+        
+        return medias.stream()
+                .map(m -> new MediaResponse(
+                        m.getId(),
+                        m.getProductId(),
+                        "/media/images/" + m.getId(),
+                        m.getCreatedAt()
+                ))
+                .toList();
+    }
+    
+    private void validateImageFile(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new InvalidFileException("No file provided!");
+        }
+        if (file.getSize() > MAX_FILE_SIZE_BYTES) {
+            throw new InvalidFileException("File exceeds 2MB size limit!");
+        }
+        String contentType = file.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            throw new InvalidFileException("Only image files are allowed!");
+        }
+    }
+    
 }

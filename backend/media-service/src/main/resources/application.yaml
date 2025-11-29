@@ -1,6 +1,16 @@
+server:
+  port: 8678
 spring:
   application:
     name: Media Service
+  data:
+    mongodb:
+      uri: "mongodb+srv://Cluster05093:.qwe.qwe.qwe@cluster05093.dh3rmhg.mongodb.net/buy-one?retryWrites=true&w=majority&appName=Cluster05093"
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          secret: "oogabooga123oogabooga123oogabooga123!"
 
 
 app:

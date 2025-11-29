@@ -12,19 +12,21 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
+import java.time.Instant;
+
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     
     // Helper for building structured error responses
     private ResponseEntity<ErrorResponse> buildError(HttpStatus status, String message, String path) {
-        ErrorResponse error = ErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(status.value())
-                .error(status.getReasonPhrase())
-                .message(message)
-                .path(path)
-                .build();
+        ErrorResponse error = new ErrorResponse(
+                Instant.now(),
+                status.value(),
+                status.getReasonPhrase(),
+                message,
+                path
+        );
         return new ResponseEntity<>(error, status);
     }
     

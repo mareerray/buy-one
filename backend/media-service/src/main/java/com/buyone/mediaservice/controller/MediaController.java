@@ -32,6 +32,7 @@ public class MediaController {
                 .build();
         return ResponseEntity.ok(response);
     }
+    
     // get metadata for specific media file
     @GetMapping("/{mediaId}")
     public ResponseEntity<ApiResponse<MediaResponse>> getMedia(@PathVariable String mediaId) {
