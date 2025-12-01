@@ -1,5 +1,6 @@
 package com.buyone.mediaservice.controller;
 
+import com.buyone.mediaservice.request.MediaUploadRequest;
 import com.buyone.mediaservice.response.MediaResponse;
 import com.buyone.mediaservice.response.MediaListResponse;
 import com.buyone.mediaservice.response.DeleteMediaResponse;
@@ -7,6 +8,7 @@ import com.buyone.mediaservice.response.ApiResponse;
 import com.buyone.mediaservice.service.MediaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +35,13 @@ public class MediaController {
         return ResponseEntity.ok(response);
     }
     
-    // get metadata for specific media file
+    //    Right now, your getMedia is perfect for APIs (Angular) to fetch metadata,
+    //    but to actually display the avatar image in <img>,
+    //    you’ll eventually need an endpoint that returns image/jpeg bytes.
+    //    For now, conceptually:
+    //    Yes: GET /media/images/{mediaId} is the avatar metadata call.
+    
+    // get metadata for specific media file, ex. Avatar
     @GetMapping("/{mediaId}")
     public ResponseEntity<ApiResponse<MediaResponse>> getMedia(@PathVariable String mediaId) {
         MediaResponse media = mediaService.getMedia(mediaId);
@@ -43,6 +51,7 @@ public class MediaController {
                 .build();
         return ResponseEntity.ok(response);
     }
+
     
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<MediaResponse>> uploadImage(

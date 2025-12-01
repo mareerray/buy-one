@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import jakarta.validation.constraints.*;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -23,4 +24,6 @@ public class UpdateProductRequest {
     
     @Min(value = 0, message = "Quantity must be zero or greater")
     private Integer quantity;
+    
+    private List<String> categoryIds;
 }

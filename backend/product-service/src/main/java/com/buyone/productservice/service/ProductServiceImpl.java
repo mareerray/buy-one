@@ -71,6 +71,7 @@ public class ProductServiceImpl implements ProductService {
                 .price(request.getPrice())
                 .quantity(request.getQuantity())
                 .userId(sellerId)
+                .categoryIds(request.getCategoryIds())
                 .build();
         
         Product savedProduct = productRepository.save(product);
@@ -150,6 +151,7 @@ public class ProductServiceImpl implements ProductService {
         if (request.getDescription() != null) product.setDescription(request.getDescription());
         if (request.getPrice() != null) product.setPrice(request.getPrice());
         if (request.getQuantity() != null) product.setQuantity(request.getQuantity());
+        if (request.getCategoryIds() != null) product.setCategoryIds(request.getCategoryIds());
         
         Product updatedProduct = productRepository.save(product);
         ProductUpdatedEvent event = ProductUpdatedEvent.builder()
@@ -215,6 +217,7 @@ public class ProductServiceImpl implements ProductService {
                 .price(product.getPrice())
                 .quantity(product.getQuantity())
                 .userId(product.getUserId()) // Correct getter
+                .categoryIds(product.getCategoryIds())
                 .build();
     }
 }

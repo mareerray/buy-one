@@ -1,4 +1,4 @@
-package com.buyone.mediaservice.request:
+package com.buyone.mediaservice.request;
 
 import com.buyone.mediaservice.model.MediaOwnerType;
 import jakarta.validation.constraints.*;

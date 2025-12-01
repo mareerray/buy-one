@@ -4,6 +4,8 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Builder;
+import java.util.List;
+
 
 @Data
 @NoArgsConstructor
@@ -16,8 +18,9 @@ public class ProductResponse {
     private Double price;
     private Integer quantity;
     private String userId;
-    // private String mediaId;
+    private List<String> categoryIds;
     
+    // private String mediaId;
     // Optional:
     // private Instant createdAt;
 }
