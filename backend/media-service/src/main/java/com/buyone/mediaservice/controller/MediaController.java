@@ -46,10 +46,13 @@ public class MediaController {
     
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<MediaResponse>> uploadImage(
-            @RequestParam("file") MultipartFile file,
-            @RequestParam("productId") String productId
+            @Valid @ModelAttribute MediaUploadRequest request
     ) {
-        MediaResponse media = mediaService.uploadImage(file, productId);
+        MediaResponse media = mediaService.uploadImage(
+                request.getFile(),
+                request.getOwnerId(),
+                request.getOwnerType()
+        );
         ApiResponse<MediaResponse> response = ApiResponse.<MediaResponse>builder()
                 .success(true)
                 .message("Image uploaded successfully")

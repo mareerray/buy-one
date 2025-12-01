@@ -1,15 +1,19 @@
-package com.buyone.mediaservice.request;
+package com.buyone.mediaservice.request:
 
-import lombok.*;
+import com.buyone.mediaservice.model.MediaOwnerType;
 import jakarta.validation.constraints.*;
+import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class MediaUploadRequest {
     
-    @NotBlank(message = "Product ID is required")
-    private String productId;
+    @NotNull(message = "File is required")
+    private MultipartFile file;
     
+    @NotBlank(message = "Owner ID is required")
+    private String ownerId;
+    
+    @NotNull(message = "Owner type is required")
+    private MediaOwnerType ownerType;
 }

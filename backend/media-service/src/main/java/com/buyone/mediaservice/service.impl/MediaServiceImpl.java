@@ -1,6 +1,7 @@
 package com.buyone.mediaservice.service.impl;
 
 import com.buyone.mediaservice.model.Media;
+import com.buyone.mediaservice.model.MediaOwnerType;
 import com.buyone.mediaservice.repository.MediaRepository;
 import com.buyone.mediaservice.response.MediaResponse;
 import com.buyone.mediaservice.response.DeleteMediaResponse;
@@ -30,16 +31,20 @@ public class MediaServiceImpl implements MediaService {
     private static final long MAX_FILE_SIZE_BYTES = 2L * 1024 * 1024;
     
     @Override
-    public MediaResponse uploadImage(MultipartFile file, String productId) {
+    public MediaResponse uploadImage(MultipartFile file, String ownerId, MediaOwnerType ownerType) {
         validateImageFile(file);
-        
-        long imageCount = mediaRepository.countByProductId(productId);
-        if (imageCount >= MAX_IMAGES_PER_PRODUCT) {
-            throw new ConflictException("This product already has the maximum number of images (" + MAX_IMAGES_PER_PRODUCT + ").");
+
+        // If this is a product image, enforce max 5 images per product
+        if (ownerType == MediaOwnerType.PRODUCT) {
+            long imageCount = mediaRepository.countByOwnerIdAndOwnerType(ownerId, MediaOwnerType.PRODUCT);
+            if (imageCount >= MAX_IMAGES_PER_PRODUCT) {
+                throw new ConflictException("This product already has the maximum number of images (" + MAX_IMAGES_PER_PRODUCT + ").");
+            }
         }
         
         Media media = Media.builder()
-                .productId(productId)
+                .ownerId(ownerId)
+                .ownerType(ownerType)
                 .createdAt(Instant.now())
                 .build();
         
@@ -54,7 +59,7 @@ public class MediaServiceImpl implements MediaService {
         
         return new MediaResponse(
                 media.getId(),
-                media.getProductId(),
+                media.getOwnerId(),
                 url,
                 media.getCreatedAt()
         );
@@ -67,7 +72,7 @@ public class MediaServiceImpl implements MediaService {
         String url = "/media/images/" + media.getId();
         return new MediaResponse(
                 media.getId(),
-                media.getProductId(),
+                media.getOwnerId(),
                 url,
                 media.getCreatedAt()
         );
@@ -95,7 +100,7 @@ public class MediaServiceImpl implements MediaService {
         
         return new MediaResponse(
                 media.getId(),
-                media.getProductId(),
+                media.getOwnerId(),
                 url,
                 media.getCreatedAt()
         );
@@ -115,12 +120,12 @@ public class MediaServiceImpl implements MediaService {
     
     @Override
     public List<MediaResponse> mediaListForProduct(String productId) {
-        var medias = mediaRepository.findAllByProductId(productId);
+        var medias = mediaRepository.findAllByOwnerIdAndOwnerType(productId, MediaOwnerType.PRODUCT);
         
         return medias.stream()
                 .map(m -> new MediaResponse(
                         m.getId(),
-                        m.getProductId(),
+                        m.getOwnerId(),
                         "/media/images/" + m.getId(),
                         m.getCreatedAt()
                 ))
