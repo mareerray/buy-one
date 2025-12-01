@@ -18,7 +18,6 @@ export const CATEGORIES = [
     icon: 'fa fa-hand-peace',
     description: 'Your favorite anime characters and pop culture icons',
   },
-  // { id: 'minimal-tech', name: 'Minimal Tech', icon: 'fa fa-microchip', description: 'Clean, minimalist designs for tech enthusiasts', color: 'from-slate-500 to-slate-700' },
   {
     id: 'code-queen',
     name: 'Code Queen',
@@ -44,12 +43,3 @@ export const CATEGORIES = [
     description: 'Exclusive collabs and limited-run designs',
   },
 ];
-
-/*
-'Code & Nerd Humor'
-'Anime & Pop Culture'
-'code-queen'
-'Gaming & Esports'
-'Geeky Memes/Quotes'
-'Limited Editions'
-*/
