@@ -270,9 +270,3 @@ export const MOCK_PRODUCTS: Product[] = [
     quantity: 6,
   },
 ];
-
-/*
-{
-
-
-*/
