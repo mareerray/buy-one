@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/product.service';
 import { Observable, of } from 'rxjs';
 import { MOCK_USERS, User } from '../../models/user.model';
+import { CATEGORIES } from '../../models/categories.model';
 import { ProductImageCarouselComponent } from '../ui/product-image-carousel/product-image-carousel.component';
 import { RouterLink } from '@angular/router';
 
@@ -17,6 +18,8 @@ import { RouterLink } from '@angular/router';
 export class ProductCardComponent implements OnInit {
   productId: string | null = null;
   product$: Observable<Product | undefined> = of(undefined);
+
+  categories = CATEGORIES;
 
   private route: ActivatedRoute = inject(ActivatedRoute);
 
@@ -34,6 +37,11 @@ export class ProductCardComponent implements OnInit {
 
   getSeller(sellerId: string): User | undefined {
     return MOCK_USERS.find((user) => user.id === sellerId && user.role === 'seller');
+  }
+
+  getCategoryName(categoryId: string): string {
+    const cat = this.categories.find((c) => c.id === categoryId);
+    return cat ? cat.name : '';
   }
 
   addToCart() {

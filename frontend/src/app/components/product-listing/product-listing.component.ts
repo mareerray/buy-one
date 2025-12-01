@@ -5,6 +5,7 @@ import { MOCK_PRODUCTS, Product } from '../../models/product.model';
 import { MOCK_USERS, User } from '../../models/user.model';
 import { Router } from '@angular/router';
 import { ProductGridCardComponent } from '../product-grid-card/product-grid-card.component';
+import { CATEGORIES } from '../../models/categories.model';
 
 @Component({
   selector: 'app-product-listing',
@@ -15,6 +16,7 @@ import { ProductGridCardComponent } from '../product-grid-card/product-grid-card
 })
 export class ProductListingComponent implements OnInit {
   products: Product[] = [];
+  category = CATEGORIES;
   searchQuery: string = '';
   categoryFilter: string = 'all';
   sortBy: string = 'name';
@@ -25,7 +27,7 @@ export class ProductListingComponent implements OnInit {
   }
 
   get categories(): string[] {
-    return ['all', ...Array.from(new Set(this.products.map((p) => p.category)))];
+    return ['all', ...Array.from(new Set(this.products.map((p) => p.categoryId)))];
   }
 
   get filteredProducts(): Product[] {
@@ -35,7 +37,7 @@ export class ProductListingComponent implements OnInit {
           product.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
           product.description.toLowerCase().includes(this.searchQuery.toLowerCase());
         const matchesCategory =
-          this.categoryFilter === 'all' || product.category === this.categoryFilter;
+          this.categoryFilter === 'all' || product.categoryId === this.categoryFilter;
         return matchesSearch && matchesCategory;
       })
       .sort((a, b) => {
@@ -55,6 +57,16 @@ export class ProductListingComponent implements OnInit {
   getSeller(sellerId: string): User | undefined {
     // Returns the User object for the seller
     return MOCK_USERS.find((user) => user.id === sellerId && user.role === 'seller');
+  }
+
+  // For filter list:
+  get categoryOptions(): string[] {
+    return ['all', ...Array.from(new Set(this.products.map((p) => p.categoryId)))];
+  }
+
+  getCategoryName(categoryId: string): string {
+    const cat = this.category.find((c) => c.id === categoryId);
+    return cat ? cat.name : '';
   }
 
   viewProductDetail(productId: string) {

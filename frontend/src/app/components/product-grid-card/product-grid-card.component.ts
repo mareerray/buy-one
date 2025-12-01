@@ -19,6 +19,9 @@ export class ProductGridCardComponent {
   // Optional: seller passed in from parent (e.g. getSeller in listing component)
   @Input() seller: User | undefined;
 
+  // Category display name (computed in parent)
+  @Input() categoryName = '';
+
   // Flags so different pages can hide/show bits
   @Input() showSeller = true;
   @Input() showCategory = true;

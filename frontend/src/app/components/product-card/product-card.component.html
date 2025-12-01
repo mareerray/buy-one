@@ -26,7 +26,7 @@
               <!-- Right: Info -->
               <div class="col-12 col-md-7">
                 <h2 class="card-title fw-bold mb-2">{{ product.name }}</h2>
-                <span class="badge bg-secondary mb-2 fs-6">{{ product.category }}</span>
+                <span class="badge bg-secondary mb-2 fs-6">{{ getCategoryName(product.categoryId) }}</span>
                 <p class="card-text text-white mb-3">{{ product.description }}</p>
                 <p class="price mb-1">
                   Price: <span class="text-primary fw-bold fs-4">€{{ product.price }}</span>

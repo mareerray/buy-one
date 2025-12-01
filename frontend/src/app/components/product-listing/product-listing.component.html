@@ -37,6 +37,7 @@
           [seller]="getSeller(product.sellerId)"
           [showSeller]="true"
           [showCategory]="true"
+          [categoryName]="getCategoryName(product.categoryId)"
           (view)="viewProductDetail($event)"
           (addToCartClick)="addToCart($event)">
         </app-product-grid-card>

@@ -28,7 +28,7 @@ export class ProductService {
   }
 
   getProductsByCategory(category: string): Product[] {
-    return this.productsSubject.value.filter((p) => p.category === category);
+    return this.productsSubject.value.filter((p) => p.categoryId === category);
   }
 
   addProduct(product: Product): void {

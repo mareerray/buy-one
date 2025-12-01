@@ -1,5 +1,6 @@
 export interface Category {
   id: string;
+  slug: string;
   name: string;
   icon: string;
   description: string;
@@ -7,37 +8,43 @@ export interface Category {
 
 export const CATEGORIES = [
   {
-    id: 'code-nerd',
+    id: 'CAT-001',
+    slug: 'code-nerd',
     name: 'Code & Nerd Humor',
     icon: 'fa fa-code',
     description: 'Developer jokes, programming puns, and tech humor',
   },
   {
-    id: 'anime-pop',
+    id: 'CAT-002',
+    slug: 'anime-pop',
     name: 'Anime & Pop Culture',
     icon: 'fa fa-hand-peace',
     description: 'Your favorite anime characters and pop culture icons',
   },
   {
-    id: 'code-queen',
+    id: 'CAT-003',
+    slug: 'code-queen',
     name: 'Code Queen',
     icon: 'fa fa-crown',
     description: 'Bold, confident styles inspired by women who code',
   },
   {
-    id: 'gaming-esports',
+    id: 'CAT-004',
+    slug: 'gaming-esports',
     name: 'Gaming & Esports',
     icon: 'fa fa-gamepad',
     description: 'Gaming legends, esports teams, and pixel art',
   },
   {
-    id: 'geeky-memes',
+    id: 'CAT-005',
+    slug: 'geeky-memes',
     name: 'Geeky Memes/Quotes',
     icon: 'fa fa-laugh',
     description: 'Internet memes and legendary geek quotes',
   },
   {
-    id: 'limited-editions',
+    id: 'CAT-006',
+    slug: 'limited-editions',
     name: 'Limited Editions',
     icon: 'fa fa-star',
     description: 'Exclusive collabs and limited-run designs',

@@ -46,12 +46,12 @@
               " {{ product.description }} "<br />
               <span>
                 <i
-                  *ngIf="getCategoryById(product.category)?.icon"
-                  [class]="getCategoryById(product.category)?.icon"
+                  *ngIf="getCategoryById(product.categoryId)?.icon"
+                  [class]="getCategoryById(product.categoryId)?.icon"
                   style="margin-right: 0.2em; color: white;"
                   aria-hidden="true"
                 ></i>
-                {{ getCategoryById(product.category)?.name || product.category }}
+                {{ getCategoryById(product.categoryId)?.name || product.categoryId }}
               </span>
               <br>
               <!-- {{ product.category }}<br /> -->
@@ -133,7 +133,7 @@
               <label
                 *ngFor="let cat of categories"
                 class="custom-radio-label"
-                [ngClass]="{ 'selected-category': selectedCategoryId === cat.id }"
+                [ngClass]="{ 'selected-category': selectedCategoryId === cat.slug }"
                 style="min-width: 120px"
               >
                 <input type="radio" formControlName="category" [value]="cat.id" />
