@@ -10,8 +10,9 @@
     </div>
     <div class="col-6 col-md-2">
       <select class="form-select" [(ngModel)]="categoryFilter">
-        <option *ngFor="let category of categories" [value]="category">
-          {{ category === 'all' ? 'All Categories' : category }}
+        <option value="all">All categories</option>
+        <option *ngFor="let opt of categoryOptions" [value]="opt.id">
+          {{ opt.name }}
         </option>
       </select>
     </div>

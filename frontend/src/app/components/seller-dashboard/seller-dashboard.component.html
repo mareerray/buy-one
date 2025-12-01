@@ -41,8 +41,10 @@
                 class="me-3 square-image">
 
             <div class="flex-grow-1">
-              # {{product.id}} | 
-              <strong>{{ product.name }}</strong><br />
+              <div class="fw-bold">
+                # {{product.id}} | 
+                <strong>{{ product.name }}</strong><br />
+              </div>
               " {{ product.description }} "<br />
               <span>
                 <i
@@ -128,20 +130,22 @@
           </div>
 
           <div class="mb-3 custom-radio-group">
-            <label class="form-label d-block mb-2">Category</label>
+            <label class="form-label d-block mb-2">
+              Category <small class="text-white">(Please choose ONE category)</small>
+            </label>
             <div class="d-flex flex-wrap gap-3">
               <label
                 *ngFor="let cat of categories"
                 class="custom-radio-label"
-                [ngClass]="{ 'selected-category': selectedCategoryId === cat.slug }"
+                [ngClass]="{ 'selected-category': selectedCategoryId === cat.id }"
                 style="min-width: 120px"
               >
-                <input type="radio" formControlName="category" [value]="cat.id" />
+                <input type="radio" formControlName="categoryId" [value]="cat.id" />
                 <span class="custom-radio-text">{{ cat.name }}</span>
               </label>
             </div>
             <div
-              *ngIf="productForm.get('category')?.invalid && productForm.get('category')?.touched"
+              *ngIf="productForm.get('categoryId')?.invalid && productForm.get('categoryId')?.touched"
               class="invalid-feedback d-block"
             >
               Category is required.

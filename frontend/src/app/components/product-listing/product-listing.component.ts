@@ -60,8 +60,8 @@ export class ProductListingComponent implements OnInit {
   }
 
   // For filter list:
-  get categoryOptions(): string[] {
-    return ['all', ...Array.from(new Set(this.products.map((p) => p.categoryId)))];
+  get categoryOptions() {
+    return [...this.category.map((c) => ({ id: c.id, name: c.name }))];
   }
 
   getCategoryName(categoryId: string): string {
