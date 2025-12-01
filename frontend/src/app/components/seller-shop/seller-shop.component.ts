@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MOCK_PRODUCTS, Product } from '../../models/product.model';
 import { MOCK_USERS, User } from '../../models/user.model';
+import { CATEGORIES } from '../../models/categories.model';
 import { ProductGridCardComponent } from '../product-grid-card/product-grid-card.component';
 
 @Component({
@@ -15,6 +16,7 @@ import { ProductGridCardComponent } from '../product-grid-card/product-grid-card
 export class SellerShopComponent implements OnInit {
   seller: User | undefined;
   sellerProducts: Product[] = [];
+  categories = CATEGORIES;
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
@@ -42,6 +44,11 @@ export class SellerShopComponent implements OnInit {
   getSeller(sellerId: string): User | undefined {
     // Returns the User object for the seller
     return MOCK_USERS.find((user) => user.id === sellerId && user.role === 'seller');
+  }
+
+  getCategoryName(categoryId: string): string {
+    const cat = this.categories.find((c) => c.id === categoryId);
+    return cat ? cat.name : '';
   }
 
   sendMessage() {

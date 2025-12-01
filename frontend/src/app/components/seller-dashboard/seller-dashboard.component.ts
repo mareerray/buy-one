@@ -37,7 +37,7 @@ export class SellerDashboardComponent implements OnInit {
       description: ['', Validators.required],
       price: ['', [Validators.required, Validators.min(1.0)]],
       image: [null, Validators.required],
-      category: [this.categories.length > 0 ? this.categories[0].id : '', Validators.required], // default to first category id
+      categoryId: [this.categories.length > 0 ? this.categories[0].id : '', Validators.required], // default to first category id
       quantity: ['', [Validators.required, Validators.min(1)]],
     });
   }
@@ -158,7 +158,7 @@ export class SellerDashboardComponent implements OnInit {
       description: this.productForm.value.description,
       price: this.productForm.value.price,
       images: this.imagePreviews.length ? this.imagePreviews.map((p) => p.dataUrl) : [],
-      category: this.productForm.value.category || 'uncategorized',
+      categoryId: this.productForm.value.category || 'uncategorized',
       sellerId: currentUserId,
       quantity: this.productForm.value.quantity ?? 1,
     };
@@ -199,7 +199,7 @@ export class SellerDashboardComponent implements OnInit {
       description: product.description,
       price: product.price,
       image: null,
-      category: product.category,
+      category: product.categoryId,
       quantity: product.quantity,
     });
     this.imagePreviews = product.images?.map((url) => ({ file: null, dataUrl: url })) || [];

@@ -15,8 +15,8 @@
           <li class="nav-item" *ngFor="let cat of categories">
             <a
               class="nav-link"
-              [class.active]="cat.id === selectedCategoryId"
-              (click)="selectCategory(cat.id)">
+              [class.active]="cat.slug === selectedCategorySlug"
+              (click)="selectCategory(cat.slug)">
               <i [ngClass]="cat.icon"></i>
               {{ cat.name }}
             </a>
@@ -34,8 +34,8 @@
           <div class="sidebar-divider"></div>
           <ul>
             <li *ngFor="let cat of categories"
-                (click)="selectCategory(cat.id)"
-                [class.active]="cat.id === selectedCategoryId">
+                [class.active]="cat.slug === selectedCategorySlug"
+                (click)="selectCategory(cat.slug)">
               <i [ngClass]="cat.icon"></i>
               <span>{{ cat.name }}</span>
             </li>
@@ -67,7 +67,8 @@
               [product]="product"
               [seller]="getSeller(product.sellerId)"
               [showSeller]="true"
-              [showCategory]="false"
+              [showCategory]="true"
+              [categoryName]="getCategoryName(product.categoryId)"
               (view)="viewProductDetail($event)"
               (addToCartClick)="addToCart()">
             </app-product-grid-card>

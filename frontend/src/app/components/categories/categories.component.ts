@@ -15,36 +15,45 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class CategoriesComponent {
   private router = inject(Router);
-  categories = CATEGORIES;
-  products = MOCK_PRODUCTS;
-  selectedCategoryId = this.categories[0].id;
-  // private router = inject(Router);
   private route = inject(ActivatedRoute);
 
+  categories = CATEGORIES;
+  products = MOCK_PRODUCTS;
+
+  selectedCategorySlug = this.categories[0].slug;
+
   constructor() {
-    this.route.queryParamMap.subscribe((params) => {
-      const categoryFromUrl = params.get('category');
-      if (categoryFromUrl && this.categories.some((cat) => cat.id === categoryFromUrl)) {
-        this.selectedCategoryId = categoryFromUrl;
+    this.route.paramMap.subscribe((params) => {
+      const slugFromUrl = params.get('slug');
+      if (slugFromUrl && this.categories.some((cat) => cat.slug === slugFromUrl)) {
+        this.selectedCategorySlug = slugFromUrl;
       }
     });
   }
 
-  selectCategory(id: string) {
-    this.selectedCategoryId = id;
+  selectCategory(slug: string) {
+    this.selectedCategorySlug = slug;
+    this.router.navigate(['/categories', slug]);
   }
 
   get selectedCategory() {
-    return this.categories.find((cat) => cat.id === this.selectedCategoryId);
+    return this.categories.find((cat) => cat.slug === this.selectedCategorySlug);
   }
 
   get filteredProducts() {
-    return this.products.filter((p) => p.category === this.selectedCategoryId);
+    const cat = this.selectedCategory;
+    if (!cat) return [];
+    return this.products.filter((p) => p.categoryId === cat.id);
   }
 
   getSeller(sellerId: string): User | undefined {
     // Returns the User object for the seller
     return MOCK_USERS.find((user) => user.id === sellerId && user.role === 'seller');
+  }
+
+  getCategoryName(categoryId: string): string {
+    const cat = this.categories.find((c) => c.id === categoryId);
+    return cat ? cat.name : '';
   }
 
   viewProductDetail(productId: string) {

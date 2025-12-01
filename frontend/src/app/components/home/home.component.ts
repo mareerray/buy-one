@@ -35,10 +35,8 @@ export class HomeComponent implements OnInit {
     console.log('sliderSellers in HomeComponent:', this.sliderSellers);
     console.log('sliderProducts in HomeComponent:', this.sliderProducts);
   }
-  onCategoryClick(categoryId: string): void {
-    this.router.navigate(['/categories'], {
-      queryParams: { category: categoryId },
-    });
+  onCategoryClick(categorySlug: string): void {
+    this.router.navigate(['/categories', categorySlug]);
   }
 
   shopNow() {}

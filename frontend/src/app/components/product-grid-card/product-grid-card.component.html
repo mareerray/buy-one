@@ -21,7 +21,7 @@
     <!-- Product Name -->
     <h5 class="card-title mb-1 fw-bold">{{ product.name }}</h5>
     <!-- Category Badge -->
-    <span class="badge bg-secondary mb-2">{{ product.category }}</span>
+    <span *ngIf="showCategory" class="badge bg-secondary mb-2">{{ categoryName }}</span>
     <!-- Seller Info -->
     <ng-container *ngIf="showSeller && seller">
       <div class="mb-3 d-flex align-items-center">

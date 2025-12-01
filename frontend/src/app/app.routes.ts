@@ -20,6 +20,7 @@ export const routes: Routes = [
   { path: 'product-listing', component: ProductListingComponent },
   { path: 'product/:id', component: ProductCardComponent },
   { path: 'categories', component: CategoriesComponent },
+  { path: 'categories/:slug', component: CategoriesComponent },
   { path: 'seller-dashboard', component: SellerDashboardComponent, canActivate: [SellerGuard] },
   { path: 'seller-shop/:id', component: SellerShopComponent },
   { path: 'about', component: AboutComponent },
