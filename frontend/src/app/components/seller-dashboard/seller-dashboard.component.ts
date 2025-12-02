@@ -1,8 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule, NgIf } from '@angular/common';
-import { Product, MOCK_PRODUCTS } from '../../models/product.model';
-import { CATEGORIES } from '../../models/categories.model';
+import { Product, MOCK_PRODUCTS } from '../../models/products/product.model';
+import { CATEGORIES } from '../../models/categories/categories.model';
 import { AuthService } from '../../services/auth.service';
 import { MediaService } from '../../services/media.service';
 import { Router } from '@angular/router';
@@ -70,6 +70,13 @@ export class SellerDashboardComponent implements OnInit {
     this.productForm.reset(); // Blank form
     this.imagePreviews = []; // Clear any images
     this.imageValidationError = null; // Clear any errors
+
+    // Re-apply default category (first category = Code & Nerd Humor)
+    if (this.categories.length > 0) {
+      this.productForm.patchValue({
+        categoryId: this.categories[0].id,
+      });
+    }
     this.showModal = true;
   }
 
@@ -136,7 +143,7 @@ export class SellerDashboardComponent implements OnInit {
   }
 
   get selectedCategoryId(): string {
-    return this.productForm.get('category')?.value;
+    return this.productForm.get('categoryId')?.value;
   }
 
   getCategoryById(id: string) {
@@ -158,7 +165,7 @@ export class SellerDashboardComponent implements OnInit {
       description: this.productForm.value.description,
       price: this.productForm.value.price,
       images: this.imagePreviews.length ? this.imagePreviews.map((p) => p.dataUrl) : [],
-      categoryId: this.productForm.value.category || 'uncategorized',
+      categoryId: this.productForm.value.categoryId || 'uncategorized',
       sellerId: currentUserId,
       quantity: this.productForm.value.quantity ?? 1,
     };
@@ -199,7 +206,7 @@ export class SellerDashboardComponent implements OnInit {
       description: product.description,
       price: product.price,
       image: null,
-      category: product.categoryId,
+      categoryId: product.categoryId,
       quantity: product.quantity,
     });
     this.imagePreviews = product.images?.map((url) => ({ file: null, dataUrl: url })) || [];
