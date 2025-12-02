@@ -1,8 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
-import { UserDTO } from '../../models/users/userDTO.model';
-import { UserUpdateDTO } from '../../models/users/userUpdateDTO.model';
+import { UserDTO } from '../../models/users/responseUser.model';
+import { UserUpdateDTO } from '../../models/users/userUpdateRequest.model';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AbstractControl } from '@angular/forms';

@@ -1,32 +1,33 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../models/users/user.model';
-import { UserDTO } from '../models/users/userDTO.model';
-import { UserUpdateDTO } from '../models/users/userUpdateDTO.model';
-import { MOCK_USERS, authenticateUser, getUserByEmail, updateUser } from '../models/users/user.model';
+import { ResponseUser } from '../models/users/responseUser.model';
+import { UserUpdateRequest } from '../models/users/userUpdateRequest.model';
+import { MOCK_USERS, authenticateUser } from '../models/users/user.model';
+import { getUserByEmail, updateUser } from '../models/users/user.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private currentUserSubject = new BehaviorSubject<UserDTO | null>(this.loadUserFromStorage());
-  public currentUser$: Observable<UserDTO | null> = this.currentUserSubject.asObservable();
+  private currentUserSubject = new BehaviorSubject<ResponseUser | null>(this.loadUserFromStorage());
+  public currentUser$: Observable<ResponseUser | null> = this.currentUserSubject.asObservable();
 
   constructor() {}
 
-  private loadUserFromStorage(): UserDTO | null {
+  private loadUserFromStorage(): ResponseUser | null {
     const userJson = localStorage.getItem('currentUser');
-    return userJson ? (JSON.parse(userJson) as UserDTO) : null;
+    return userJson ? (JSON.parse(userJson) as ResponseUser) : null;
   }
 
   login(email: string, password: string): { success: boolean; message?: string } {
     const user = authenticateUser(email, password);
 
     if (user) {
-      const { ...userDTO } = user;
-      localStorage.setItem('currentUser', JSON.stringify(userDTO));
-      this.currentUserSubject.next(userDTO as UserDTO);
-      console.log(userDTO);
+      const { ...ResponseUser } = user;
+      localStorage.setItem('currentUser', JSON.stringify(ResponseUser));
+      this.currentUserSubject.next(ResponseUser as ResponseUser);
+      console.log(ResponseUser);
       return { success: true };
     }
 
@@ -50,9 +51,9 @@ export class AuthService {
     };
     MOCK_USERS.push(newUser);
 
-    const { ...userDTO } = newUser;
-    localStorage.setItem('currentUser', JSON.stringify(userDTO));
-    this.currentUserSubject.next(userDTO as UserDTO);
+    const { ...ResponseUser } = newUser;
+    localStorage.setItem('currentUser', JSON.stringify(ResponseUser));
+    this.currentUserSubject.next(ResponseUser as ResponseUser);
     return { success: true };
   }
 
@@ -61,7 +62,7 @@ export class AuthService {
     this.currentUserSubject.next(null);
   }
 
-  get currentUserValue(): UserDTO | null {
+  get currentUserValue(): ResponseUser | null {
     return this.currentUserSubject.value;
   }
 
@@ -73,11 +74,11 @@ export class AuthService {
     return this.currentUserValue?.role === 'seller';
   }
 
-  updateUser(update: UserUpdateDTO) {
+  updateUser(update: UserUpdateRequest) {
     const updated = updateUser(update);
     if (updated) {
-      const { ...userDTO } = updated;
-      this.currentUserSubject.next(userDTO as UserDTO);
+      const { ...ResponseUser } = updated;
+      this.currentUserSubject.next(ResponseUser as ResponseUser);
     }
   }
 }
