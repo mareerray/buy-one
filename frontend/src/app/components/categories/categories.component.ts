@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common'; // for ngClass, ngIf, ngFor
-import { CATEGORIES } from '../../models/categories.model';
-import { MOCK_PRODUCTS } from '../../models/product.model';
-import { MOCK_USERS, User } from '../../models/user.model';
+import { CATEGORIES } from '../../models/categories/categories.model';
+import { MOCK_PRODUCTS } from '../../models/products/product.model';
+import { MOCK_USERS, User } from '../../models/users/user.model';
 import { ProductGridCardComponent } from '../product-grid-card/product-grid-card.component';
 import { Router, ActivatedRoute } from '@angular/router';
 

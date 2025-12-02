@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Product } from '../../models/product.model';
-import { User } from '../../models/user.model';
+import { Product } from '../../models/products/product.model';
+import { User } from '../../models/users/user.model';
 import { ProductImageCarouselComponent } from '../ui/product-image-carousel/product-image-carousel.component';
 import { RouterLink } from '@angular/router';
 

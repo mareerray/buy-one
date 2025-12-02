@@ -1,11 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Product } from '../../models/product.model';
+import { Product } from '../../models/products/product.model';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/product.service';
 import { Observable, of } from 'rxjs';
-import { MOCK_USERS, User } from '../../models/user.model';
-import { CATEGORIES } from '../../models/categories.model';
+import { MOCK_USERS, User } from '../../models/users/user.model';
+import { CATEGORIES } from '../../models/categories/categories.model';
 import { ProductImageCarouselComponent } from '../ui/product-image-carousel/product-image-carousel.component';
 import { RouterLink } from '@angular/router';
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Product, MOCK_PRODUCTS } from '../models/product.model';
+import { Product, MOCK_PRODUCTS } from '../models/products/product.model';
 import { map } from 'rxjs/operators';
 
 @Injectable({

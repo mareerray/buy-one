@@ -1,8 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule, NgIf } from '@angular/common';
-import { Product, MOCK_PRODUCTS } from '../../models/product.model';
-import { CATEGORIES } from '../../models/categories.model';
+import { Product, MOCK_PRODUCTS } from '../../models/products/product.model';
+import { CATEGORIES } from '../../models/categories/categories.model';
 import { AuthService } from '../../services/auth.service';
 import { MediaService } from '../../services/media.service';
 import { Router } from '@angular/router';

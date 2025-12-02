@@ -76,11 +76,22 @@ grit-tee/
 │   │   │   ├── product.service.ts
 │   │   │   └── media.service.ts
 │   │   ├── models/
-│   │   │   ├── user.model.ts
-│   │   │   ├── userDTO.model.ts
-│   │   │   ├── userUpdateDTO.model.ts
-│   │   │   ├── product.model.ts
-│   │   │   └── categories.model.ts
+│   │   │       ├── products/
+│   │   │       │   ├── product.model.ts
+│   │   │       │   ├── createProductRequest.model.ts
+│   │   │       │   ├── updateProductRequest.model.ts
+│   │   │       │   └── productResponse.model.ts
+│   │   │       ├── categories/
+│   │   │       │   └── categories.model.ts
+│   │   │       ├── users/
+│   │   │       │   ├── user.model.ts
+│   │   │       │   ├── .model.ts
+│   │   │       │   ├── .model.ts
+│   │   │       │   └── .model.ts
+│   │   │       ├── media/
+│   │   │       │   └── media.model.ts
+│   │   │       └── api-response/
+│   │   │           └── api-response.model.ts
 │   │   ├── guards/
 │   │   │   ├── auth.guard.ts
 │   │   │   └── seller.guard.ts

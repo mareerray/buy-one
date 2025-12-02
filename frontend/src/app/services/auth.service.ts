@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { User } from '../models/user.model';
-import { UserDTO } from '../models/userDTO.model';
-import { UserUpdateDTO } from '../models/userUpdateDTO.model';
-import { MOCK_USERS, authenticateUser, getUserByEmail, updateUser } from '../models/user.model';
+import { User } from '../models/users/user.model';
+import { UserDTO } from '../models/users/userDTO.model';
+import { UserUpdateDTO } from '../models/users/userUpdateDTO.model';
+import { MOCK_USERS, authenticateUser, getUserByEmail, updateUser } from '../models/users/user.model';
 
 @Injectable({
   providedIn: 'root',

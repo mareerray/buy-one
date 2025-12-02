@@ -1,11 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common'; // for ngClass, ngIf, ngFor
 import { FormsModule } from '@angular/forms'; // for ngModel (template-driven forms)
-import { MOCK_PRODUCTS, Product } from '../../models/product.model';
-import { MOCK_USERS, User } from '../../models/user.model';
+import { MOCK_PRODUCTS, Product } from '../../models/products/product.model';
+import { MOCK_USERS, User } from '../../models/users/user.model';
 import { Router } from '@angular/router';
 import { ProductGridCardComponent } from '../product-grid-card/product-grid-card.component';
-import { CATEGORIES } from '../../models/categories.model';
+import { CATEGORIES } from '../../models/categories/categories.model';
 
 @Component({
   selector: 'app-product-listing',
