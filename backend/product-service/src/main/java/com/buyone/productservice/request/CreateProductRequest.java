@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import jakarta.validation.constraints.*;
-import java.util.List;
 
 /**
  * DTO for product creation, validates all required/optional fields.
@@ -31,7 +30,7 @@ public class CreateProductRequest {
     @Min(value = 0, message = "Quantity must be zero or greater")
     private Integer quantity;
     
-    private List<String> categoryIds;
+    private String categoryId;
     
     // userId is NOT included here, it comes from JWT / header in the controller for security!
     // Add more fields as model extends, with corresponding validations

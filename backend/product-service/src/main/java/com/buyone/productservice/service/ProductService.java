@@ -5,11 +5,10 @@ import com.buyone.productservice.request.UpdateProductRequest;
 import com.buyone.productservice.response.ProductResponse;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ProductService {
     ProductResponse createProduct(CreateProductRequest request, String sellerId);
-    Optional<ProductResponse> getProductById(String id);
+    ProductResponse getProductById(String id);
     List<ProductResponse> getAllProducts();
     ProductResponse updateProduct(String id, UpdateProductRequest request, String sellerId);
     void deleteProduct(String id, String sellerId);

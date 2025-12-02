@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import java.util.List;
 
 
 @Data
@@ -23,5 +22,5 @@ public class Product {
     private Double price;
     private Integer quantity;
     private String userId;
-    private List<String> categoryIds;
+    private String categoryId;
 }

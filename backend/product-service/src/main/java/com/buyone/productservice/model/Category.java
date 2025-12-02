@@ -16,6 +16,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Category {
     @Id
     private String id;
+    private String slug;
     private String name;
     private String icon;
     private String description;

@@ -9,12 +9,25 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
+    // Creation
     UserResponse createUser(RegisterUserRequest request);
-    Optional<UserResponse> getUserById(String id);
-    Optional<User> getUserEntityByEmail(String email); // Internal
+    
+    // Queries for API (DTOs)
+    UserResponse getUserById(String id);
+    UserResponse getUserByEmail(String email);
+    
     List<UserResponse> getAllUsers();
-    UserResponse updateUser(String id, UpdateUserRequest request);
-    User getUserEntityById(String id); // Internal
+    List<UserResponse> getUsersByRole(Role role);
+    
+    // Updates
+    UserResponse updateUser(String id, UpdateUserRequest request);              // admin/internal
+    UserResponse updateUserByEmail(String email, UpdateUserRequest request);   // for /me
+    
+    // Internal lookups (entities, not exposed to controllers)
+    Optional<User> getUserEntityByEmail(String email);
+    User getUserEntityById(String id);
+    
+    // Deletion
     void deleteUser(String id);
 }
 
