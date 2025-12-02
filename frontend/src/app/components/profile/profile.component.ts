@@ -1,8 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
-import { UserDTO } from '../../models/users/responseUser.model';
-import { UserUpdateDTO } from '../../models/users/userUpdateRequest.model';
+import { ResponseUser } from '../../models/users/responseUser.model';
+import { UserUpdateRequest } from '../../models/users/userUpdateRequest.model';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AbstractControl } from '@angular/forms';
@@ -17,7 +17,7 @@ import { HttpEventType } from '@angular/common/http';
   imports: [ReactiveFormsModule, CommonModule],
 })
 export class ProfileComponent implements OnInit {
-  currentUser: UserDTO | null = null;
+  currentUser: ResponseUser | null = null;
   profileForm: FormGroup;
   passwordForm: FormGroup;
   avatar: string | null = null;
@@ -94,7 +94,7 @@ export class ProfileComponent implements OnInit {
 
   saveProfile() {
     if (this.profileForm.valid && this.currentUser) {
-      const dto: UserUpdateDTO = {
+      const dto: UserUpdateRequest = {
         id: this.currentUser.id,
         name: this.profileForm.value.name,
         email: this.profileForm.value.email,
@@ -107,7 +107,7 @@ export class ProfileComponent implements OnInit {
 
   changePassword() {
     if (this.passwordForm.valid && this.currentUser) {
-      const dto: UserUpdateDTO = {
+      const dto: UserUpdateRequest = {
         id: this.currentUser.id,
         name: this.currentUser.name, // keep unchanged
         email: this.currentUser.email, // keep unchanged
