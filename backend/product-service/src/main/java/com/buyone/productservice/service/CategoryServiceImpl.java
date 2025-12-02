@@ -45,7 +45,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category cat = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found: " + id));
         cat.setName(request.getName());
-        cat.setEmoji(request.getEmoji());
+        cat.setIcon(request.getIcon());
         cat.setDescription(request.getDescription());
         Category saved = categoryRepository.save(cat);
         return toResponse(saved);
@@ -55,7 +55,7 @@ public class CategoryServiceImpl implements CategoryService {
         return new CategoryResponse(
                 c.getId(),
                 c.getName(),
-                c.getEmoji(),
+                c.getIcon(),
                 c.getDescription()
         );
     }

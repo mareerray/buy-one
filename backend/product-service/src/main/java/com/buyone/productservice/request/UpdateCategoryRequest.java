@@ -13,6 +13,6 @@ public class UpdateCategoryRequest {
     @NotBlank(message = "Category name is required")
     private String name;
     
-    private String emoji;
+    private String icon;
     private String description;
 }

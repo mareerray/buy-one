@@ -18,7 +18,7 @@ public class ProductResponse {
     private Double price;
     private Integer quantity;
     private String userId;
-    private List<String> categoryIds;
+    private List<String> categoryId;
     
     // private String mediaId;
     // Optional:
