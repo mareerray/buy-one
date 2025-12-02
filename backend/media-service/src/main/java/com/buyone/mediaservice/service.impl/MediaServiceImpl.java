@@ -11,7 +11,6 @@ import com.buyone.mediaservice.exception.MediaNotFoundException;
 import com.buyone.mediaservice.exception.InvalidFileException;
 import com.buyone.mediaservice.exception.ConflictException;
 import com.buyone.mediaservice.exception.ForbiddenException;
-import com.buyone.mediaservice.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,14 +24,23 @@ public class MediaServiceImpl implements MediaService {
     
     private final MediaRepository mediaRepository;
     private final StorageService storageService;
-    private final SecurityUtils securityUtils;
     
     private static final int MAX_IMAGES_PER_PRODUCT = 5;
     private static final long MAX_FILE_SIZE_BYTES = 2L * 1024 * 1024;
     
     @Override
-    public MediaResponse uploadImage(MultipartFile file, String ownerId, MediaOwnerType ownerType) {
+    public MediaResponse uploadImage((MultipartFile file,
+                                     String ownerId,
+                                     MediaOwnerType ownerType,
+                                     String currentUserId,
+                                     String currentUserRole) {
         validateImageFile(file);
+        if (!"SELLER".equals(currentUserRole)) {
+            throw new ForbiddenException("Only Seller can upload images");
+        }
+        if (ownerType == MediaOwnerType.USER && !ownerId.equals(currentUserId)) {
+            throw new ForbiddenException("You can only upload an avatar for yourself.");
+        }
 
         // If this is a product image, enforce max 5 images per product
         if (ownerType == MediaOwnerType.PRODUCT) {
@@ -79,13 +87,24 @@ public class MediaServiceImpl implements MediaService {
     }
     
     @Override
-    public MediaResponse updateMedia(MultipartFile file, String mediaId) {
+    public MediaResponse updateMedia(MultipartFile file,
+                                     String mediaId,
+                                     String currentUserId,
+                                     String currentUserRole) {
         validateImageFile(file);
+        
+        if (!"SELLER".equals(currentUserRole)) {
+            throw new ForbiddenException("Only sellers can update images.");
+        }
         
         Media media = mediaRepository.findById(mediaId)
                 .orElseThrow(() -> new MediaNotFoundException(mediaId));
         
-        // TODO: later – read current user from SecurityUtils and enforce ownership.
+        // Ownership: only ownerId can update this media
+        if (!media.getOwnerId().equals(currentUserId)) {
+            throw new ForbiddenException("You can only update your own media.");
+        }
+        
         
         storageService.delete(media.getImagePath());
         
@@ -107,11 +126,21 @@ public class MediaServiceImpl implements MediaService {
     }
     
     @Override
-    public DeleteMediaResponse deleteMedia(String id) {
+    public DeleteMediaResponse deleteMedia(String id,
+                                           String currentUserId,
+                                           String currentUserRole) {
+        
+        if (!"SELLER".equals(currentUserRole)) {
+            throw new ForbiddenException("Only sellers can delete images.");
+        }
+        
         Media media = mediaRepository.findById(id)
                 .orElseThrow(() -> new MediaNotFoundException(id));
         
-        // TODO: later – enforce ownership with SecurityUtils
+        // Ownership: only ownerId can delete this media
+        if (!media.getOwnerId().equals(currentUserId)) {
+            throw new ForbiddenException("You can only delete your own media.");
+        }
         
         storageService.delete(media.getImagePath());
         mediaRepository.deleteById(id);

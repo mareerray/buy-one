@@ -22,14 +22,29 @@ spring:
           uri: lb://USER-SERVICE
           predicates:
             - Path=/auth/**
+          filters:
+            - JwtHeaderFilter
+
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
             - Path=/users/**
+          filters:
+            - JwtHeaderFilter
+
         - id: product-service
           uri: lb://PRODUCT-SERVICE
           predicates:
             - Path=/products/**
+          filters:
+            - JwtHeaderFilter
+
+        - id: media-service
+          uri: lb://MEDIA-SERVICE
+          predicates:
+            - Path=/media/**
+          filters:
+            - JwtHeaderFilter
 
 eureka:
   client:

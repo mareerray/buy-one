@@ -55,12 +55,16 @@ public class MediaController {
     
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<MediaResponse>> uploadImage(
-            @Valid @ModelAttribute MediaUploadRequest request
+            @Valid @ModelAttribute MediaUploadRequest request,
+            @RequestHeader("X-USER-ID") String currentUserId,
+            @RequestHeader("X-USER-ROLE") String currentUserRole
     ) {
         MediaResponse media = mediaService.uploadImage(
                 request.getFile(),
                 request.getOwnerId(),
-                request.getOwnerType()
+                request.getOwnerType(),
+                currentUserId,
+                currentUserRole
         );
         ApiResponse<MediaResponse> response = ApiResponse.<MediaResponse>builder()
                 .success(true)
@@ -73,9 +77,11 @@ public class MediaController {
     @PutMapping(value = "/{mediaId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<MediaResponse>> updateMedia(
             @PathVariable String mediaId,
-            @RequestParam("file") MultipartFile file
+            @RequestParam("file") MultipartFile file,
+            @RequestHeader("X-USER-ID") String currentUserId,
+            @RequestHeader("X-USER-ROLE") String currentUserRole
     ) {
-        MediaResponse media = mediaService.updateMedia(file, mediaId);
+        MediaResponse media = mediaService.updateMedia(file, mediaId, currentUserId, currentUserRole);
         ApiResponse<MediaResponse> response = ApiResponse.<MediaResponse>builder()
                 .success(true)
                 .message("Image updated successfully")
@@ -85,8 +91,11 @@ public class MediaController {
     }
 
     @DeleteMapping("/{mediaId}")
-    public ResponseEntity<ApiResponse<DeleteMediaResponse>>  deleteMedia(@PathVariable String mediaId) {
-        DeleteMediaResponse deleted = mediaService.deleteMedia(mediaId);
+    public ResponseEntity<ApiResponse<DeleteMediaResponse>>  deleteMedia(@PathVariable String mediaId,
+            @RequestHeader("X-USER-ID") String currentUserId,
+            @RequestHeader("X-USER-ROLE") String currentUserRole
+    ) {
+        DeleteMediaResponse deleted = mediaService.deleteMedia(mediaId, currentUserId, currentUserRole);
         ApiResponse<DeleteMediaResponse> response = ApiResponse.<DeleteMediaResponse>builder()
                 .success(true)
                 .message("Deleted successfully")
