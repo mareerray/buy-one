@@ -1,17 +1,21 @@
 package com.buyone.mediaservice.controller;
 
+import com.buyone.mediaservice.model.Media;
 import com.buyone.mediaservice.request.MediaUploadRequest;
 import com.buyone.mediaservice.response.MediaResponse;
 import com.buyone.mediaservice.response.MediaListResponse;
 import com.buyone.mediaservice.response.DeleteMediaResponse;
 import com.buyone.mediaservice.response.ApiResponse;
 import com.buyone.mediaservice.service.MediaService;
+import com.buyone.mediaservice.service.StorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.ResponseEntity;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 
 import java.util.List;
 
@@ -21,6 +25,7 @@ import java.util.List;
 public class MediaController {
     
     private final MediaService mediaService;
+    private final StorageService storageService;
     // use @Value or service constant and put into yml
     private static final int MAX_IMAGES_PER_PRODUCT = 5;
     
@@ -51,7 +56,19 @@ public class MediaController {
                 .build();
         return ResponseEntity.ok(response);
     }
-
+    
+    // raw image api
+    @GetMapping("/{mediaId}/file")
+    public ResponseEntity<Resource> getImageFile(@PathVariable String mediaId) {
+        Media media = mediaService.findMediaEntity(mediaId); // or reuse getMedia + repo
+        Resource resource = storageService.loadAsResource(media.getImagePath());
+        
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG) // or detect from file/metadata
+                .body(resource);
+    }
+    
+    
     
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<MediaResponse>> uploadImage(

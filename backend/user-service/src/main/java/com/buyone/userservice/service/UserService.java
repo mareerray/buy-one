@@ -4,6 +4,7 @@ import com.buyone.userservice.request.RegisterUserRequest;
 import com.buyone.userservice.request.UpdateUserRequest;
 import com.buyone.userservice.response.UserResponse;
 import com.buyone.userservice.model.User;
+import com.buyone.userservice.model.Role;
 
 import java.util.List;
 import java.util.Optional;

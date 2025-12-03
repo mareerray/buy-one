@@ -29,7 +29,7 @@ public class MediaServiceImpl implements MediaService {
     private static final long MAX_FILE_SIZE_BYTES = 2L * 1024 * 1024;
     
     @Override
-    public MediaResponse uploadImage((MultipartFile file,
+    public MediaResponse uploadImage(MultipartFile file,
                                      String ownerId,
                                      MediaOwnerType ownerType,
                                      String currentUserId,
@@ -159,6 +159,12 @@ public class MediaServiceImpl implements MediaService {
                         m.getCreatedAt()
                 ))
                 .toList();
+    }
+    
+    @Override
+    public Media findMediaEntity(String id) {
+        return mediaRepository.findById(id)
+                .orElseThrow(() -> new MediaNotFoundException(id));
     }
     
     private void validateImageFile(MultipartFile file) {

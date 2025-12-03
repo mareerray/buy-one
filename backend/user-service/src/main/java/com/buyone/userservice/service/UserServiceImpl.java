@@ -1,6 +1,7 @@
 package com.buyone.userservice.service;
 
 import com.buyone.userservice.model.User;
+import com.buyone.userservice.model.Role;
 import com.buyone.userservice.repository.UserRepository;
 import com.buyone.userservice.request.RegisterUserRequest;
 import com.buyone.userservice.request.UpdateUserRequest;

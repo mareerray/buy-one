@@ -1,5 +1,6 @@
 package com.buyone.mediaservice.service;
 
+import com.buyone.mediaservice.model.Media;
 import com.buyone.mediaservice.model.MediaOwnerType;
 import com.buyone.mediaservice.response.MediaResponse;
 import com.buyone.mediaservice.response.MediaListResponse;
@@ -26,4 +27,7 @@ public interface MediaService {
                                     String currentUserRole);
     
     List<MediaResponse> mediaListForProduct(String productId);
+    
+    // calling from storage to media
+    Media findMediaEntity(String id);
 }

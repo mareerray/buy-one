@@ -1,4 +1,4 @@
-package com.buyone.gateway_service.config;
+package com.buyone.gatewayservice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +10,7 @@ import org.springframework.http.HttpMethod;
 @Configuration
 @EnableWebFluxSecurity
 public class SecurityConfig {
+
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         http
@@ -18,6 +19,7 @@ public class SecurityConfig {
                     .pathMatchers("/auth/**").permitAll()   // allow login/register
                     .pathMatchers(HttpMethod.GET, "/products/**").permitAll()  // public GET
                     .pathMatchers("/products/**").authenticated()
+                    .pathMatchers(HttpMethod.GET, "/media/images/**").permitAll()
                     .anyExchange().authenticated()          // require JWT for all others
             )
             .oauth2ResourceServer(oauth2 -> oauth2

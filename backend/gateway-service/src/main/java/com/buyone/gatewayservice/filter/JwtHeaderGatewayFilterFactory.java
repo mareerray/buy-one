@@ -1,17 +1,16 @@
-package com.buyone.gateway_service.filter;
+package com.buyone.gatewayservice.filter;
 
-import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
+import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationToken;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
 
 @Component
-public class JwtHeaderFilterFactory extends AbstractGatewayFilterFactory<JwtHeaderFilterFactory.Config> {
-    
-    public JwtHeaderFilterFactory() {
+public class JwtHeaderGatewayFilterFactory extends AbstractGatewayFilterFactory<JwtHeaderGatewayFilterFactory.Config> {
+
+    public JwtHeaderGatewayFilterFactory() {
         super(Config.class);
     }
     
@@ -19,7 +18,7 @@ public class JwtHeaderFilterFactory extends AbstractGatewayFilterFactory<JwtHead
     public GatewayFilter apply(Config config) {
         return (exchange, chain) ->
                 exchange.getPrincipal()
-                        .cast(ReactiveJwtAuthenticationToken.class)
+                        .cast(JwtAuthenticationToken.class)
                         .map(auth -> {
                             Jwt jwt = auth.getToken();
                             String userId = jwt.getSubject();

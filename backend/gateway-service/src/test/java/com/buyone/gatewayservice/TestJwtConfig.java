@@ -1,4 +1,4 @@
-package com.buyone.gateway_service;
+package com.buyone.gatewayservice;
 
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
