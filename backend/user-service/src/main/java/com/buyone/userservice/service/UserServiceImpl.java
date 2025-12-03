@@ -1,6 +1,7 @@
 package com.buyone.userservice.service;
 
 import com.buyone.userservice.model.User;
+import com.buyone.userservice.model.Role;
 import com.buyone.userservice.repository.UserRepository;
 import com.buyone.userservice.request.RegisterUserRequest;
 import com.buyone.userservice.request.UpdateUserRequest;
@@ -27,6 +28,7 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
     
+    // Creation //
     @Override
     public UserResponse createUser(RegisterUserRequest request) {
         if (request.getEmail() == null || request.getEmail().isBlank()) {
@@ -50,23 +52,31 @@ public class UserServiceImpl implements UserService {
         User savedUser = userRepository.save(user);
         return toUserResponse(savedUser);
     }
+
+    
+    // -------------------------- //
+    
+    // for DTOs
     
     @Override
-    public Optional<UserResponse> getUserById(String id) {
+    public UserResponse getUserById(String id) {
         return userRepository.findById(id)
                 .map(this::toUserResponse)
-                .or(() -> {
-                    throw new ResourceNotFoundException("User not found with ID " + id);
-                });
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("User not found with ID " + id)
+                );
     }
     
     @Override
-    public Optional<User> getUserEntityByEmail(String email) {
+    public UserResponse getUserByEmail(String email) {
         if (email == null || email.isBlank()) {
             throw new BadRequestException("Email must not be empty");
         }
         return userRepository.findByEmail(email)
-                .or(() -> { throw new ResourceNotFoundException("No user found with email: " + email); });
+                .map(this::toUserResponse)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("No user found with email: " + email)
+                );
     }
     
     @Override
@@ -81,6 +91,18 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
     
+    @Override
+    public List<UserResponse> getUsersByRole(Role role) {
+        return userRepository.findByRole(role)
+                .stream()
+                .map(this::toUserResponse)
+                .collect(Collectors.toList());
+    }
+    
+    
+    // -------------------------- //
+    
+    // updates
     @Override
     public UserResponse updateUser(String id, UpdateUserRequest request) {
         User existingUser = userRepository.findById(id)
@@ -111,10 +133,52 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
+    public UserResponse updateUserByEmail(String email, UpdateUserRequest request) {
+        if (email == null || email.isBlank()) {
+            throw new BadRequestException("Email must not be empty");
+        }
+        
+        User existingUser = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("No user found with email: " + email)
+                );
+        
+        // Decide allowed fields for self-update (no role change, maybe no email change)
+        if (request.getName() != null) {
+            existingUser.setName(request.getName());
+        }
+        if (request.getPassword() != null && !request.getPassword().isBlank()) {
+            existingUser.setPassword(passwordEncoder.encode(request.getPassword()));
+        }
+        if (request.getAvatar() != null) {
+            existingUser.setAvatar(request.getAvatar());
+        }
+        // if you want to allow email change via /me, handle it carefully & check uniqueness
+        
+        User updatedUser = userRepository.save(existingUser);
+        return toUserResponse(updatedUser);
+    }
+    
+    // -------------------------- //
+    
+    // for internal lookup
+    @Override
+    public Optional<User> getUserEntityByEmail(String email) {
+        if (email == null || email.isBlank()) {
+            throw new BadRequestException("Email must not be empty");
+        }
+        return userRepository.findByEmail(email);
+    }
+    
+    @Override
     public User getUserEntityById(String id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + id));
     }
+    
+    // -------------------------- //
+    
+    // Deletion
     
     @Override
     @Transactional
@@ -125,6 +189,8 @@ public class UserServiceImpl implements UserService {
         // Cascade deletes/logic for related entities if needed
         userRepository.deleteById(id);
     }
+    
+    // -------------------------- //
     
     // Mapping helper
     private UserResponse toUserResponse(User user) {

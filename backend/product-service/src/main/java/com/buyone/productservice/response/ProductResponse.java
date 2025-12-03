@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Builder;
 
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,8 +17,9 @@ public class ProductResponse {
     private Double price;
     private Integer quantity;
     private String userId;
-    // private String mediaId;
+    private String categoryId;
     
+    // private String mediaId;
     // Optional:
     // private Instant createdAt;
 }
