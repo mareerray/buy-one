@@ -4,7 +4,7 @@ import java.time.Instant;
 
 public record MediaResponse(
         String id,
-        String productId,
+        String ownerId,
         String url,          // e.g. /media/images/{id}
         Instant createdAt
 ) {}

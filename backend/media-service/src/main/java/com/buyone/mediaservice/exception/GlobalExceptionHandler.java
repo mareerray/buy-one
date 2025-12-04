@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
     }
     
     // 413: File too large (Spring built-in)
-    @ExceptionHandler(org.springframework.web.multipart.MaxUploadSizeExceededException.class)
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<ErrorResponse> handleMaxUploadSize(MaxUploadSizeExceededException ex, HttpServletRequest request) {
         return buildError(HttpStatus.PAYLOAD_TOO_LARGE, "File exceeds 2MB size limit.", request.getRequestURI());
     }

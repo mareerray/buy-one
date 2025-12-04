@@ -1,6 +1,7 @@
 package com.buyone.mediaservice.service.impl;
 
 import com.buyone.mediaservice.model.Media;
+import com.buyone.mediaservice.model.MediaOwnerType;
 import com.buyone.mediaservice.repository.MediaRepository;
 import com.buyone.mediaservice.response.MediaResponse;
 import com.buyone.mediaservice.response.DeleteMediaResponse;
@@ -10,7 +11,6 @@ import com.buyone.mediaservice.exception.MediaNotFoundException;
 import com.buyone.mediaservice.exception.InvalidFileException;
 import com.buyone.mediaservice.exception.ConflictException;
 import com.buyone.mediaservice.exception.ForbiddenException;
-import com.buyone.mediaservice.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,22 +24,35 @@ public class MediaServiceImpl implements MediaService {
     
     private final MediaRepository mediaRepository;
     private final StorageService storageService;
-    private final SecurityUtils securityUtils;
     
     private static final int MAX_IMAGES_PER_PRODUCT = 5;
     private static final long MAX_FILE_SIZE_BYTES = 2L * 1024 * 1024;
     
     @Override
-    public MediaResponse uploadImage(MultipartFile file, String productId) {
+    public MediaResponse uploadImage(MultipartFile file,
+                                     String ownerId,
+                                     MediaOwnerType ownerType,
+                                     String currentUserId,
+                                     String currentUserRole) {
         validateImageFile(file);
-        
-        long imageCount = mediaRepository.countByProductId(productId);
-        if (imageCount >= MAX_IMAGES_PER_PRODUCT) {
-            throw new ConflictException("This product already has the maximum number of images (" + MAX_IMAGES_PER_PRODUCT + ").");
+        if (!"SELLER".equals(currentUserRole)) {
+            throw new ForbiddenException("Only Seller can upload images");
+        }
+        if (ownerType == MediaOwnerType.USER && !ownerId.equals(currentUserId)) {
+            throw new ForbiddenException("You can only upload an avatar for yourself.");
+        }
+
+        // If this is a product image, enforce max 5 images per product
+        if (ownerType == MediaOwnerType.PRODUCT) {
+            long imageCount = mediaRepository.countByOwnerIdAndOwnerType(ownerId, MediaOwnerType.PRODUCT);
+            if (imageCount >= MAX_IMAGES_PER_PRODUCT) {
+                throw new ConflictException("This product already has the maximum number of images (" + MAX_IMAGES_PER_PRODUCT + ").");
+            }
         }
         
         Media media = Media.builder()
-                .productId(productId)
+                .ownerId(ownerId)
+                .ownerType(ownerType)
                 .createdAt(Instant.now())
                 .build();
         
@@ -54,7 +67,7 @@ public class MediaServiceImpl implements MediaService {
         
         return new MediaResponse(
                 media.getId(),
-                media.getProductId(),
+                media.getOwnerId(),
                 url,
                 media.getCreatedAt()
         );
@@ -67,20 +80,31 @@ public class MediaServiceImpl implements MediaService {
         String url = "/media/images/" + media.getId();
         return new MediaResponse(
                 media.getId(),
-                media.getProductId(),
+                media.getOwnerId(),
                 url,
                 media.getCreatedAt()
         );
     }
     
     @Override
-    public MediaResponse updateMedia(MultipartFile file, String mediaId) {
+    public MediaResponse updateMedia(MultipartFile file,
+                                     String mediaId,
+                                     String currentUserId,
+                                     String currentUserRole) {
         validateImageFile(file);
+        
+        if (!"SELLER".equals(currentUserRole)) {
+            throw new ForbiddenException("Only sellers can update images.");
+        }
         
         Media media = mediaRepository.findById(mediaId)
                 .orElseThrow(() -> new MediaNotFoundException(mediaId));
         
-        // TODO: later – read current user from SecurityUtils and enforce ownership.
+        // Ownership: only ownerId can update this media
+        if (!media.getOwnerId().equals(currentUserId)) {
+            throw new ForbiddenException("You can only update your own media.");
+        }
+        
         
         storageService.delete(media.getImagePath());
         
@@ -95,18 +119,28 @@ public class MediaServiceImpl implements MediaService {
         
         return new MediaResponse(
                 media.getId(),
-                media.getProductId(),
+                media.getOwnerId(),
                 url,
                 media.getCreatedAt()
         );
     }
     
     @Override
-    public DeleteMediaResponse deleteMedia(String id) {
+    public DeleteMediaResponse deleteMedia(String id,
+                                           String currentUserId,
+                                           String currentUserRole) {
+        
+        if (!"SELLER".equals(currentUserRole)) {
+            throw new ForbiddenException("Only sellers can delete images.");
+        }
+        
         Media media = mediaRepository.findById(id)
                 .orElseThrow(() -> new MediaNotFoundException(id));
         
-        // TODO: later – enforce ownership with SecurityUtils
+        // Ownership: only ownerId can delete this media
+        if (!media.getOwnerId().equals(currentUserId)) {
+            throw new ForbiddenException("You can only delete your own media.");
+        }
         
         storageService.delete(media.getImagePath());
         mediaRepository.deleteById(id);
@@ -115,16 +149,22 @@ public class MediaServiceImpl implements MediaService {
     
     @Override
     public List<MediaResponse> mediaListForProduct(String productId) {
-        var medias = mediaRepository.findAllByProductId(productId);
+        var medias = mediaRepository.findAllByOwnerIdAndOwnerType(productId, MediaOwnerType.PRODUCT);
         
         return medias.stream()
                 .map(m -> new MediaResponse(
                         m.getId(),
-                        m.getProductId(),
+                        m.getOwnerId(),
                         "/media/images/" + m.getId(),
                         m.getCreatedAt()
                 ))
                 .toList();
+    }
+    
+    @Override
+    public Media findMediaEntity(String id) {
+        return mediaRepository.findById(id)
+                .orElseThrow(() -> new MediaNotFoundException(id));
     }
     
     private void validateImageFile(MultipartFile file) {

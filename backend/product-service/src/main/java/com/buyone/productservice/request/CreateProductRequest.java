@@ -30,6 +30,8 @@ public class CreateProductRequest {
     @Min(value = 0, message = "Quantity must be zero or greater")
     private Integer quantity;
     
+    private String categoryId;
+    
     // userId is NOT included here, it comes from JWT / header in the controller for security!
     // Add more fields as model extends, with corresponding validations
     

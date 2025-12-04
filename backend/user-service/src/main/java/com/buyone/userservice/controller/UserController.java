@@ -1,13 +1,14 @@
 package com.buyone.userservice.controller;
 
+import com.buyone.userservice.model.Role;
 import com.buyone.userservice.request.UpdateUserRequest;
 import com.buyone.userservice.response.UserResponse;
 import com.buyone.userservice.service.UserService;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -20,22 +21,53 @@ public class UserController {
         this.userService = userService;
     }
     
-    // GET /api/users/{id} - Find user by ID
+    // ---------------------- //
+    
+    // GET /api/users/{id} - Find user by ID (admin/internal)
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable String id) {
-        return userService.getUserById(id)
-                .map(ResponseEntity::ok)
-                .orElseThrow(); // ResourceNotFoundException will be handled globally
+        UserResponse user = userService.getUserById(id);
+        return ResponseEntity.ok(user);
     }
     
-    // GET /api/users - List all users
+    // GET /api/users - List all users (admin/internal)
     @GetMapping
     public ResponseEntity<List<UserResponse>> getAllUsers() {
         List<UserResponse> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
     
-    // PUT /api/users/{id} - Update user info
+    // GET /me - current user profile
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse> getCurrentUser(Principal principal) {
+        String email = principal.getName();
+        UserResponse user = userService.getUserByEmail(email);
+        return ResponseEntity.ok(user);
+    }
+    
+    @GetMapping("/sellers")
+    public ResponseEntity<List<UserResponse>> getSellers() {
+        return ResponseEntity.ok(userService.getUsersByRole(Role.SELLER));
+    }
+    
+    @GetMapping("/clients")
+    public ResponseEntity<List<UserResponse>> getClients() {
+        return ResponseEntity.ok(userService.getUsersByRole(Role.CLIENT));
+    }
+    
+    // ---------------------- //
+    
+    // PUT /me - update current user profile
+    @PutMapping("/me")
+    public ResponseEntity<UserResponse> updateCurrentUser(
+            Principal principal,
+            @Valid @RequestBody UpdateUserRequest updateUserRequest) {
+        String email = principal.getName();
+        UserResponse updated = userService.updateUserByEmail(email, updateUserRequest);
+        return ResponseEntity.ok(updated);
+    }
+
+    // PUT /api/users/{id} - Update user info (admin/internal)
     @PutMapping("/{id}")
     public ResponseEntity<UserResponse> updateUser(
             @PathVariable String id,
@@ -44,7 +76,7 @@ public class UserController {
         return ResponseEntity.ok(updated);
     }
     
-    // DELETE /api/users/{id} - Delete user by ID
+    // DELETE /api/users/{id} - Delete user by ID (admin/internal)
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable String id) {
         userService.deleteUser(id);

@@ -20,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -71,6 +70,7 @@ public class ProductServiceImpl implements ProductService {
                 .price(request.getPrice())
                 .quantity(request.getQuantity())
                 .userId(sellerId)
+                .categoryId(request.getCategoryId())
                 .build();
         
         Product savedProduct = productRepository.save(product);
@@ -94,12 +94,12 @@ public class ProductServiceImpl implements ProductService {
     
     // Get single product by ID
     @Override
-    public Optional<ProductResponse> getProductById(String id) {
+    public ProductResponse getProductById(String id) {
         return productRepository.findById(id)
                 .map(this::toProductResponse)
-                .or(() -> {
-                    throw new ProductNotFoundException("Product not found with ID: " + id);
-                });
+                .orElseThrow(() ->
+                        new ProductNotFoundException("Product not found with ID: " + id)
+                );
     }
     
     // Get all products (consider pagination for production)
@@ -150,6 +150,7 @@ public class ProductServiceImpl implements ProductService {
         if (request.getDescription() != null) product.setDescription(request.getDescription());
         if (request.getPrice() != null) product.setPrice(request.getPrice());
         if (request.getQuantity() != null) product.setQuantity(request.getQuantity());
+        if (request.getCategoryId() != null) product.setCategoryId(request.getCategoryId());
         
         Product updatedProduct = productRepository.save(product);
         ProductUpdatedEvent event = ProductUpdatedEvent.builder()
@@ -215,6 +216,7 @@ public class ProductServiceImpl implements ProductService {
                 .price(product.getPrice())
                 .quantity(product.getQuantity())
                 .userId(product.getUserId()) // Correct getter
+                .categoryId(product.getCategoryId())
                 .build();
     }
 }

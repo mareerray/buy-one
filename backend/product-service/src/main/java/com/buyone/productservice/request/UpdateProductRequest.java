@@ -23,4 +23,6 @@ public class UpdateProductRequest {
     
     @Min(value = 0, message = "Quantity must be zero or greater")
     private Integer quantity;
+    
+    private String categoryId;
 }

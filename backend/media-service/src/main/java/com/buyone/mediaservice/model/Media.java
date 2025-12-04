@@ -16,9 +16,8 @@ public class Media {
     
     @Id
     private String id;
-    
-    private String productId;
-    
+    private String ownerId; // userId or productId
+    private MediaOwnerType ownerType; // USER or PRODUCT
     private String imagePath;   // where the file is stored (relative path or URL)
     
     @CreatedDate

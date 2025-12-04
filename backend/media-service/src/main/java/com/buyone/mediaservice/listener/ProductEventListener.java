@@ -1,5 +1,6 @@
 package com.buyone.mediaservice.listener;
 
+import com.buyone.mediaservice.model.MediaOwnerType;
 import com.buyone.mediaservice.repository.MediaRepository;
 import com.buyone.mediaservice.service.StorageService;
 import com.buyone.productservice.event.ProductDeletedEvent;
@@ -20,7 +21,10 @@ public class ProductEventListener {
     )
     public void onProductDeleted(ProductDeletedEvent event) {
         // Find all media for this product
-        var medias = mediaRepository.findAllByProductId(event.getProductId());
+        var medias = mediaRepository.findAllByOwnerIdAndOwnerType(
+                event.getProductId(),
+                MediaOwnerType.PRODUCT
+        );
         for (var media : medias) {
             storageService.delete(media.getImagePath());
             mediaRepository.deleteById(media.getId());

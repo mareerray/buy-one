@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
-import jakarta.validation.*;
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/products")
-@Validated // For request validation (if using method-level validation later)
+@Validated
 public class ProductController {
     
     private final ProductService productService;
@@ -27,17 +27,16 @@ public class ProductController {
     
     // GET /products (public)
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAllProducts() {
+    public ResponseEntity<ApiResponse<List<ProductResponse>>> getAllProducts() {
         List<ProductResponse> products = productService.getAllProducts();
-        return ResponseEntity.ok(products);
+        return ResponseEntity.ok(okResponse("Products fetched successfully", products));
     }
     
     // GET /products/{id} (public)
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> getProductById(@PathVariable String id) {
-        ProductResponse product = productService.getProductById(id)
-                .orElseThrow(); // Relies on service to throw if not found
-        return ResponseEntity.ok(product);
+    public ResponseEntity<ApiResponse<ProductResponse>> getProductById(@PathVariable String id) {
+        ProductResponse product = productService.getProductById(id);
+        return ResponseEntity.ok(okResponse("Product fetched successfully", product));
     }
     
     // POST /products (seller only)
@@ -50,15 +49,11 @@ public class ProductController {
         if (!"SELLER".equals(role)) {
             throw new ForbiddenException("Only sellers can create products.");
         }
+        
         ProductResponse product = productService.createProduct(request, sellerId);
-        
-        ApiResponse<ProductResponse> response = ApiResponse.<ProductResponse>builder()
-                .success(true)
-                .message("Product created successfully")
-                .data(product)
-                .build();
-        
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(okResponse("Product created successfully", product));
     }
     
     // PUT /products/{id} (seller only & must own)
@@ -72,13 +67,9 @@ public class ProductController {
         if (!"SELLER".equals(role)) {
             throw new ForbiddenException("Only sellers can update products.");
         }
+        
         ProductResponse product = productService.updateProduct(id, request, sellerId);
-        ApiResponse<ProductResponse> response = ApiResponse.<ProductResponse>builder()
-                .success(true)
-                .message("Product updated successfully")
-                .data(product)
-                .build();
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(okResponse("Product updated successfully", product));
     }
     
     // DELETE /products/{id} (seller only & must own)
@@ -91,11 +82,17 @@ public class ProductController {
         if (!"SELLER".equals(role)) {
             throw new ForbiddenException("Only sellers can delete products.");
         }
+        
         productService.deleteProduct(id, sellerId);
-        ApiResponse<Void> response = ApiResponse.<Void>builder()
+        return ResponseEntity.ok(okResponse("Product deleted successfully", null));
+    }
+    
+    // Helper to build ApiResponse consistently
+    private <T> ApiResponse<T> okResponse(String message, T data) {
+        return ApiResponse.<T>builder()
                 .success(true)
-                .message("Product deleted successfully")
+                .message(message)
+                .data(data)
                 .build();
-        return ResponseEntity.ok(response);
     }
 }
