@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
-import { ResponseUser } from '../../models/users/responseUser.model';
+import { UserService } from '../../services/user.service';
+import { UserResponse } from '../../models/users/userResponse.model';
 import { UserUpdateRequest } from '../../models/users/userUpdateRequest.model';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -17,14 +17,14 @@ import { HttpEventType } from '@angular/common/http';
   imports: [ReactiveFormsModule, CommonModule],
 })
 export class ProfileComponent implements OnInit {
-  currentUser: ResponseUser | null = null;
+  currentUser: UserResponse | null = null;
   profileForm: FormGroup;
   passwordForm: FormGroup;
   avatar: string | null = null;
   avatarError: string = '';
   uploadProgress = 0;
 
-  authService = inject(AuthService);
+  userService = inject(UserService);
   mediaService = inject(MediaService);
 
   fb = inject(FormBuilder);
@@ -45,7 +45,7 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.authService.currentUser$.subscribe((user) => {
+    this.userService.getCurrentUser().subscribe((user) => {
       if (user) {
         this.currentUser = user;
         this.profileForm.patchValue({ name: user.name, email: user.email });
@@ -101,7 +101,7 @@ export class ProfileComponent implements OnInit {
         avatar: this.avatar || this.currentUser.avatar,
         // password not included here
       };
-      this.authService.updateUser(dto);
+      this.userService.updateCurrentUser(dto);
     }
   }
 
@@ -114,7 +114,7 @@ export class ProfileComponent implements OnInit {
         avatar: this.currentUser.avatar,
         password: this.passwordForm.value.newPassword,
       };
-      this.authService.updateUser(dto);
+      this.userService.updateCurrentUser(dto);
     }
   }
 

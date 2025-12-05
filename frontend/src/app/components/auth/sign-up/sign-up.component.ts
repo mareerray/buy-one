@@ -1,11 +1,12 @@
-import { Component, Output, EventEmitter, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { MediaService } from '../../../services/media.service';
 import { HttpEventType } from '@angular/common/http';
+import { AuthService } from '../../../services/auth.service';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -35,24 +36,28 @@ import { MatRadioModule } from '@angular/material/radio';
   ],
 })
 export class SignUpComponent {
-  @Output() signUp = new EventEmitter<{
-    name: string;
-    email: string;
-    password: string;
-    role: 'client' | 'seller';
-    avatar?: string;
-  }>();
-  @Output() switchToSignIn = new EventEmitter<void>();
+  // @Output() signUp = new EventEmitter<{
+  //   name: string;
+  //   email: string;
+  //   password: string;
+  //   role: 'client' | 'seller';
+  //   avatar?: string;
+  // }>();
+  // @Output() switchToSignIn = new EventEmitter<void>();
 
   uploadProgress = 0;
   avatar: string = '';
   avatarError: string = '';
   showAvatar: boolean = false;
+  errorMessage = '';
+  isLoading = false;
 
   form: FormGroup;
 
   private fb = inject(FormBuilder);
   private mediaService = inject(MediaService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
   constructor() {
     this.form = this.fb.group(
@@ -64,7 +69,7 @@ export class SignUpComponent {
           [
             Validators.required,
             Validators.minLength(8),
-            Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)'),
+            // Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])'),
           ],
         ],
         confirmPassword: ['', Validators.required],
@@ -124,13 +129,33 @@ export class SignUpComponent {
 
   submit() {
     if (this.form.invalid) return;
+
+    this.isLoading = true;
+    this.errorMessage = '';
+
     const { name, email, password, role } = this.form.value;
-    this.signUp.emit({
+
+    // Transform to match backend RegisterUserRequest
+    const payload = {
       name: name!,
       email: email!,
       password: password!,
-      role: role!,
-      avatar: this.avatar,
+      role: role.toUpperCase(), // 'client' | 'seller' to 'CLIENT' | 'SELLER'
+      avatar: this.avatar || 'assets/avatars/user-default.png',
+    };
+
+    this.authService.signup(payload).subscribe({
+      next: (user) => {
+        this.isLoading = false;
+        console.log('Sign-up successful', user);
+        // this.signUp.emit(payload); --- IGNORE ---
+        this.router.navigate(['/profile']);
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.errorMessage = 'Sign-up failed. Please try again.';
+        console.error('Sign-up error', error);
+      },
     });
   }
 }

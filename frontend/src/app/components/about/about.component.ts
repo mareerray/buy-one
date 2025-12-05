@@ -18,7 +18,7 @@ export class AboutComponent {
   }
   onSellWithUsClick(): void {
     const user = this.authService.currentUserValue; // or however you read it
-    const isSeller = user?.role === 'seller';
+    const isSeller = user?.role === 'SELLER';
 
     if (isSeller) {
       this.router.navigate(['/seller-dashboard']);

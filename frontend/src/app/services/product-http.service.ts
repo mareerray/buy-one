@@ -10,7 +10,7 @@ import { ApiResponse } from '../models/api-response/api-response.model';
 @Injectable({ providedIn: 'root' })
 export class ProductService {
   private http = inject(HttpClient);
-  private baseUrl = 'http://localhost:8080/api/products';
+  private baseUrl = 'https://localhost:8080/api/products';
 
   private productsSubject = new BehaviorSubject<ProductResponse[]>([]);
   products$ = this.productsSubject.asObservable();

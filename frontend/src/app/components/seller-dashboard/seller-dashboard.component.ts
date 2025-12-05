@@ -61,7 +61,7 @@ export class SellerDashboardComponent implements OnInit {
 
   viewMyShop() {
     const currentUser = this.authService.currentUserValue;
-    if (currentUser && currentUser.role === 'seller') {
+    if (currentUser && currentUser.role === 'SELLER') {
       this.router.navigate(['/seller-shop', currentUser.id]);
     }
   }
