@@ -13,7 +13,7 @@ import { UserResponse } from '../models/users/userResponse.model'; // Create thi
 export class AuthService {
   private http = inject(HttpClient);
 
-  private baseUrl = 'https://localhost:8080/auth'; // Your backend URL
+  private baseUrl = 'https://localhost:8080/auth';
   private currentUserSubject = new BehaviorSubject<UserResponse | null>(this.loadUserFromStorage());
   public currentUser$ = this.currentUserSubject.asObservable();
 
@@ -26,7 +26,6 @@ export class AuthService {
     localStorage.setItem('currentUser', JSON.stringify(user));
     this.currentUserSubject.next(user);
   }
-
 
   private saveAuthData(token: string, user: UserResponse): void {
     localStorage.setItem('token', token);

@@ -53,6 +53,8 @@ export class ProfileComponent implements OnInit {
       if (user) {
         this.currentUser = user;
         this.profileForm.patchValue({ name: user.name, email: user.email });
+        // Disable email field
+        this.profileForm.get('email')?.disable();
         this.avatar = user.avatar || null;
       }
     });
@@ -103,27 +105,27 @@ export class ProfileComponent implements OnInit {
       const dto: UserUpdateRequest = {
         id: this.currentUser.id,
         name: this.profileForm.value.name,
-        email: this.profileForm.value.email,
+        // email: this.profileForm.value.email,
         avatar: this.avatar || this.currentUser.avatar,
         // password not included here
       };
       this.userService.updateCurrentUser(dto).subscribe({
-            next: (updatedUser) => {
-              this.currentUser = updatedUser;
-              this.profileForm.patchValue({
-                  name: updatedUser.name,
-                  email: updatedUser.email
-              });
-              // keep AuthService / navbar in sync
-              this.authService.updateCurrentUserInStorage(updatedUser); // navbar updates
-              this.successMessage = 'Profile updated successfully!';
-              this.showSuccess = true;
-              console.log('Profile updated successfully');
-            },
-            error: (err) => {
-              console.error('Failed to update profile', err);
-            }
+        next: (updatedUser) => {
+          this.currentUser = updatedUser;
+          this.profileForm.patchValue({
+            name: updatedUser.name,
+            // email: updatedUser.email,
           });
+          // keep AuthService / navbar in sync
+          this.authService.updateCurrentUserInStorage(updatedUser); // navbar updates
+          this.successMessage = 'Profile updated successfully!';
+          this.showSuccess = true;
+          console.log('Profile updated successfully');
+        },
+        error: (err) => {
+          console.error('Failed to update profile', err);
+        },
+      });
     }
   }
 
@@ -134,22 +136,22 @@ export class ProfileComponent implements OnInit {
       const dto: UserUpdateRequest = {
         id: this.currentUser.id,
         name: this.currentUser.name, // keep unchanged
-        email: this.currentUser.email, // keep unchanged
+        // email: this.currentUser.email, // keep unchanged
         avatar: this.currentUser.avatar,
         password: this.passwordForm.value.newPassword,
       };
       this.userService.updateCurrentUser(dto).subscribe({
-            next: (updatedUser) => {
-              this.currentUser = updatedUser;
-              this.passwordForm.reset();
-                this.successMessage = 'Password changed successfully!';
-                this.showSuccess = true;
-              console.log('Password updated successfully');
-            },
-            error: (err) => {
-              console.error('Failed to update password', err);
-            }
-          });
+        next: (updatedUser) => {
+          this.currentUser = updatedUser;
+          this.passwordForm.reset();
+          this.successMessage = 'Password changed successfully!';
+          this.showSuccess = true;
+          console.log('Password updated successfully');
+        },
+        error: (err) => {
+          console.error('Failed to update password', err);
+        },
+      });
     }
   }
 

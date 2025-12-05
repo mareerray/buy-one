@@ -64,7 +64,9 @@ public class UserController {
             @Valid @RequestBody UpdateUserRequest updateUserRequest) {
         String email = principal.getName();
         UserResponse updated = userService.updateUserByEmail(email, updateUserRequest);
-        return ResponseEntity.ok(updated);
+        return ResponseEntity.ok()
+            .header("X-Email-Update", "Email changes require admin privileges")
+            .body(updated);
     }
 
     // PUT /api/users/{id} - Update user info (admin/internal)

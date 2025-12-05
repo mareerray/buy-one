@@ -9,7 +9,7 @@
   </button>
 </div>
 
-<div class="container mt-4">
+<div class="container mt-4 mb-5">
   <div class="card p-4 shadow rounded-3">
     <div class="row">
       <div class="col-md-5 text-center position-relative">
@@ -62,9 +62,9 @@
           </div>
         </div>
         <div class="mt-3">
-          <div class="fw-bold mb-2">{{ currentUser?.name }}</div>
-          <span class="badge bg-primary mt-2">{{ currentUser?.role }}</span>
-          <span class="badge bg-secondary ms-2">{{ currentUser?.id }}</span>
+          <div class="fw-bold mb-2 fs-2">{{ currentUser?.name }}</div>
+          <span class="badge bg-primary">{{ currentUser?.role }}</span>
+          <!-- <span class="badge bg-secondary ms-2">{{ currentUser?.id }}</span> -->
         </div>
       </div>
       <div class="col-md-6">
@@ -74,8 +74,8 @@
             <input type="text" class="form-control custom-width" formControlName="name" />
           </div>
           <div class="row-md-5">
-            <label class="form-label">Email</label>
-            <input type="email" class="form-control custom-width" formControlName="email" />
+            <label class="form-label">Email<small class="text-white"> (Cannot be changed)</small></label>
+            <input type="email" readonly class="form-control custom-width" formControlName="email" />
           </div>
           <div class="col-12 d-flex justify-content-end">
             <button type="submit" class="btn btn-primary hover-lift" [disabled]="!profileForm.valid">

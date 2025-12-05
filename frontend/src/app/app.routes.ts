@@ -10,10 +10,10 @@ import { SellerDashboardComponent } from './components/seller-dashboard/seller-d
 import { SellerShopComponent } from './components/seller-shop/seller-shop.component';
 import { AboutComponent } from './components/about/about.component';
 import { SellerGuard } from './guards/seller.guard';
-import { AuthGuard} from './guards/auth.guard';
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'signin', pathMatch: 'full' },
+  // { path: '', redirectTo: 'signin', pathMatch: 'full' },
   { path: '', component: HomeComponent },
   { path: 'signin', component: SignInComponent },
   { path: 'signup', component: SignUpComponent },
