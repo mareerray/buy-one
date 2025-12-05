@@ -1,4 +1,4 @@
-package com.buyone.media.config;
+package com.buyone.mediaservice.config;
 
 import java.net.URI;
 

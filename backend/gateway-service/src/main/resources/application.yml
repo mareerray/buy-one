@@ -22,13 +22,12 @@ spring:
           uri: lb://USER-SERVICE
           predicates:
             - Path=/auth/**
-          filters:
-            - JwtHeader
+          # NO JwtHeader filter - let USER-SERVICE handle login/register
 
-        - id: user-service
+        - id: user-service-api
           uri: lb://USER-SERVICE
           predicates:
-            - Path=/users/**
+            - Path=/api/users/**
           filters:
             - JwtHeader
 
