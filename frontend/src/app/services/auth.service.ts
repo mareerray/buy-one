@@ -22,6 +22,12 @@ export class AuthService {
     return userJson ? (JSON.parse(userJson) as UserResponse) : null;
   }
 
+  updateCurrentUserInStorage(user: UserResponse): void {
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    this.currentUserSubject.next(user);
+  }
+
+
   private saveAuthData(token: string, user: UserResponse): void {
     localStorage.setItem('token', token);
     localStorage.setItem('currentUser', JSON.stringify(user));

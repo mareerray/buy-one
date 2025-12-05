@@ -149,7 +149,7 @@ export class SignUpComponent {
         this.isLoading = false;
         console.log('Sign-up successful', user);
         // this.signUp.emit(payload); --- IGNORE ---
-        this.router.navigate(['/profile']);
+        this.router.navigate(['/signin']);
       },
       error: (error) => {
         this.isLoading = false;

@@ -68,8 +68,10 @@ export class SignInComponent implements OnInit {
 
           const user = this.authService.currentUserValue;
           if (user?.role === 'SELLER') {
+            localStorage.setItem('token', response.token);
             this.router.navigate(['/profile']);
           } else {
+            localStorage.setItem('token', response.token);
             this.router.navigate(['/profile']);
           }
         },

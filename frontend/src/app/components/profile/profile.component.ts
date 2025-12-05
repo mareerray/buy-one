@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { AbstractControl } from '@angular/forms';
 import { MediaService } from '../../services/media.service';
 import { HttpEventType } from '@angular/common/http';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -23,9 +24,12 @@ export class ProfileComponent implements OnInit {
   avatar: string | null = null;
   avatarError: string = '';
   uploadProgress = 0;
+  successMessage = '';
+  showSuccess = false;
 
   userService = inject(UserService);
   mediaService = inject(MediaService);
+  authService = inject(AuthService);
 
   fb = inject(FormBuilder);
 
@@ -94,6 +98,8 @@ export class ProfileComponent implements OnInit {
 
   saveProfile() {
     if (this.profileForm.valid && this.currentUser) {
+      this.successMessage = '';
+
       const dto: UserUpdateRequest = {
         id: this.currentUser.id,
         name: this.profileForm.value.name,
@@ -101,12 +107,30 @@ export class ProfileComponent implements OnInit {
         avatar: this.avatar || this.currentUser.avatar,
         // password not included here
       };
-      this.userService.updateCurrentUser(dto);
+      this.userService.updateCurrentUser(dto).subscribe({
+            next: (updatedUser) => {
+              this.currentUser = updatedUser;
+              this.profileForm.patchValue({
+                  name: updatedUser.name,
+                  email: updatedUser.email
+              });
+              // keep AuthService / navbar in sync
+              this.authService.updateCurrentUserInStorage(updatedUser); // navbar updates
+              this.successMessage = 'Profile updated successfully!';
+              this.showSuccess = true;
+              console.log('Profile updated successfully');
+            },
+            error: (err) => {
+              console.error('Failed to update profile', err);
+            }
+          });
     }
   }
 
   changePassword() {
     if (this.passwordForm.valid && this.currentUser) {
+      this.successMessage = '';
+
       const dto: UserUpdateRequest = {
         id: this.currentUser.id,
         name: this.currentUser.name, // keep unchanged
@@ -114,7 +138,18 @@ export class ProfileComponent implements OnInit {
         avatar: this.currentUser.avatar,
         password: this.passwordForm.value.newPassword,
       };
-      this.userService.updateCurrentUser(dto);
+      this.userService.updateCurrentUser(dto).subscribe({
+            next: (updatedUser) => {
+              this.currentUser = updatedUser;
+              this.passwordForm.reset();
+                this.successMessage = 'Password changed successfully!';
+                this.showSuccess = true;
+              console.log('Password updated successfully');
+            },
+            error: (err) => {
+              console.error('Failed to update password', err);
+            }
+          });
     }
   }
 

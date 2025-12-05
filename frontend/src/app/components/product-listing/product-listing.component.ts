@@ -20,18 +20,31 @@ export class ProductListingComponent implements OnInit {
   searchQuery: string = '';
   categoryFilter: string = 'all';
   sortBy: string = 'name';
+
+  categories: string[] = [];
+  filteredProducts: Product[] = [];
+  categoryOptions: { id: string; name: string }[] = [];
+
   private router = inject(Router); //
 
   ngOnInit() {
     this.products = MOCK_PRODUCTS;
+    this.initializeCategories();
+    this.initializeCategoryOptions();
+    this.updateFilteredProducts();
   }
 
-  get categories(): string[] {
-    return ['all', ...Array.from(new Set(this.products.map((p) => p.categoryId)))];
+  private initializeCategories() {
+    this.categories = ['all', ...Array.from(new Set(this.products.map((p) => p.categoryId)))];
   }
 
-  get filteredProducts(): Product[] {
-    return this.products
+  private initializeCategoryOptions() {
+    this.categoryOptions = this.category.map((c) => ({ id: c.id, name: c.name }));
+  }
+
+  // Call this whenever filters change
+  updateFilteredProducts() {
+    this.filteredProducts = this.products
       .filter((product) => {
         const matchesSearch =
           product.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
@@ -59,11 +72,6 @@ export class ProductListingComponent implements OnInit {
     return MOCK_USERS.find((user) => user.id === sellerId && user.role === 'seller');
   }
 
-  // For filter list:
-  get categoryOptions() {
-    return [...this.category.map((c) => ({ id: c.id, name: c.name }))];
-  }
-
   getCategoryName(categoryId: string): string {
     const cat = this.category.find((c) => c.id === categoryId);
     return cat ? cat.name : '';
@@ -77,4 +85,17 @@ export class ProductListingComponent implements OnInit {
     alert('Add to Cart feature coming soon!');
     console.log('add to cart', productId);
   }
+
+  // These methods call when user changes filters
+    onSearchChange() {
+      this.updateFilteredProducts();
+    }
+
+    onCategoryChange() {
+      this.updateFilteredProducts();
+    }
+
+    onSortChange() {
+      this.updateFilteredProducts();
+    }
 }
