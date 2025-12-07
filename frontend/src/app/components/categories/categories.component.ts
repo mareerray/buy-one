@@ -26,18 +26,36 @@ export class CategoriesComponent {
   selectedCategorySlug: string | null = null;
   // selectedCategorySlug = this.categories[0].slug;
 
+  isLoading = false;
+  errorMessage: string | null = null;
+
   constructor() {
-    // 1) Load categories from backend
-    this.categoryService.getCategories().subscribe((cats) => {
-      this.categories = cats;
+    this.loadCategories();
+    this.listenToRoute();
+  }
 
-      // If nothing selected yet, pick first one
-      if (!this.selectedCategorySlug && this.categories.length > 0) {
-        this.selectedCategorySlug = this.categories[0].slug;
-      }
+  // Load categories from backend
+  private loadCategories() {
+    this.isLoading = true;
+    this.errorMessage = null;
+
+    this.categoryService.getCategories().subscribe({
+      next: (cats) => {
+        this.categories = cats;
+        if (!this.selectedCategorySlug && this.categories.length > 0) {
+          this.selectedCategorySlug = this.categories[0].slug;
+        }
+        this.isLoading = false;
+      },
+      error: () => {
+        this.errorMessage = 'Could not load categories.';
+        this.isLoading = false;
+      },
     });
+  }
 
-    // 2) Listen to route slug
+  // Listen to route slug
+  private listenToRoute() {
     this.route.paramMap.subscribe((params) => {
       const slugFromUrl = params.get('slug');
       if (slugFromUrl && this.categories.some((cat) => cat.slug === slugFromUrl)) {
@@ -45,14 +63,6 @@ export class CategoriesComponent {
       }
     });
   }
-  // constructor() {
-  //   this.route.paramMap.subscribe((params) => {
-  //     const slugFromUrl = params.get('slug');
-  //     if (slugFromUrl && this.categories.some((cat) => cat.slug === slugFromUrl)) {
-  //       this.selectedCategorySlug = slugFromUrl;
-  //     }
-  //   });
-  // }
 
   selectCategory(slug: string) {
     this.selectedCategorySlug = slug;
