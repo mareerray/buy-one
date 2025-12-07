@@ -25,4 +25,6 @@ public class UpdateProductRequest {
     private Integer quantity;
     
     private String categoryId;
+
+    private java.util.List<String> images;
 }
