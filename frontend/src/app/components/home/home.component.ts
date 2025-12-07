@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HeroComponent } from '../ui/hero/hero.component';
 import { MOCK_PRODUCTS } from '../../models/products/product.model';
 import { MOCK_USERS } from '../../models/users/user.model';
-import { CATEGORIES } from '../../models/categories/categories.model';
+import { CATEGORIES } from '../../models/categories/category.model';
 import { InfiniteSliderComponent } from '../ui/infinite-slider/infinite-slider.component';
 import { Router } from '@angular/router';
 

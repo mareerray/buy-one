@@ -4,8 +4,8 @@ import { HttpClient } from '@angular/common/http';
 
 import { LoginRequest } from '../models/users/loginRequest.model';
 import { RegisterUserRequest } from '../models/users/registerUserRequest.model';
-import { LoginResponse } from '../models/users/loginResponse.model'; // Create this
-import { UserResponse } from '../models/users/userResponse.model'; // Create this
+import { LoginResponse } from '../models/users/login-response.model'; // Create this
+import { UserResponse } from '../models/users/user-response.model'; // Create this
 
 @Injectable({
   providedIn: 'root',

@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../services/user.service';
-import { UserResponse } from '../../models/users/userResponse.model';
+import { UserResponse } from '../../models/users/user-response.model';
 import { UserUpdateRequest } from '../../models/users/userUpdateRequest.model';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';

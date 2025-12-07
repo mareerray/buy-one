@@ -5,7 +5,7 @@ import { MOCK_PRODUCTS, Product } from '../../models/products/product.model';
 import { MOCK_USERS, User } from '../../models/users/user.model';
 import { Router } from '@angular/router';
 import { ProductGridCardComponent } from '../product-grid-card/product-grid-card.component';
-import { CATEGORIES } from '../../models/categories/categories.model';
+import { CATEGORIES } from '../../models/categories/category.model';
 
 @Component({
   selector: 'app-product-listing',

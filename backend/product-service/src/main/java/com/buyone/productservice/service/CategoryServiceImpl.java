@@ -54,6 +54,7 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryResponse toResponse(Category c) {
         return new CategoryResponse(
                 c.getId(),
+                c.getSlug(),
                 c.getName(),
                 c.getIcon(),
                 c.getDescription()

@@ -1,4 +1,4 @@
-import { UserResponse } from './userResponse.model';
+import { UserResponse } from './user-response.model';
 
 export interface LoginResponse {
   message: string;

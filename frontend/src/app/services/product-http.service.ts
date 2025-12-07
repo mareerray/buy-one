@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { CreateProductRequest } from '../models/products/createProductRequest.model';
 import { UpdateProductRequest } from '../models/products/updateProductRequest.model';
-import { ProductResponse } from '../models/products/productResponse.model';
+import { ProductResponse } from '../models/products/product-response.model';
 import { ApiResponse } from '../models/api-response/api-response.model';
 
 @Injectable({ providedIn: 'root' })
