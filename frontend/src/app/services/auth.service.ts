@@ -1,68 +1,44 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { User } from '../models/users/user.model';
-import { UserDTO } from '../models/users/userDTO.model';
-import { UserUpdateDTO } from '../models/users/userUpdateDTO.model';
-import { MOCK_USERS, authenticateUser, getUserByEmail, updateUser } from '../models/users/user.model';
+import { Injectable, inject } from '@angular/core';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+
+import { LoginRequest } from '../models/users/loginRequest.model';
+import { RegisterUserRequest } from '../models/users/registerUserRequest.model';
+import { LoginResponse } from '../models/users/login-response.model'; // Create this
+import { UserResponse } from '../models/users/user-response.model'; // Create this
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private currentUserSubject = new BehaviorSubject<UserDTO | null>(this.loadUserFromStorage());
-  public currentUser$: Observable<UserDTO | null> = this.currentUserSubject.asObservable();
+  private http = inject(HttpClient);
 
-  constructor() {}
+  private baseUrl = 'https://localhost:8080/auth';
+  private currentUserSubject = new BehaviorSubject<UserResponse | null>(this.loadUserFromStorage());
+  public currentUser$ = this.currentUserSubject.asObservable();
 
-  private loadUserFromStorage(): UserDTO | null {
+  private loadUserFromStorage(): UserResponse | null {
     const userJson = localStorage.getItem('currentUser');
-    return userJson ? (JSON.parse(userJson) as UserDTO) : null;
+    return userJson ? (JSON.parse(userJson) as UserResponse) : null;
   }
 
-  login(email: string, password: string): { success: boolean; message?: string } {
-    const user = authenticateUser(email, password);
-
-    if (user) {
-      const { ...userDTO } = user;
-      localStorage.setItem('currentUser', JSON.stringify(userDTO));
-      this.currentUserSubject.next(userDTO as UserDTO);
-      console.log(userDTO);
-      return { success: true };
-    }
-
-    return { success: false, message: 'Invalid credentials' };
+  updateCurrentUserInStorage(user: UserResponse): void {
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    this.currentUserSubject.next(user);
   }
 
-  signup(userData: Partial<User>): { success: boolean; message?: string } {
-    const existingUser = getUserByEmail(userData.email!);
-
-    if (existingUser) {
-      return { success: false, message: 'Email already registered' };
-    }
-
-    const newUser: User = {
-      id: `user-${Date.now()}`,
-      email: userData.email!,
-      password: userData.password!,
-      name: userData.name!,
-      role: userData.role || 'client',
-      avatar: userData.avatar || '',
-    };
-    MOCK_USERS.push(newUser);
-
-    const { ...userDTO } = newUser;
-    localStorage.setItem('currentUser', JSON.stringify(userDTO));
-    this.currentUserSubject.next(userDTO as UserDTO);
-    return { success: true };
+  private saveAuthData(token: string, user: UserResponse): void {
+    localStorage.setItem('token', token);
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    this.currentUserSubject.next(user);
   }
 
-  logout(): void {
-    localStorage.removeItem('currentUser');
-    this.currentUserSubject.next(null);
-  }
-
-  get currentUserValue(): UserDTO | null {
+  get currentUserValue(): UserResponse | null {
     return this.currentUserSubject.value;
+  }
+
+  get token(): string | null {
+    return localStorage.getItem('token');
   }
 
   isAuthenticated(): boolean {
@@ -70,14 +46,28 @@ export class AuthService {
   }
 
   isSeller(): boolean {
-    return this.currentUserValue?.role === 'seller';
+    return this.currentUserValue?.role === 'SELLER';
   }
 
-  updateUser(update: UserUpdateDTO) {
-    const updated = updateUser(update);
-    if (updated) {
-      const { ...userDTO } = updated;
-      this.currentUserSubject.next(userDTO as UserDTO);
-    }
+  login(credentials: LoginRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.baseUrl}/login`, credentials).pipe(
+      tap((response) => {
+        this.saveAuthData(response.token, response.user);
+      }),
+    );
+  }
+
+  signup(userData: RegisterUserRequest): Observable<UserResponse> {
+    return this.http.post<UserResponse>(`${this.baseUrl}/register`, userData).pipe(
+      tap((user) => {
+        this.saveAuthData('', user); // No token from register (adjust if backend sends one)
+      }),
+    );
+  }
+
+  logout(): void {
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('token');
+    this.currentUserSubject.next(null);
   }
 }

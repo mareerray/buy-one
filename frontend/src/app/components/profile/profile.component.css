@@ -58,6 +58,11 @@ img.rounded-circle {
   color: #fff;
 }
 
+.visible-close-btn {
+   filter: brightness(0) saturate(100%) invert(79%) sepia(53%) saturate(2392%) hue-rotate(100deg) brightness(98%) contrast(96%);
+    opacity: 1;
+}
+
 @media (max-width: 768px) {
   .container {
     padding-left: 0.5rem;

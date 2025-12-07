@@ -1,10 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common'; // for ngClass, ngIf, ngFor
-import { CATEGORIES } from '../../models/categories/categories.model';
+import { Category } from '../../models/categories/category.model';
 import { MOCK_PRODUCTS } from '../../models/products/product.model';
 import { MOCK_USERS, User } from '../../models/users/user.model';
 import { ProductGridCardComponent } from '../product-grid-card/product-grid-card.component';
 import { Router, ActivatedRoute } from '@angular/router';
+import { CategoryService } from '../../services/category.service';
 
 @Component({
   selector: 'app-categories',
@@ -16,13 +17,45 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class CategoriesComponent {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private categoryService = inject(CategoryService);
 
-  categories = CATEGORIES;
+  categories: Category[] = [];
+  // categories = CATEGORIES;
   products = MOCK_PRODUCTS;
 
-  selectedCategorySlug = this.categories[0].slug;
+  selectedCategorySlug: string | null = null;
+  // selectedCategorySlug = this.categories[0].slug;
+
+  isLoading = false;
+  errorMessage: string | null = null;
 
   constructor() {
+    this.loadCategories();
+    this.listenToRoute();
+  }
+
+  // Load categories from backend
+  private loadCategories() {
+    this.isLoading = true;
+    this.errorMessage = null;
+
+    this.categoryService.getCategories().subscribe({
+      next: (cats) => {
+        this.categories = cats;
+        if (!this.selectedCategorySlug && this.categories.length > 0) {
+          this.selectedCategorySlug = this.categories[0].slug;
+        }
+        this.isLoading = false;
+      },
+      error: () => {
+        this.errorMessage = 'Could not load categories.';
+        this.isLoading = false;
+      },
+    });
+  }
+
+  // Listen to route slug
+  private listenToRoute() {
     this.route.paramMap.subscribe((params) => {
       const slugFromUrl = params.get('slug');
       if (slugFromUrl && this.categories.some((cat) => cat.slug === slugFromUrl)) {
@@ -37,6 +70,7 @@ export class CategoriesComponent {
   }
 
   get selectedCategory() {
+    if (!this.selectedCategorySlug) return undefined;
     return this.categories.find((cat) => cat.slug === this.selectedCategorySlug);
   }
 

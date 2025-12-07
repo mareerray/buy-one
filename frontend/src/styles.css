@@ -216,3 +216,13 @@ body {
   overflow: hidden;
   line-clamp: 3;
 }
+
+.alert.alert-info {
+  margin-top: 20px;
+  background-color: transparent;
+  border: none;
+  text-align: center;
+  font-size: 1.2rem;
+  color: var(--link);
+}
+

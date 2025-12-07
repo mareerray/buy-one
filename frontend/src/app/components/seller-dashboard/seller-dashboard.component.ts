@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule, NgIf } from '@angular/common';
 import { Product, MOCK_PRODUCTS } from '../../models/products/product.model';
-import { CATEGORIES } from '../../models/categories/categories.model';
+import { CATEGORIES } from '../../models/categories/category.model';
 import { AuthService } from '../../services/auth.service';
 import { MediaService } from '../../services/media.service';
 import { Router } from '@angular/router';
@@ -61,7 +61,7 @@ export class SellerDashboardComponent implements OnInit {
 
   viewMyShop() {
     const currentUser = this.authService.currentUserValue;
-    if (currentUser && currentUser.role === 'seller') {
+    if (currentUser && currentUser.role === 'SELLER') {
       this.router.navigate(['/seller-shop', currentUser.id]);
     }
   }

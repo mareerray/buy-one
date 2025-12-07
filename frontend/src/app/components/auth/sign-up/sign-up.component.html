@@ -75,8 +75,15 @@
             <div class="error-msg mt-1" *ngIf="avatarError">
               {{ avatarError }}
             </div>
+            <div class="progress mt-1" *ngIf="uploadProgress > 0">
+              <div class="progress-bar" [style.width.%]="uploadProgress"></div>
+            </div>
           </div>
-
+          <!-- Error Alert  -->
+          <div class="alert alert-danger" *ngIf="errorMessage" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            {{ errorMessage }}
+          </div>
           <!-- Name Field -->
           <mat-form-field appearance="outline" class="w-100 mb-3">
             <mat-label>Full Name</mat-label>
@@ -146,10 +153,11 @@
             mat-raised-button
             color="primary"
             type="submit"
-            class="w-100 mb-3"
-            [disabled]="form.invalid"
+            class="w-100 mb-3 hover-lift"
+            [disabled]="form.invalid || isLoading"
           >
-            Create Account
+          <mat-spinner diameter="20" *ngIf="isLoading" class="d-inline-block me-2"></mat-spinner>
+            {{ isLoading ? 'Creating Account...' : 'Create Account' }}
           </button>
 
           <!-- Sign In Link -->

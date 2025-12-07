@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MOCK_PRODUCTS, Product } from '../../models/products/product.model';
 import { MOCK_USERS, User } from '../../models/users/user.model';
-import { CATEGORIES } from '../../models/categories/categories.model';
+import { CATEGORIES } from '../../models/categories/category.model';
 import { ProductGridCardComponent } from '../product-grid-card/product-grid-card.component';
 
 @Component({

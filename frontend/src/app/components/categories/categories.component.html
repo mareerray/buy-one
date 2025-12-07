@@ -1,3 +1,8 @@
+<p *ngIf="isLoading" class="text-center my-3">Loading categories...</p>
+<p *ngIf="!isLoading && errorMessage" class="text-center my-3 text-info">
+  {{ errorMessage }}
+</p>
+
 <div class="container py-5 categories-page">
     <div class="row">
       <!-- Mobile nav -->

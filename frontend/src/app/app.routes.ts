@@ -10,13 +10,14 @@ import { SellerDashboardComponent } from './components/seller-dashboard/seller-d
 import { SellerShopComponent } from './components/seller-shop/seller-shop.component';
 import { AboutComponent } from './components/about/about.component';
 import { SellerGuard } from './guards/seller.guard';
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
-  // { path: '', redirectTo: 'signin', pathMatch: 'full' }, // Default to 'signin'
+  // { path: '', redirectTo: 'signin', pathMatch: 'full' },
   { path: '', component: HomeComponent },
   { path: 'signin', component: SignInComponent },
   { path: 'signup', component: SignUpComponent },
-  { path: 'profile', component: ProfileComponent },
+  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
   { path: 'product-listing', component: ProductListingComponent },
   { path: 'product/:id', component: ProductCardComponent },
   { path: 'categories', component: CategoriesComponent },

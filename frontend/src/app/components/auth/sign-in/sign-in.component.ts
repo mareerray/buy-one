@@ -60,21 +60,27 @@ export class SignInComponent implements OnInit {
       this.errorMessage = '';
 
       const { email, password } = this.signInForm.value;
-      const result = this.authService.login(email, password);
 
-      this.isLoading = false;
+      this.authService.login({ email, password }).subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          console.log('Login successful', response);
 
-      if (result.success) {
-        console.log('Login successful');
-        const user = this.authService.currentUserValue;
-        if (user?.role === 'seller') {
-          this.router.navigate(['/profile']);
-        } else {
-          this.router.navigate(['/profile']);
-        }
-      } else {
-        this.errorMessage = result.message || 'Login failed';
-      }
+          const user = this.authService.currentUserValue;
+          if (user?.role === 'SELLER') {
+            localStorage.setItem('token', response.token);
+            this.router.navigate(['/profile']);
+          } else {
+            localStorage.setItem('token', response.token);
+            this.router.navigate(['/profile']);
+          }
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.errorMessage = 'Login failed. Please check your credentials.';
+          console.error('Login error', error);
+        },
+      });
     }
   }
 

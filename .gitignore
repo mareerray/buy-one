@@ -26,3 +26,5 @@ Thumbs.db
 /environment.ts
 /environment.prod.ts
 
+# Husky (optional Git hooks)
+.husky/
