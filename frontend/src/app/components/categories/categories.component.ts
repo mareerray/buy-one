@@ -1,11 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common'; // for ngClass, ngIf, ngFor
-import { Category } from '../../models/categories/category.model';
-import { MOCK_PRODUCTS } from '../../models/products/product.model';
-import { MOCK_USERS, User } from '../../models/users/user.model';
 import { ProductGridCardComponent } from '../product-grid-card/product-grid-card.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CategoryService } from '../../services/category.service';
+import { Category } from '../../models/categories/category.model';
+import { ProductService } from '../../services/product.service';
+import { ProductResponse } from '../../models/products/product-response.model';
+import { UserService } from '../../services/user.service';
+import { UserResponse } from '../../models/users/user-response.model';
 
 @Component({
   selector: 'app-categories',
@@ -18,19 +20,21 @@ export class CategoriesComponent {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private categoryService = inject(CategoryService);
+  private productService = inject(ProductService);
+  private userService = inject(UserService);
 
   categories: Category[] = [];
-  // categories = CATEGORIES;
-  products = MOCK_PRODUCTS;
+  products: ProductResponse[] = [];
+  sellers = new Map<string, UserResponse>();
 
   selectedCategorySlug: string | null = null;
-  // selectedCategorySlug = this.categories[0].slug;
 
   isLoading = false;
   errorMessage: string | null = null;
 
   constructor() {
     this.loadCategories();
+    this.loadProducts();
     this.listenToRoute();
   }
 
@@ -51,6 +55,33 @@ export class CategoriesComponent {
         this.errorMessage = 'Could not load categories.';
         this.isLoading = false;
       },
+    });
+  }
+
+  private loadProducts() {
+    this.productService.getProducts().subscribe({
+      next: (prods) => {
+        this.products = prods;
+        this.loadSellersForProducts();
+      },
+      error: () => {
+        this.errorMessage = 'Could not load products.';
+      },
+    });
+  }
+
+  private loadSellersForProducts() {
+    const ids = Array.from(new Set(this.products.map((p) => p.sellerId)));
+    ids.forEach((id) => {
+      if (!this.sellers.has(id)) {
+        this.userService.getUserById(id).subscribe({
+          next: (user) => {
+            if (user && user.role === 'SELLER') {
+              this.sellers.set(id, user);
+            }
+          },
+        });
+      }
     });
   }
 
@@ -80,9 +111,9 @@ export class CategoriesComponent {
     return this.products.filter((p) => p.categoryId === cat.id);
   }
 
-  getSeller(sellerId: string): User | undefined {
+  getSeller(sellerId: string): UserResponse | undefined {
     // Returns the User object for the seller
-    return MOCK_USERS.find((user) => user.id === sellerId && user.role === 'seller');
+    return this.sellers.get(sellerId);
   }
 
   getCategoryName(categoryId: string): string {
