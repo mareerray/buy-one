@@ -4,10 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { ProductGridCardComponent } from '../product-grid-card/product-grid-card.component';
-import { CATEGORIES } from '../../models/categories/category.model';
-import { MOCK_USERS, User } from '../../models/users/user.model';
 import { ProductService } from '../../services/product.service';
 import { ProductResponse } from '../../models/products/product-response.model';
+import { UserService } from '../../services/user.service';
+import { UserResponse } from '../../models/users/user-response.model';
+import { CategoryService } from '../../services/category.service';
+import { Category } from '../../models/categories/category.model';
 
 @Component({
   selector: 'app-product-listing',
@@ -19,16 +21,19 @@ import { ProductResponse } from '../../models/products/product-response.model';
 export class ProductListingComponent implements OnInit {
   private router = inject(Router);
   private productService = inject(ProductService);
+  private userService = inject(UserService);
+  private categoryService = inject(CategoryService);
 
   products: ProductResponse[] = [];
   filteredProducts: ProductResponse[] = [];
 
-  category = CATEGORIES;
+  sellers = new Map<string, UserResponse>();
+
   searchQuery = '';
   categoryFilter = 'all';
   sortBy = 'name';
 
-  categories: string[] = [];
+  categories: Category[] = [];
   categoryOptions: { id: string; name: string }[] = [];
 
   isLoading = false;
@@ -36,6 +41,7 @@ export class ProductListingComponent implements OnInit {
 
   ngOnInit() {
     this.loadProducts();
+    this.loadCategories();
   }
 
   private loadProducts() {
@@ -45,9 +51,9 @@ export class ProductListingComponent implements OnInit {
     this.productService.getProducts().subscribe({
       next: (prods) => {
         this.products = prods;
-        this.initializeCategories();
         this.initializeCategoryOptions();
         this.updateFilteredProducts();
+        this.loadSellersForProducts();
         this.isLoading = false;
       },
       error: () => {
@@ -57,12 +63,31 @@ export class ProductListingComponent implements OnInit {
     });
   }
 
-  private initializeCategories() {
-    this.categories = ['all', ...Array.from(new Set(this.products.map((p) => p.categoryId)))];
+  private loadCategories() {
+    this.categoryService.getCategories().subscribe({
+      next: (cats) => {
+        this.categories = cats;
+        this.initializeCategoryOptions();
+      },
+      error: () => {
+        // optional: keep dropdown with only "All categories"
+        this.categories = [];
+        this.categoryOptions = [];
+      },
+    });
   }
 
   private initializeCategoryOptions() {
-    this.categoryOptions = this.category.map((c) => ({ id: c.id, name: c.name }));
+    this.categoryOptions = this.categories.map((c) => ({
+      id: c.id,
+      // use slug or name depending on what you want to show
+      name: c.slug, // or c.name
+    }));
+  }
+
+  getCategoryName(categoryId: string): string {
+    const cat = this.categories.find((c) => c.id === categoryId);
+    return cat ? cat.slug : categoryId; // or cat.name
   }
 
   updateFilteredProducts() {
@@ -89,13 +114,23 @@ export class ProductListingComponent implements OnInit {
       });
   }
 
-  getSeller(userId: string): User | undefined {
-    return MOCK_USERS.find((user) => user.id === userId && user.role === 'seller');
+  getSeller(userId: string): UserResponse | undefined {
+    return this.sellers.get(userId);
   }
 
-  getCategoryName(categoryId: string): string {
-    const cat = this.category.find((c) => c.id === categoryId);
-    return cat ? cat.name : '';
+  private loadSellersForProducts() {
+    const ids = Array.from(new Set(this.products.map((p) => p.sellerId)));
+    ids.forEach((id) => {
+      if (!this.sellers.has(id)) {
+        this.userService.getUserById(id).subscribe({
+          next: (user) => {
+            if (user && user.role === 'SELLER') {
+              this.sellers.set(id, user);
+            }
+          },
+        });
+      }
+    });
   }
 
   viewProductDetail(productId: string) {

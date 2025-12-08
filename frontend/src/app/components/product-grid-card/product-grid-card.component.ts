@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Product } from '../../models/products/product.model';
-import { User } from '../../models/users/user.model';
+import { ProductResponse } from '../../models/products/product-response.model';
+import { UserResponse } from '../../models/users/user-response.model';
 import { ProductImageCarouselComponent } from '../ui/product-image-carousel/product-image-carousel.component';
 import { RouterLink } from '@angular/router';
 
@@ -14,10 +14,10 @@ import { RouterLink } from '@angular/router';
 })
 export class ProductGridCardComponent {
   // One product per card – passed in from parent
-  @Input() product!: Product;
+  @Input() product!: ProductResponse;
 
   // Optional: seller passed in from parent (e.g. getSeller in listing component)
-  @Input() seller: User | undefined;
+  @Input() seller: UserResponse | undefined;
 
   // Category display name (computed in parent)
   @Input() categoryName = '';
