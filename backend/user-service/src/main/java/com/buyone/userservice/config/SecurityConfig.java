@@ -37,6 +37,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         //.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow CORS preflight
                         .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register").permitAll() // Open auth endpoints
+                        .requestMatchers(HttpMethod.GET, "/api/users/{id}").permitAll() // Allow public access to get seller by ID
                         .anyRequest().authenticated() // Everything else requires JWT
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

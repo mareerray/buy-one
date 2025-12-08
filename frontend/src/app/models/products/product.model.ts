@@ -5,7 +5,7 @@ export interface Product {
   price: number;
   images: string[];
   categoryId: string;
-  sellerId: string;
+  userId: string;
   quantity: number;
 }
 
@@ -17,7 +17,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 29,
     images: ['assets/images/CodeWizardTee1.png', 'assets/images/CodeWizardTee2.jpeg'],
     categoryId: 'CAT-001',
-    sellerId: 'USER-002',
+    userId: 'USER-002',
     quantity: 10,
   },
   {
@@ -31,7 +31,7 @@ export const MOCK_PRODUCTS: Product[] = [
       'assets/images/MarkusClassicPortraitTee2.jpeg',
     ],
     categoryId: 'CAT-006',
-    sellerId: 'USER-006',
+    userId: 'USER-006',
     quantity: 1,
   },
   {
@@ -42,7 +42,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 30,
     images: ['assets/images/PopCodeQueenTee1.png', 'assets/images/PopCodeQueenTee2.png'],
     categoryId: 'CAT-003',
-    sellerId: 'USER-008',
+    userId: 'USER-008',
     quantity: 6,
   },
   {
@@ -53,7 +53,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 45,
     images: ['assets/images/UrbanLegendsTee1.png', 'assets/images/UrbanLegendsTee2.jpeg'],
     categoryId: 'CAT-006',
-    sellerId: 'USER-006',
+    userId: 'USER-006',
     quantity: 1,
   },
   {
@@ -67,7 +67,7 @@ export const MOCK_PRODUCTS: Product[] = [
       'assets/images/AllenMartialArtsPromoTee2.jpeg',
     ],
     categoryId: 'CAT-006',
-    sellerId: 'USER-006',
+    userId: 'USER-006',
     quantity: 1,
   },
   {
@@ -78,7 +78,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 45,
     images: ['assets/images/OlegActionNoirTee1.png', 'assets/images/OlegActionNoirTee2.jpeg'],
     categoryId: 'CAT-006',
-    sellerId: 'USER-006',
+    userId: 'USER-006',
     quantity: 1,
   },
   {
@@ -88,7 +88,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 35,
     images: ['assets/images/SharinganNinjaTee1.jpg'],
     categoryId: 'CAT-002',
-    sellerId: 'USER-004',
+    userId: 'USER-004',
     quantity: 10,
   },
   {
@@ -102,7 +102,7 @@ export const MOCK_PRODUCTS: Product[] = [
       'assets/images/LittleWarriorMangaTee2.png',
     ],
     categoryId: 'CAT-002',
-    sellerId: 'USER-002',
+    userId: 'USER-002',
     quantity: 6,
   },
   {
@@ -115,7 +115,7 @@ export const MOCK_PRODUCTS: Product[] = [
       'assets/images/pixelArt.jpg',
     ],
     categoryId: 'CAT-005',
-    sellerId: 'USER-004',
+    userId: 'USER-004',
     quantity: 15,
   },
   {
@@ -125,7 +125,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 29,
     images: ['assets/images/EsportsChampionTee1.png', 'assets/images/EsportsChampionTee2.png'],
     categoryId: 'CAT-004',
-    sellerId: 'USER-002',
+    userId: 'USER-002',
     quantity: 10,
   },
   {
@@ -135,7 +135,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 29,
     images: ['assets/images/CyberShooterTee1.png', 'assets/images/CyberShooterTee2.png'],
     categoryId: 'CAT-004',
-    sellerId: 'USER-002',
+    userId: 'USER-002',
     quantity: 8,
   },
   {
@@ -145,7 +145,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 29,
     images: ['assets/images/ProLeagueTee1.png', 'assets/images/ProLeagueTee2.png'],
     categoryId: 'CAT-004',
-    sellerId: 'USER-002',
+    userId: 'USER-002',
     quantity: 6,
   },
   {
@@ -156,7 +156,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 28,
     images: ['assets/images/KeepCodingTee1.png', 'assets/images/KeepCodingTee2.png'],
     categoryId: 'CAT-001',
-    sellerId: 'USER-004',
+    userId: 'USER-004',
     quantity: 6,
   },
   {
@@ -167,7 +167,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 22,
     images: ['assets/images/GroupieTrackerTee1.png', 'assets/images/GroupieTrackerTee2.png'],
     categoryId: 'CAT-001',
-    sellerId: 'USER-004',
+    userId: 'USER-004',
     quantity: 6,
   },
   {
@@ -178,7 +178,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 25,
     images: ['assets/images/DebugLifeMemeTee1.png', 'assets/images/DebugLifeMemeTee2.png'],
     categoryId: 'CAT-005',
-    sellerId: 'USER-004',
+    userId: 'USER-004',
     quantity: 6,
   },
   {
@@ -189,7 +189,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 30,
     images: ['assets/images/TotoroNightPopTee1.png', 'assets/images/TotoroNightPopTee2.jpg'],
     categoryId: 'CAT-002',
-    sellerId: 'USER-002',
+    userId: 'USER-002',
     quantity: 6,
   },
   {
@@ -200,7 +200,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 45,
     images: ['assets/images/OppaNotBadMemeTee1.png', 'assets/images/OppaNotBadMemeTee2.jpeg'],
     categoryId: 'CAT-006',
-    sellerId: 'USER-006',
+    userId: 'USER-006',
     quantity: 1,
   },
   {
@@ -211,7 +211,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 30,
     images: ['assets/images/Bim!CoderWinTee1.png', 'assets/images/Bim!CoderWinTee2.png'],
     categoryId: 'CAT-005',
-    sellerId: 'USER-002',
+    userId: 'USER-002',
     quantity: 6,
   },
   {
@@ -222,7 +222,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 40,
     images: ['assets/images/NightOwlCoderTee1.png', 'assets/images/NightOwlCoderTee2.png'],
     categoryId: 'CAT-003',
-    sellerId: 'USER-008',
+    userId: 'USER-008',
     quantity: 6,
   },
   {
@@ -233,7 +233,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 30,
     images: ['assets/images/FlowStateSPMTee1.png', 'assets/images/FlowStateSPMTee2.png'],
     categoryId: 'CAT-003',
-    sellerId: 'USER-008',
+    userId: 'USER-008',
     quantity: 6,
   },
   {
@@ -244,7 +244,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 30,
     images: ['assets/images/ZenDevMomentTee1.png', 'assets/images/ZenDevMomentTee2.png'],
     categoryId: 'CAT-003',
-    sellerId: 'USER-008',
+    userId: 'USER-008',
     quantity: 6,
   },
   {
@@ -255,7 +255,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 30,
     images: ['assets/images/BrightIdeasTee1.png', 'assets/images/BrightIdeasTee2.png'],
     categoryId: 'CAT-003',
-    sellerId: 'USER-008',
+    userId: 'USER-008',
     quantity: 6,
   },
   {
@@ -266,7 +266,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 30,
     images: ['assets/images/MessyBunDevTee1.png', 'assets/images/MessyBunDevTee2.png'],
     categoryId: 'CAT-003',
-    sellerId: 'USER-008',
+    userId: 'USER-008',
     quantity: 6,
   },
 ];

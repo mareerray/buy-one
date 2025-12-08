@@ -45,13 +45,13 @@ export class SellerDashboardComponent implements OnInit {
   ngOnInit() {
     const currentUser = this.authService.currentUserValue;
     if (currentUser) {
-      this.userProducts = MOCK_PRODUCTS.filter((product) => product.sellerId === currentUser.id);
+      this.userProducts = MOCK_PRODUCTS.filter((product) => product.userId === currentUser.id);
       this.sellerName = currentUser.name;
       this.sellerAvatar = currentUser.avatar || 'assets/avatars/default-user.jpg'; // or whatever field holds avatar url
     }
     // const currentUserId = this.authService.currentUserValue?.id;
     // if (currentUserId) {
-    //   this.userProducts = MOCK_PRODUCTS.filter((product) => product.sellerId === currentUserId);
+    //   this.userProducts = MOCK_PRODUCTS.filter((product) => product.userId === currentUserId);
     // }
   }
 
@@ -166,19 +166,19 @@ export class SellerDashboardComponent implements OnInit {
       price: this.productForm.value.price,
       images: this.imagePreviews.length ? this.imagePreviews.map((p) => p.dataUrl) : [],
       categoryId: this.productForm.value.categoryId || 'uncategorized',
-      sellerId: currentUserId,
+      userId: currentUserId,
       quantity: this.productForm.value.quantity ?? 1,
     };
 
     if (this.editIndex !== null) {
       // Edit mode: update existing product
-      // Keep the product's original ID and sellerId
+      // Keep the product's original ID and userId
       const oldProduct = this.userProducts[this.editIndex];
       this.userProducts[this.editIndex] = {
         ...oldProduct,
         ...productData,
         id: oldProduct.id, // Ensure ID stays consistent
-        sellerId: oldProduct.sellerId,
+        userId: oldProduct.userId,
       };
       this.editIndex = null;
     } else {

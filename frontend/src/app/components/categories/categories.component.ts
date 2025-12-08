@@ -71,7 +71,9 @@ export class CategoriesComponent {
   }
 
   private loadSellersForProducts() {
-    const ids = Array.from(new Set(this.products.map((p) => p.sellerId)));
+    const ids = Array.from(
+      new Set(this.products.map((p) => p.userId).filter((id): id is string => !!id)),
+    ); // Filter out undefined and null
     ids.forEach((id) => {
       if (!this.sellers.has(id)) {
         this.userService.getUserById(id).subscribe({

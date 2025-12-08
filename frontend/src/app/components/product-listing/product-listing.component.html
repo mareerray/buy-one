@@ -47,7 +47,7 @@
       <div *ngFor="let product of filteredProducts" class="col-12 col-md-6 col-lg-4">
         <app-product-grid-card
           [product]="product"
-          [seller]="getSeller(product.sellerId)"
+          [seller]="getSeller(product.userId)"
           [showSeller]="true"
           [showCategory]="true"
           [categoryName]="getCategoryName(product.categoryId)"

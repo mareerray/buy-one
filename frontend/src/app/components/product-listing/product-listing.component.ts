@@ -114,12 +114,10 @@ export class ProductListingComponent implements OnInit {
       });
   }
 
-  getSeller(userId: string): UserResponse | undefined {
-    return this.sellers.get(userId);
-  }
-
   private loadSellersForProducts() {
-    const ids = Array.from(new Set(this.products.map((p) => p.sellerId)));
+    const ids = Array.from(
+      new Set(this.products.map((p) => p.userId).filter((id): id is string => !!id)), // Filter out undefined and null
+    );
     ids.forEach((id) => {
       if (!this.sellers.has(id)) {
         this.userService.getUserById(id).subscribe({
@@ -131,6 +129,10 @@ export class ProductListingComponent implements OnInit {
         });
       }
     });
+  }
+
+  getSeller(userId: string): UserResponse | undefined {
+    return this.sellers.get(userId);
   }
 
   viewProductDetail(productId: string) {

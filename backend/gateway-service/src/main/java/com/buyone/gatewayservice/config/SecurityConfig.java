@@ -28,6 +28,7 @@ public class SecurityConfig {
                         .pathMatchers(HttpMethod.GET, "/products/**").permitAll() // public GET
                         .pathMatchers("/products/**").authenticated()
                         .pathMatchers(HttpMethod.GET, "/media/images/**").permitAll()
+                        .pathMatchers(HttpMethod.GET, "/api/users/**").permitAll()
                         .anyExchange().authenticated() // require JWT for all others
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
