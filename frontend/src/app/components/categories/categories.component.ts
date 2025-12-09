@@ -23,11 +23,10 @@ export class CategoriesComponent {
   private productService = inject(ProductService);
   private userService = inject(UserService);
 
+  selectedCategorySlug: string | null = null;
   categories: Category[] = [];
   products: ProductResponse[] = [];
   sellers = new Map<string, UserResponse>();
-
-  selectedCategorySlug: string | null = null;
 
   isLoading = false;
   errorMessage: string | null = null;
@@ -46,7 +45,12 @@ export class CategoriesComponent {
     this.categoryService.getCategories().subscribe({
       next: (cats) => {
         this.categories = cats;
-        if (!this.selectedCategorySlug && this.categories.length > 0) {
+
+        // if URL already has a slug, respect it
+        const slugFromUrl = this.route.snapshot.paramMap.get('slug');
+        if (slugFromUrl && this.categories.some((cat) => cat.slug === slugFromUrl)) {
+          this.selectedCategorySlug = slugFromUrl;
+        } else if (!this.selectedCategorySlug && this.categories.length > 0) {
           this.selectedCategorySlug = this.categories[0].slug;
         }
         this.isLoading = false;

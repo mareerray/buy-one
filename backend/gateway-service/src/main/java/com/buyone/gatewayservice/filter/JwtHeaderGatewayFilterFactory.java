@@ -21,7 +21,7 @@ public class JwtHeaderGatewayFilterFactory extends AbstractGatewayFilterFactory<
                         .cast(JwtAuthenticationToken.class)
                         .map(auth -> {
                             Jwt jwt = auth.getToken();
-                            String userId = jwt.getSubject();
+                            String userId = jwt.getClaimAsString("id");
                             String role = jwt.getClaimAsString("role");
                             ServerHttpRequest request = exchange.getRequest()
                                     .mutate()
