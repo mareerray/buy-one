@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeroComponent } from '../ui/hero/hero.component';
 import { MOCK_PRODUCTS } from '../../models/products/product.model';
@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent {
   private router = inject(Router);
   categories = CATEGORIES;
 
@@ -31,10 +31,6 @@ export class HomeComponent implements OnInit {
     image: Array.isArray(product.images) ? product.images[0] : product.images,
   }));
 
-  ngOnInit() {
-    console.log('sliderSellers in HomeComponent:', this.sliderSellers);
-    console.log('sliderProducts in HomeComponent:', this.sliderProducts);
-  }
   onCategoryClick(categorySlug: string): void {
     this.router.navigate(['/categories', categorySlug]);
   }

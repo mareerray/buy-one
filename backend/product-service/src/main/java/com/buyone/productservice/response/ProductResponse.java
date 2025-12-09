@@ -18,6 +18,7 @@ public class ProductResponse {
     private Integer quantity;
     private String userId;
     private String categoryId;
+    private java.util.List<String> images;
     
     // private String mediaId;
     // Optional:

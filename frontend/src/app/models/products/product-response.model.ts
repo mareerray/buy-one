@@ -6,5 +6,5 @@ export interface ProductResponse {
   images: string[];
   quantity: number;
   categoryId: string;
-  sellerId: string;
+  userId: string;
 }

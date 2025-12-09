@@ -1,11 +1,15 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common'; // for ngClass, ngIf, ngFor
-import { FormsModule } from '@angular/forms'; // for ngModel (template-driven forms)
-import { MOCK_PRODUCTS, Product } from '../../models/products/product.model';
-import { MOCK_USERS, User } from '../../models/users/user.model';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+
 import { ProductGridCardComponent } from '../product-grid-card/product-grid-card.component';
-import { CATEGORIES } from '../../models/categories/category.model';
+import { ProductService } from '../../services/product.service';
+import { ProductResponse } from '../../models/products/product-response.model';
+import { UserService } from '../../services/user.service';
+import { UserResponse } from '../../models/users/user-response.model';
+import { CategoryService } from '../../services/category.service';
+import { Category } from '../../models/categories/category.model';
 
 @Component({
   selector: 'app-product-listing',
@@ -15,40 +19,83 @@ import { CATEGORIES } from '../../models/categories/category.model';
   imports: [CommonModule, FormsModule, ProductGridCardComponent],
 })
 export class ProductListingComponent implements OnInit {
-  products: Product[] = [];
-  category = CATEGORIES;
-  searchQuery: string = '';
-  categoryFilter: string = 'all';
-  sortBy: string = 'name';
+  private router = inject(Router);
+  private productService = inject(ProductService);
+  private userService = inject(UserService);
+  private categoryService = inject(CategoryService);
 
-  categories: string[] = [];
-  filteredProducts: Product[] = [];
+  products: ProductResponse[] = [];
+  filteredProducts: ProductResponse[] = [];
+
+  sellers = new Map<string, UserResponse>();
+
+  searchQuery = '';
+  categoryFilter = 'all';
+  sortBy = 'name';
+
+  categories: Category[] = [];
   categoryOptions: { id: string; name: string }[] = [];
 
-  private router = inject(Router); //
+  isLoading = false;
+  errorMessage: string | null = null;
 
   ngOnInit() {
-    this.products = MOCK_PRODUCTS;
-    this.initializeCategories();
-    this.initializeCategoryOptions();
-    this.updateFilteredProducts();
+    this.loadProducts();
+    this.loadCategories();
   }
 
-  private initializeCategories() {
-    this.categories = ['all', ...Array.from(new Set(this.products.map((p) => p.categoryId)))];
+  private loadProducts() {
+    this.isLoading = true;
+    this.errorMessage = null;
+
+    this.productService.getProducts().subscribe({
+      next: (prods) => {
+        this.products = prods;
+        this.initializeCategoryOptions();
+        this.updateFilteredProducts();
+        this.loadSellersForProducts();
+        this.isLoading = false;
+      },
+      error: () => {
+        this.errorMessage = 'Could not load products.';
+        this.isLoading = false;
+      },
+    });
+  }
+
+  private loadCategories() {
+    this.categoryService.getCategories().subscribe({
+      next: (cats) => {
+        this.categories = cats;
+        this.initializeCategoryOptions();
+      },
+      error: () => {
+        // optional: keep dropdown with only "All categories"
+        this.categories = [];
+        this.categoryOptions = [];
+      },
+    });
   }
 
   private initializeCategoryOptions() {
-    this.categoryOptions = this.category.map((c) => ({ id: c.id, name: c.name }));
+    this.categoryOptions = this.categories.map((c) => ({
+      id: c.id,
+      // use slug or name depending on what you want to show
+      name: c.slug, // or c.name
+    }));
   }
 
-  // Call this whenever filters change
+  getCategoryName(categoryId: string): string {
+    const cat = this.categories.find((c) => c.id === categoryId);
+    return cat ? cat.slug : categoryId; // or cat.name
+  }
+
   updateFilteredProducts() {
     this.filteredProducts = this.products
       .filter((product) => {
+        const q = this.searchQuery.toLowerCase();
         const matchesSearch =
-          product.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-          product.description.toLowerCase().includes(this.searchQuery.toLowerCase());
+          product.name.toLowerCase().includes(q) || product.description.toLowerCase().includes(q);
         const matchesCategory =
           this.categoryFilter === 'all' || product.categoryId === this.categoryFilter;
         return matchesSearch && matchesCategory;
@@ -67,14 +114,25 @@ export class ProductListingComponent implements OnInit {
       });
   }
 
-  getSeller(sellerId: string): User | undefined {
-    // Returns the User object for the seller
-    return MOCK_USERS.find((user) => user.id === sellerId && user.role === 'seller');
+  private loadSellersForProducts() {
+    const ids = Array.from(
+      new Set(this.products.map((p) => p.userId).filter((id): id is string => !!id)), // Filter out undefined and null
+    );
+    ids.forEach((id) => {
+      if (!this.sellers.has(id)) {
+        this.userService.getUserById(id).subscribe({
+          next: (user) => {
+            if (user && user.role === 'SELLER') {
+              this.sellers.set(id, user);
+            }
+          },
+        });
+      }
+    });
   }
 
-  getCategoryName(categoryId: string): string {
-    const cat = this.category.find((c) => c.id === categoryId);
-    return cat ? cat.name : '';
+  getSeller(userId: string): UserResponse | undefined {
+    return this.sellers.get(userId);
   }
 
   viewProductDetail(productId: string) {
@@ -86,16 +144,15 @@ export class ProductListingComponent implements OnInit {
     console.log('add to cart', productId);
   }
 
-  // These methods call when user changes filters
-    onSearchChange() {
-      this.updateFilteredProducts();
-    }
+  onSearchChange() {
+    this.updateFilteredProducts();
+  }
 
-    onCategoryChange() {
-      this.updateFilteredProducts();
-    }
+  onCategoryChange() {
+    this.updateFilteredProducts();
+  }
 
-    onSortChange() {
-      this.updateFilteredProducts();
-    }
+  onSortChange() {
+    this.updateFilteredProducts();
+  }
 }

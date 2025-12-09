@@ -50,7 +50,6 @@
       <div *ngFor="let product of sellerProducts" class="col-12 col-md-6 col-lg-4">
         <app-product-grid-card
           [product]="product"
-          [seller]="getSeller(product.sellerId)"
           [showSeller]="true"
           [categoryName]="getCategoryName(product.categoryId)"
           [showCategory]="true"

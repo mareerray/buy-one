@@ -25,9 +25,11 @@ public class SecurityConfig {
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow CORS preflight
                         .pathMatchers("/auth/**").permitAll() // allow login/register
-                        .pathMatchers(HttpMethod.GET, "/products/**").permitAll() // public GET
+                        .pathMatchers(HttpMethod.GET, "/products/**").permitAll() // public GET products
                         .pathMatchers("/products/**").authenticated()
                         .pathMatchers(HttpMethod.GET, "/media/images/**").permitAll()
+                        .pathMatchers(HttpMethod.GET, "/api/users/**").permitAll()
+                        .pathMatchers(HttpMethod.GET, "/categories/**").permitAll()  // Public categories
                         .anyExchange().authenticated() // require JWT for all others
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2

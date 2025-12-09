@@ -1,10 +1,14 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MOCK_PRODUCTS, Product } from '../../models/products/product.model';
-import { MOCK_USERS, User } from '../../models/users/user.model';
-import { CATEGORIES } from '../../models/categories/category.model';
+
 import { ProductGridCardComponent } from '../product-grid-card/product-grid-card.component';
+import { ProductService } from '../../services/product.service';
+import { ProductResponse } from '../../models/products/product-response.model';
+import { UserService } from '../../services/user.service';
+import { UserResponse } from '../../models/users/user-response.model';
+import { CategoryService } from '../../services/category.service';
+import { Category } from '../../models/categories/category.model';
 
 @Component({
   selector: 'app-seller-shop',
@@ -14,23 +18,71 @@ import { ProductGridCardComponent } from '../product-grid-card/product-grid-card
   imports: [CommonModule, ProductGridCardComponent],
 })
 export class SellerShopComponent implements OnInit {
-  seller: User | undefined;
-  sellerProducts: Product[] = [];
-  categories = CATEGORIES;
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private productService = inject(ProductService);
+  private userService = inject(UserService);
+  private categoryService = inject(CategoryService);
+
+  seller: UserResponse | undefined;
+  sellerProducts: ProductResponse[] = [];
+  categories: Category[] = [];
+
+  isLoading = false;
+  errorMessage: string | null = null;
 
   ngOnInit() {
     // Get seller ID from route parameter
     const sellerId = this.route.snapshot.paramMap.get('id');
 
     if (sellerId) {
-      // Find seller from MOCK_USERS
-      this.seller = MOCK_USERS.find((user) => user.id === sellerId && user.role === 'seller');
-
-      // Filter products by this seller
-      this.sellerProducts = MOCK_PRODUCTS.filter((product) => product.sellerId === sellerId);
+      this.loadSeller(sellerId);
+      this.loadSellerProducts(sellerId);
+      this.loadCategories();
+    } else {
+      this.errorMessage = 'No Seller specified.';
     }
+  }
+
+  private loadSeller(sellerId: string) {
+    this.userService.getUserById(sellerId).subscribe({
+      next: (user) => {
+        if (user && user.role === 'SELLER') {
+          this.seller = user;
+        } else {
+          this.errorMessage = 'Seller not found.';
+        }
+      },
+      error: () => {
+        this.errorMessage = 'Could not load seller.';
+      },
+    });
+  }
+
+  private loadSellerProducts(sellerId: string) {
+    this.isLoading = true;
+    this.productService.getProductsBySeller(sellerId).subscribe({
+      next: (prods) => {
+        this.sellerProducts = prods;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.errorMessage = 'Could not load seller products.';
+        this.isLoading = false;
+      },
+    });
+  }
+
+  private loadCategories() {
+    this.categoryService.getCategories().subscribe({
+      next: (cats) => (this.categories = cats),
+      error: () => {},
+    });
+  }
+
+  getCategoryName(categoryId: string): string {
+    const cat = this.categories.find((c) => c.id === categoryId);
+    return cat ? cat.slug : categoryId; // or cat.name
   }
 
   viewProductDetail(productId: string) {
@@ -39,16 +91,6 @@ export class SellerShopComponent implements OnInit {
 
   addToCart() {
     alert('Add to Cart feature coming soon!');
-  }
-
-  getSeller(sellerId: string): User | undefined {
-    // Returns the User object for the seller
-    return MOCK_USERS.find((user) => user.id === sellerId && user.role === 'seller');
-  }
-
-  getCategoryName(categoryId: string): string {
-    const cat = this.categories.find((c) => c.id === categoryId);
-    return cat ? cat.name : '';
   }
 
   sendMessage() {
