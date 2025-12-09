@@ -1,8 +1,13 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule, NgIf } from '@angular/common';
-import { Product, MOCK_PRODUCTS } from '../../models/products/product.model';
-import { CATEGORIES } from '../../models/categories/category.model';
+import { ProductService } from '../../services/product.service';
+import { ProductResponse } from '../../models/products/product-response.model';
+import { CreateProductRequest } from '../../models/products/createProductRequest.model';
+import { UpdateProductRequest } from '../../models/products/updateProductRequest.model';
+import { CategoryService } from '../../services/category.service';
+import { Category } from '../../models/categories/category.model';
+
 import { AuthService } from '../../services/auth.service';
 import { MediaService } from '../../services/media.service';
 import { Router } from '@angular/router';
@@ -15,21 +20,26 @@ import { Router } from '@angular/router';
   styleUrls: ['./seller-dashboard.component.css'],
 })
 export class SellerDashboardComponent implements OnInit {
+  private router = inject(Router);
+  private mediaService = inject(MediaService);
+  private authService = inject(AuthService);
+  private productService = inject(ProductService);
+  private categoryService = inject(CategoryService);
+
+  userProducts: ProductResponse[] = [];
+  categories: Category[] = [];
+
   sellerName: string = '';
   sellerAvatar: string = '';
   showModal: boolean = false;
   editIndex: number | null = null;
-  userProducts: Product[] = [];
+
   productForm: FormGroup;
-  categories = CATEGORIES;
   // imagePreview: string | ArrayBuffer | null = null;
   imagePreviews: { file: File | null; dataUrl: string }[] = [];
   isDragActive: boolean = false;
 
-  mediaService = inject(MediaService);
-  authService = inject(AuthService);
   fb = inject(FormBuilder);
-  router = inject(Router);
 
   constructor() {
     this.productForm = this.fb.group({
@@ -44,15 +54,42 @@ export class SellerDashboardComponent implements OnInit {
 
   ngOnInit() {
     const currentUser = this.authService.currentUserValue;
-    if (currentUser) {
-      this.userProducts = MOCK_PRODUCTS.filter((product) => product.userId === currentUser.id);
-      this.sellerName = currentUser.name;
-      this.sellerAvatar = currentUser.avatar || 'assets/avatars/default-user.jpg'; // or whatever field holds avatar url
+    if (!currentUser || currentUser.role !== 'SELLER') {
+      this.router.navigate(['/']);
+      return;
     }
-    // const currentUserId = this.authService.currentUserValue?.id;
-    // if (currentUserId) {
-    //   this.userProducts = MOCK_PRODUCTS.filter((product) => product.userId === currentUserId);
-    // }
+
+    this.sellerName = currentUser.name;
+    this.sellerAvatar = currentUser.avatar || 'assets/avatars/default-user.jpg';
+    this.loadCategories();
+    this.loadSellerProducts(currentUser.id);
+  }
+
+  private loadCategories() {
+    this.categoryService.getCategories().subscribe({
+      next: (cats) => {
+        console.log('Loaded categories in dashboard', cats);
+        this.categories = cats;
+        // Set default category in the form
+        if (this.categories.length > 0 && !this.productForm.get('categoryId')?.value) {
+          this.productForm.patchValue({ categoryId: this.categories[0].id });
+        }
+      },
+      error: () => {
+        console.error('Error loading categories:');
+      },
+    });
+  }
+
+  private loadSellerProducts(sellerId: string) {
+    this.productService.getProductsBySeller(sellerId).subscribe({
+      next: (products) => {
+        this.userProducts = products;
+      },
+      error: () => {
+        console.error('Error loading seller products:');
+      },
+    });
   }
 
   maxImageSize = 2 * 1024 * 1024; // 2MB in bytes equals 2,097,152 bytes
@@ -151,43 +188,63 @@ export class SellerDashboardComponent implements OnInit {
   }
 
   submitProduct() {
+    console.log('submitProduct called', this.productForm.value);
     if (this.productForm.invalid) {
       this.productForm.markAllAsTouched();
       return;
     }
-    const currentUserId = this.authService.currentUserValue?.id;
-    if (!currentUserId) return;
+    const currentUser = this.authService.currentUserValue;
+    if (!currentUser) return;
 
-    // Gather form data
-    const productData: Product = {
-      id: (MOCK_PRODUCTS.length + 1).toString(), // Will only use for new products
-      name: this.productForm.value.name,
-      description: this.productForm.value.description,
-      price: this.productForm.value.price,
-      images: this.imagePreviews.length ? this.imagePreviews.map((p) => p.dataUrl) : [],
-      categoryId: this.productForm.value.categoryId || 'uncategorized',
-      userId: currentUserId,
-      quantity: this.productForm.value.quantity ?? 1,
-    };
+    const images = this.imagePreviews.length ? this.imagePreviews.map((p) => p.dataUrl) : [];
 
     if (this.editIndex !== null) {
       // Edit mode: update existing product
       // Keep the product's original ID and userId
-      const oldProduct = this.userProducts[this.editIndex];
-      this.userProducts[this.editIndex] = {
-        ...oldProduct,
-        ...productData,
-        id: oldProduct.id, // Ensure ID stays consistent
-        userId: oldProduct.userId,
+      const existing = this.userProducts[this.editIndex];
+      const payload: UpdateProductRequest = {
+        name: this.productForm.value.name,
+        description: this.productForm.value.description,
+        price: this.productForm.value.price,
+        quantity: this.productForm.value.quantity,
+        categoryId: this.productForm.value.categoryId,
+        images,
       };
-      this.editIndex = null;
-    } else {
-      // Add new product
-      this.userProducts.push(productData);
-    }
 
+      this.productService.updateProduct(existing.id, payload, currentUser.id, 'SELLER').subscribe({
+        next: () => {
+          this.loadSellerProducts(currentUser.id);
+          this.closeModal();
+          // this.showModal = false;
+        },
+      });
+    } else {
+      // Add mode: create new product
+      const payload: CreateProductRequest = {
+        name: this.productForm.value.name,
+        description: this.productForm.value.description,
+        price: this.productForm.value.price,
+        quantity: this.productForm.value.quantity,
+        categoryId: this.productForm.value.categoryId,
+        images,
+      };
+
+      this.productService.addProduct(payload, currentUser.id, 'SELLER').subscribe({
+        next: () => {
+          this.loadSellerProducts(currentUser.id);
+          // this.showModal = false;
+          this.closeModal();
+        },
+      });
+    }
+  }
+
+  private closeModal() {
     this.productForm.reset();
     this.imagePreviews = [];
+    this.imageValidationError = null;
+    this.editIndex = null;
+    this.showModal = false;
   }
 
   cancelEdit() {
@@ -215,6 +272,15 @@ export class SellerDashboardComponent implements OnInit {
   }
 
   deleteProduct(index: number) {
-    this.userProducts.splice(index, 1);
+    const currentUser = this.authService.currentUserValue;
+    if (!currentUser) return;
+
+    const product = this.userProducts[index];
+
+    this.productService.deleteProduct(product.id, currentUser.id, 'SELLER').subscribe({
+      next: () => {
+        this.userProducts.splice(index, 1); // or reloadSellerProducts
+      },
+    });
   }
 }
