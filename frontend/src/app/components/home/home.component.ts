@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeroComponent } from '../ui/hero/hero.component';
 import { MOCK_PRODUCTS } from '../../models/products/product.model';

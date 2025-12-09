@@ -151,6 +151,12 @@ body {
   border: none;
 }
 
+.btn-outline-secondary:hover {
+  color: white;
+  border-color: var(--text-secondary);
+  background-color: var(--text-secondary);
+}
+
 /* Reusable hover-lift style */
 .hover-lift {
   transition:

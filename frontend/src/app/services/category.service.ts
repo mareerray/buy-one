@@ -6,7 +6,7 @@ import { Category } from '../models/categories/category.model';
 @Injectable({ providedIn: 'root' })
 export class CategoryService {
   private http = inject(HttpClient);
-  private baseUrl = 'http://localhost:8567/categories'; // <-- use product-service port
+  private baseUrl = 'https://localhost:8080/categories'; // <-- use product-service port
 
   private categoriesSubject = new BehaviorSubject<Category[]>([]);
   categories$ = this.categoriesSubject.asObservable();
