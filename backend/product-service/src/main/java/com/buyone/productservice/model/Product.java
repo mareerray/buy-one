@@ -23,4 +23,5 @@ public class Product {
     private Integer quantity;
     private String userId;
     private String categoryId;
+    private java.util.List<String> images;
 }

@@ -1,158 +1,115 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Product, MOCK_PRODUCTS } from '../models/products/product.model';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
+import { CreateProductRequest } from '../models/products/createProductRequest.model';
+import { UpdateProductRequest } from '../models/products/updateProductRequest.model';
+import { ProductResponse } from '../models/products/product-response.model';
+import { ApiResponse } from '../models/api-response/api-response.model';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ProductService {
-  // private productsSubject = new BehaviorSubject<Product[]>([]);
+  private http = inject(HttpClient);
+  private baseUrl = 'https://localhost:8080/products';
 
-  private productsSubject = new BehaviorSubject<Product[]>(MOCK_PRODUCTS);
+  private productsSubject = new BehaviorSubject<ProductResponse[]>([]);
+  products$ = this.productsSubject.asObservable();
 
-  public products$: Observable<Product[]> = this.productsSubject.asObservable();
-
-  constructor() {}
-
-  getProducts(): Observable<Product[]> {
-    return this.products$;
+  // GET all products
+  // Sends GET /api/products to the backend and returns an Observable of product array
+  // tap(...) is used for side effect that updates productSubject to ensure
+  // the in-memory list matches the backend
+  // GET /products
+  getProducts(): Observable<ProductResponse[]> {
+    return this.http.get<ApiResponse<ProductResponse[]>>(this.baseUrl).pipe(
+      map((resp) => resp.data || []),
+      tap((products) => this.productsSubject.next(products)),
+    );
   }
 
-  getProductById(id: string): Observable<Product | undefined> {
-    return this.products$.pipe(map((products) => products.find((p) => p.id === id)));
+  // GET /products/{id}
+  getProductById(productId: string): Observable<ProductResponse> {
+    return this.http
+      .get<ApiResponse<ProductResponse>>(`${this.baseUrl}/${productId}`)
+      .pipe(map((resp) => resp.data!));
   }
 
-  getProductsBySeller(sellerId: string): Product[] {
-    return this.productsSubject.value.filter((p) => p.sellerId === sellerId);
+  // GET /products?sellerId=...
+  getProductsBySeller(sellerId: string): Observable<ProductResponse[]> {
+    return this.http
+      .get<ApiResponse<ProductResponse[]>>(`${this.baseUrl}?sellerId=${sellerId}`)
+      .pipe(map((resp) => resp.data || []));
   }
 
-  getProductsByCategory(categoryId: string): Product[] {
-    return this.productsSubject.value.filter((p) => p.categoryId === categoryId);
+  // GET /products?categoryId=...
+  getProductsByCategory(categoryId: string): Observable<ProductResponse[]> {
+    return this.http
+      .get<ApiResponse<ProductResponse[]>>(`${this.baseUrl}?categoryId=${categoryId}`)
+      .pipe(map((resp) => resp.data || []));
   }
 
-  addProduct(product: Product): void {
-    const currentProducts = this.productsSubject.value;
-    this.productsSubject.next([...currentProducts, product]);
+  // POST create product
+  addProduct(
+    req: CreateProductRequest,
+    sellerId: string,
+    role: string = 'SELLER',
+  ): Observable<ApiResponse<ProductResponse>> {
+    return this.http
+      .post<
+        ApiResponse<ProductResponse>
+      >(this.baseUrl, req, { headers: { 'X-USER-ID': sellerId, 'X-USER-ROLE': role } })
+      .pipe(
+        tap((resp) => {
+          if (resp.data) {
+            const existingProducts = this.productsSubject.value;
+            this.productsSubject.next([...existingProducts, resp.data]);
+          }
+        }),
+      );
   }
 
-  updateProduct(id: string, updates: Partial<Product>): void {
-    const currentProducts = this.productsSubject.value;
-    const index = currentProducts.findIndex((p) => p.id === id);
-
-    if (index !== -1) {
-      currentProducts[index] = { ...currentProducts[index], ...updates };
-      this.productsSubject.next([...currentProducts]);
-    }
+  // PUT update product
+  updateProduct(
+    productId: string,
+    req: UpdateProductRequest,
+    sellerId: string,
+    role: string = 'SELLER',
+  ): Observable<ApiResponse<ProductResponse>> {
+    return this.http
+      .put<
+        ApiResponse<ProductResponse>
+      >(`${this.baseUrl}/${productId}`, req, { headers: { 'X-USER-ID': sellerId, 'X-USER-ROLE': role } })
+      .pipe(
+        tap((resp) => {
+          if (resp.data) {
+            const products = this.productsSubject.value;
+            const index = products.findIndex((p) => p.id === resp.data!.id);
+            if (index !== -1) {
+              const updatedList = [...products];
+              updatedList[index] = resp.data;
+              this.productsSubject.next(updatedList);
+            }
+          }
+        }),
+      );
   }
 
-  deleteProduct(id: string): void {
-    const currentProducts = this.productsSubject.value.filter((p) => p.id !== id);
-    this.productsSubject.next(currentProducts);
+  // DELETE product
+  deleteProduct(
+    productId: string,
+    sellerId: string,
+    role: string = 'SELLER',
+  ): Observable<ApiResponse<void>> {
+    return this.http
+      .delete<
+        ApiResponse<void>
+      >(`${this.baseUrl}/${productId}`, { headers: { 'X-USER-ID': sellerId, 'X-USER-ROLE': role } })
+      .pipe(
+        tap(() => {
+          const existingProducts = this.productsSubject.value;
+          const remainingProducts = existingProducts.filter((p) => p.id !== productId);
+          this.productsSubject.next(remainingProducts);
+        }),
+      );
   }
 }
-
-// import { Injectable, inject } from '@angular/core';
-// import { HttpClient } from '@angular/common/http';
-// import { BehaviorSubject, Observable } from 'rxjs';
-// import { tap } from 'rxjs/operators';
-// import { CreateProductRequest } from '../models/createProductRequest.model';
-// import { UpdateProductRequest } from '../models/updateProductRequest.model';
-// import { ProductResponse } from '../models/productResponse.model';
-// import { ApiResponse } from '../models/api-response.model';
-
-// @Injectable({ providedIn: 'root' })
-// export class ProductService {
-//   private http = inject(HttpClient);
-//   private baseUrl = 'http://localhost:8080/api/products';
-
-//   private productsSubject = new BehaviorSubject<ProductResponse[]>([]);
-//   products$ = this.productsSubject.asObservable();
-
-//   // GET all products
-//   getProducts(): Observable<ProductResponse[]> {
-//     return this.http
-//       .get<ProductResponse[]>(this.baseUrl)
-//       .pipe(tap((products) => this.productsSubject.next(products)));
-//   }
-
-//   // GET product by ID
-//   getProductById(productId: string): Observable<ProductResponse> {
-//     return this.http.get<ProductResponse>(`${this.baseUrl}/${productId}`);
-//   }
-
-//   // GET products by Seller
-//   getProductsBySeller(sellerId: string): Observable<ProductResponse[]> {
-//     return this.http.get<ProductResponse[]>(`${this.baseUrl}?sellerId=${sellerId}`);
-//   }
-
-//   // GET products by Category
-//   getProductsByCategory(categoryId: string): Observable<ProductResponse[]> {
-//     return this.http.get<ProductResponse[]>(`${this.baseUrl}?categoryId=${categoryId}`);
-//   }
-
-//   // POST create product
-//   addProduct(
-//     req: CreateProductRequest,
-//     sellerId: string,
-//     role: string = 'SELLER',
-//   ): Observable<ApiResponse<ProductResponse>> {
-//     return this.http
-//       .post<
-//         ApiResponse<ProductResponse>
-//       >(this.baseUrl, req, { headers: { 'X-USER-ID': sellerId, 'X-USER-ROLE': role } })
-//       .pipe(
-//         tap((resp) => {
-//           if (resp.data) {
-//             const existingProducts = this.productsSubject.value;
-//             this.productsSubject.next([...existingProducts, resp.data]);
-//           }
-//         }),
-//       );
-//   }
-
-//   // PUT update product
-//   updateProduct(
-//     productId: string,
-//     req: UpdateProductRequest,
-//     sellerId: string,
-//     role: string = 'SELLER',
-//   ): Observable<ApiResponse<ProductResponse>> {
-//     return this.http
-//       .put<
-//         ApiResponse<ProductResponse>
-//       >(`${this.baseUrl}/${productId}`, req, { headers: { 'X-USER-ID': sellerId, 'X-USER-ROLE': role } })
-//       .pipe(
-//         tap((resp) => {
-//           if (resp.data) {
-//             const products = this.productsSubject.value;
-//             const index = products.findIndex((p) => p.id === resp.data!.id);
-//             if (index !== -1) {
-//               const updatedList = [...products];
-//               updatedList[index] = resp.data;
-//               this.productsSubject.next(updatedList);
-//             }
-//           }
-//         }),
-//       );
-//   }
-
-//   // DELETE product
-//   deleteProduct(
-//     productId: string,
-//     sellerId: string,
-//     role: string = 'SELLER',
-//   ): Observable<ApiResponse<void>> {
-//     return this.http
-//       .delete<
-//         ApiResponse<void>
-//       >(`${this.baseUrl}/${productId}`, { headers: { 'X-USER-ID': sellerId, 'X-USER-ROLE': role } })
-//       .pipe(
-//         tap(() => {
-//           const existingProducts = this.productsSubject.value;
-//           const remainingProducts = existingProducts.filter((p) => p.id !== productId);
-//           this.productsSubject.next(remainingProducts);
-//         }),
-//       );
-//   }
-// }

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 import { UserUpdateRequest } from '../models/users/userUpdateRequest.model';
 import { UserResponse } from '../models/users/user-response.model';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -41,5 +42,9 @@ export class UserService {
     return this.http.get<UserResponse[]>(`${this.baseUrl}/sellers`, {
       headers: this.getAuthHeaders(),
     });
+  }
+
+  getUserById(userId: string): Observable<UserResponse> {
+    return this.http.get<UserResponse>(`${this.baseUrl}/${userId}`);
   }
 }

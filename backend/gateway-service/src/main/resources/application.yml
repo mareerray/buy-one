@@ -24,6 +24,14 @@ spring:
             - Path=/auth/**
           # NO JwtHeader filter - let USER-SERVICE handle login/register
 
+        # NEW: public GET for individual users (sellers)
+        - id: user-service-public-get
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/api/users/**
+            - Method=GET
+          # IMPORTANT: no JwtHeader filter here
+
         - id: user-service-api
           uri: lb://USER-SERVICE
           predicates:
@@ -31,6 +39,7 @@ spring:
           filters:
             - JwtHeader
 
+        # Existing secured user API route (for non-GET, admin, etc.)
         - id: product-service
           uri: lb://PRODUCT-SERVICE
           predicates:
@@ -44,6 +53,13 @@ spring:
             - Path=/media/**
           filters:
             - JwtHeader
+        
+           # NEW: Public categories route (no JWT required)
+        - id: categories-service
+          uri: lb://PRODUCT-SERVICE  # Assuming categories in product-service
+          predicates:
+            - Path=/categories/**
+           # NO filters needed - path matches perfectly
 
 
 eureka:

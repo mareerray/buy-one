@@ -1,13 +1,16 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Product } from '../../models/products/product.model';
 import { CommonModule } from '@angular/common';
-import { ProductService } from '../../services/product.service';
-import { Observable, of } from 'rxjs';
-import { MOCK_USERS, User } from '../../models/users/user.model';
-import { CATEGORIES } from '../../models/categories/category.model';
+import { switchMap } from 'rxjs';
 import { ProductImageCarouselComponent } from '../ui/product-image-carousel/product-image-carousel.component';
 import { RouterLink } from '@angular/router';
+
+import { ProductService } from '../../services/product.service';
+import { ProductResponse } from '../../models/products/product-response.model';
+import { UserService } from '../../services/user.service';
+import { UserResponse } from '../../models/users/user-response.model';
+import { CategoryService } from '../../services/category.service';
+import { Category } from '../../models/categories/category.model';
 
 @Component({
   selector: 'app-product-card',
@@ -16,32 +19,47 @@ import { RouterLink } from '@angular/router';
   imports: [CommonModule, ProductImageCarouselComponent, RouterLink],
 })
 export class ProductCardComponent implements OnInit {
-  productId: string | null = null;
-  product$: Observable<Product | undefined> = of(undefined);
-
-  categories = CATEGORIES;
-
   private route: ActivatedRoute = inject(ActivatedRoute);
-
   private productService: ProductService = inject(ProductService);
+  private userService: UserService = inject(UserService);
+  private categoryService: CategoryService = inject(CategoryService);
+
+  product!: ProductResponse; // non-null after load
+  seller: UserResponse | undefined;
+  category: Category | undefined;
 
   isFading = false;
 
   ngOnInit() {
-    this.productId = this.route.snapshot.paramMap.get('id');
-    if (this.productId) {
-      this.product$ = this.productService.getProductById(this.productId);
-      // Now product$ will emit the product or undefined
-    }
+    const productId = this.route.snapshot.paramMap.get('id');
+    if (!productId) return;
+
+    this.productService
+      .getProductById(productId)
+      .pipe(
+        switchMap((prod) => {
+          this.product = prod; // <- store in field
+
+          // load seller and category in parallel
+          const user$ = this.userService.getUserById(prod.userId);
+
+          const category$ = this.categoryService.getCategoryById(prod.categoryId);
+
+          return user$.pipe(
+            switchMap((user) => {
+              this.seller = user;
+              return category$;
+            }),
+          );
+        }),
+      )
+      .subscribe((cat) => {
+        this.category = cat;
+      });
   }
 
-  getSeller(sellerId: string): User | undefined {
-    return MOCK_USERS.find((user) => user.id === sellerId && user.role === 'seller');
-  }
-
-  getCategoryName(categoryId: string): string {
-    const cat = this.categories.find((c) => c.id === categoryId);
-    return cat ? cat.name : '';
+  getCategoryName(): string {
+    return this.category ? this.category.name : '';
   }
 
   addToCart() {

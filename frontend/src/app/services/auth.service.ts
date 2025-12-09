@@ -17,6 +17,16 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<UserResponse | null>(this.loadUserFromStorage());
   public currentUser$ = this.currentUserSubject.asObservable();
 
+  constructor() {
+    const user = this.loadUserFromStorage();
+    const token = this.token;
+    if (user && token) {
+      this.currentUserSubject.next(user);
+    } else {
+      this.logout(); // ensure clean state
+    }
+  }
+
   private loadUserFromStorage(): UserResponse | null {
     const userJson = localStorage.getItem('currentUser');
     return userJson ? (JSON.parse(userJson) as UserResponse) : null;
@@ -42,7 +52,8 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return !!this.currentUserValue;
+    const token = this.token;
+    return !!token;
   }
 
   isSeller(): boolean {
@@ -58,11 +69,7 @@ export class AuthService {
   }
 
   signup(userData: RegisterUserRequest): Observable<UserResponse> {
-    return this.http.post<UserResponse>(`${this.baseUrl}/register`, userData).pipe(
-      tap((user) => {
-        this.saveAuthData('', user); // No token from register (adjust if backend sends one)
-      }),
-    );
+    return this.http.post<UserResponse>(`${this.baseUrl}/register`, userData);
   }
 
   logout(): void {

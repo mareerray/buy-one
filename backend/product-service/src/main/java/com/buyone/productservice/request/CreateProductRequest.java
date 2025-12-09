@@ -32,6 +32,8 @@ public class CreateProductRequest {
     
     private String categoryId;
     
+    private java.util.List<String> images;
+
     // userId is NOT included here, it comes from JWT / header in the controller for security!
     // Add more fields as model extends, with corresponding validations
     

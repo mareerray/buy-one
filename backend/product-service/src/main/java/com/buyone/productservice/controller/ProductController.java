@@ -26,11 +26,29 @@ public class ProductController {
     }
     
     // GET /products (public)
+    // @GetMapping
+    // public ResponseEntity<ApiResponse<List<ProductResponse>>> getAllProducts() {
+    //     List<ProductResponse> products = productService.getAllProducts();
+    //     return ResponseEntity.ok(okResponse("Products fetched successfully", products));
+    // }
+
+    
+    // GET /products (public) or GET /products?sellerId=... (public)
     @GetMapping
-    public ResponseEntity<ApiResponse<List<ProductResponse>>> getAllProducts() {
-        List<ProductResponse> products = productService.getAllProducts();
+    public ResponseEntity<ApiResponse<List<ProductResponse>>> getProducts(
+            @RequestParam(required = false) String sellerId) {
+
+        List<ProductResponse> products;
+
+        if (sellerId != null) {
+            products = productService.getProductsBySeller(sellerId);
+        } else {
+            products = productService.getAllProducts();
+        }
+
         return ResponseEntity.ok(okResponse("Products fetched successfully", products));
     }
+
     
     // GET /products/{id} (public)
     @GetMapping("/{id}")
