@@ -27,6 +27,7 @@ public class SecurityConfig {
                         .pathMatchers("/auth/**").permitAll() // allow login/register
                         .pathMatchers(HttpMethod.GET, "/products/**").permitAll() // public GET
                         .pathMatchers("/products/**").authenticated()
+                        .pathMatchers("/actuator/health").permitAll()
                         .pathMatchers(HttpMethod.GET, "/media/images/**").permitAll()
                         .anyExchange().authenticated() // require JWT for all others
                 )
