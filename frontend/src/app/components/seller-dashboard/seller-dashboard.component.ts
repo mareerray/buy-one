@@ -46,7 +46,7 @@ export class SellerDashboardComponent implements OnInit {
       name: ['', Validators.required],
       description: ['', Validators.required],
       price: ['', [Validators.required, Validators.min(1.0)]],
-      image: [null, Validators.required],
+      image: [null],
       categoryId: [this.categories.length > 0 ? this.categories[0].id : '', Validators.required], // default to first category id
       quantity: ['', [Validators.required, Validators.min(1)]],
     });
@@ -189,7 +189,16 @@ export class SellerDashboardComponent implements OnInit {
 
   submitProduct() {
     console.log('submitProduct called', this.productForm.value);
+    console.log('form valid?', this.productForm.valid, this.productForm.errors);
     if (this.productForm.invalid) {
+      console.log('form invalid, controls:', {
+        name: this.productForm.get('name')?.errors,
+        description: this.productForm.get('description')?.errors,
+        price: this.productForm.get('price')?.errors,
+        quantity: this.productForm.get('quantity')?.errors,
+        categoryId: this.productForm.get('categoryId')?.errors,
+        image: this.productForm.get('image')?.errors,
+      });
       this.productForm.markAllAsTouched();
       return;
     }
@@ -197,6 +206,10 @@ export class SellerDashboardComponent implements OnInit {
     if (!currentUser) return;
 
     const images = this.imagePreviews.length ? this.imagePreviews.map((p) => p.dataUrl) : [];
+    if (this.imagePreviews.length === 0) {
+      this.imageValidationError = 'Please add at least one image.';
+      return;
+    }
 
     if (this.editIndex !== null) {
       // Edit mode: update existing product
@@ -233,7 +246,7 @@ export class SellerDashboardComponent implements OnInit {
         next: () => {
           this.loadSellerProducts(currentUser.id);
           // this.showModal = false;
-          this.closeModal();
+          this.closeModal(); // Reset and hide modal
         },
       });
     }
