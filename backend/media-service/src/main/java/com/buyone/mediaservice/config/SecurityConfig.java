@@ -24,11 +24,13 @@ public class SecurityConfig {
                         // Public endpoints (no auth needed)
                         .requestMatchers(HttpMethod.GET, "/media/images/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/media/**").permitAll()
+                        // Actuator health for startup script
+                        .requestMatchers("/actuator/health").permitAll()
 
                         // All writes require authentication (we can refine to ROLE_SELLER later)
-                                .requestMatchers(HttpMethod.POST, "/media/**").authenticated()
-                                .requestMatchers(HttpMethod.PUT, "/media/**").authenticated()
-                                .requestMatchers(HttpMethod.DELETE, "/media/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/media/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/media/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/media/**").authenticated()
                         
                         // All other requests require authentication
                         .anyRequest().authenticated()

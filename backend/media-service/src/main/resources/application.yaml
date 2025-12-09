@@ -12,6 +12,13 @@ spring:
         jwt:
           secret: "oogabooga123oogabooga123oogabooga123!"
 
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+
 
 app:
   kafka:
@@ -26,3 +33,7 @@ cloudflare:
     bucket: "buyone-images"
     endpoint: "https://ed2494a6dd015fe932f0eb26102d514d.r2.cloudflarestorage.com"
     region: "auto"
+
+logging:
+  level:
+    org.springframework.security: DEBUG
