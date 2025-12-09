@@ -1,4 +1,8 @@
 <!-- seller-dashboard.component.html -->
+<div *ngIf="successMessage" class="alert alert-success mt-3">
+  {{ successMessage }}
+</div>
+<!-- Seller info -->
 <div class="container mt-4">
   <div class="row justify-content-center">
     <div class="col-12 col-lg-10">
@@ -13,11 +17,7 @@
           style="object-fit: cover;">
         <span class="fw-bold ms-0">{{ sellerName }}</span>
       </h2>
-
-      <!-- <h2 class="text-center mb-4">
-        Seller Dashboard
-      </h2> -->
-
+      <!-- Title & buttons -->
       <h3 class="d-flex justify-content-between align-items-center">
         Products List
         <div class="d-flex gap-2">
@@ -32,39 +32,53 @@
           <i class="fa fa-plus me-1"></i> Add New Product
         </button>
       </h3>
-      <ul class="list-group mb-5">
-        <li class="list-group-item" *ngFor="let product of userProducts; let i = index">
-          <div class="d-flex align-items-center">
-            <img *ngIf="product.images && product.images.length"
-                [src]="product.images[0]"
-                alt="Product Image"
-                class="me-3 square-image">
+      <!-- Loading state -->
+      <div *ngIf="isLoadingProducts" class="text-center py-5 text-white">
+        Loading your products...
+      </div>
+      <!-- Empty state -->
+      <div *ngIf="!isLoadingProducts && userProducts.length === 0"
+          class="text-center py-5 text-white">
+        You have not created any products yet.
+      </div>
+      <!-- Product cards -->
+      <div *ngIf="!isLoadingProducts && userProducts.length > 0">
+        <ul class="list-group mb-5">
+          <li class="list-group-item" *ngFor="let product of userProducts; let i = index">
+            <div class="d-flex align-items-center">
+              <img *ngIf="product.images && product.images.length"
+                  [src]="product.images[0]"
+                  alt="Product Image"
+                  class="me-3 square-image">
 
-            <div class="flex-grow-1">
-              <div class="fw-bold">
-                # {{product.id}} | 
-                <strong>{{ product.name }}</strong><br />
+              <div class="flex-grow-1">
+                <div class="fw-bold">
+                  ID: {{product.id}} <br />
+                  <strong>{{ product.name }}</strong><br />
+                </div>
+                " {{ product.description }} "<br />
+                <span>
+                  <i
+                    *ngIf="getCategoryById(product.categoryId)?.icon"
+                    [class]="getCategoryById(product.categoryId)?.icon"
+                    style="margin-right: 0.2em; color: white;"
+                    aria-hidden="true"
+                  ></i>
+                  {{ getCategoryById(product.categoryId)?.name || product.categoryId }}
+                </span>
+                <br>
+                <div class="d-flex align-items-center">
+                  <span class="me-3">Price: €{{ product.price }}</span>
+                  <span>|</span>
+                  <span class="ms-3">Quantity: {{ product.quantity }} pc</span>
+                </div>
               </div>
-              " {{ product.description }} "<br />
-              <span>
-                <i
-                  *ngIf="getCategoryById(product.categoryId)?.icon"
-                  [class]="getCategoryById(product.categoryId)?.icon"
-                  style="margin-right: 0.2em; color: white;"
-                  aria-hidden="true"
-                ></i>
-                {{ getCategoryById(product.categoryId)?.name || product.categoryId }}
-              </span>
-              <br>
-              <!-- {{ product.category }}<br /> -->
-              €{{ product.price }}<br />
-              {{ product.quantity }} pc
+              <button class="btn btn-sm btn-warning me-2 hover-lift" (click)="editProduct(i)">Edit</button>
+              <button class="btn btn-sm btn-danger hover-lift" (click)="deleteProduct(i)">Delete</button>
             </div>
-            <button class="btn btn-sm btn-warning me-2 hover-lift" (click)="editProduct(i)">Edit</button>
-            <button class="btn btn-sm btn-danger hover-lift" (click)="deleteProduct(i)">Delete</button>
-          </div>
-        </li>
-      </ul>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </div>
@@ -87,7 +101,7 @@
         <h5 class="modal-title">
             {{ editIndex === null ? "Add Product" : "Edit Product" }}
         </h5>
-        <button type="button" class="btn-close btn-close-white hover-lift" aria-label="Close" (click)="cancelEdit()"></button>
+        <button type="button" class="btn-close btn-close-white hover-lift" aria-label="Close" (click)="closeModal()"></button>
       </div>
       <div class="modal-body">
         <form [formGroup]="productForm" (ngSubmit)="submitProduct()" novalidate>
@@ -253,7 +267,7 @@
           </div>
 <!-- ...all your form fields here... -->
           <button type="submit" class="btn btn-primary hover-lift">Save Product</button>
-          <button type="button" class="btn btn-secondary ms-2 hover-lift" (click)="cancelEdit()">Cancel</button>
+          <button type="button" class="btn btn-secondary ms-2 hover-lift" (click)="closeModal()">Cancel</button>
         </form>
       </div>
     </div>

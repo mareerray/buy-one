@@ -244,7 +244,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 30,
     images: ['assets/images/ZenDevMomentTee1.png', 'assets/images/ZenDevMomentTee2.png'],
     categoryId: 'CAT-003',
-    userId: 'USER-008',
+    userId: 'USER-008', //Mama Blues
     quantity: 6,
   },
   {
@@ -255,7 +255,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 30,
     images: ['assets/images/BrightIdeasTee1.png', 'assets/images/BrightIdeasTee2.png'],
     categoryId: 'CAT-003',
-    userId: 'USER-008',
+    userId: 'USER-008', //Mama Blues
     quantity: 6,
   },
   {
@@ -266,7 +266,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 30,
     images: ['assets/images/MessyBunDevTee1.png', 'assets/images/MessyBunDevTee2.png'],
     categoryId: 'CAT-003',
-    userId: 'USER-008',
+    userId: 'USER-008', //Mama Blues
     quantity: 6,
   },
 ];

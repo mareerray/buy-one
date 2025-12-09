@@ -28,6 +28,10 @@ export class SellerDashboardComponent implements OnInit {
 
   userProducts: ProductResponse[] = [];
   categories: Category[] = [];
+  isLoadingProducts = false;
+  isLoadingCategories = false;
+  errorMessage: string | null = null;
+  successMessage: string | null = null;
 
   sellerName: string = '';
   sellerAvatar: string = '';
@@ -66,28 +70,35 @@ export class SellerDashboardComponent implements OnInit {
   }
 
   private loadCategories() {
+    this.isLoadingCategories = true;
     this.categoryService.getCategories().subscribe({
       next: (cats) => {
-        console.log('Loaded categories in dashboard', cats);
         this.categories = cats;
         // Set default category in the form
         if (this.categories.length > 0 && !this.productForm.get('categoryId')?.value) {
           this.productForm.patchValue({ categoryId: this.categories[0].id });
         }
+        this.isLoadingCategories = false;
       },
       error: () => {
         console.error('Error loading categories:');
+        this.isLoadingCategories = false;
+        this.errorMessage = 'Could not load categories.';
       },
     });
   }
 
   private loadSellerProducts(sellerId: string) {
+    this.isLoadingProducts = true;
     this.productService.getProductsBySeller(sellerId).subscribe({
       next: (products) => {
         this.userProducts = products;
+        this.isLoadingProducts = false;
       },
       error: () => {
         console.error('Error loading seller products:');
+        this.isLoadingProducts = false;
+        this.errorMessage = 'Could not load your products.';
       },
     });
   }
@@ -225,10 +236,14 @@ export class SellerDashboardComponent implements OnInit {
       };
 
       this.productService.updateProduct(existing.id, payload, currentUser.id, 'SELLER').subscribe({
-        next: () => {
+        next: (resp) => {
+          console.log('Update product success', resp);
+          this.successMessage = 'Product updated successfully';
           this.loadSellerProducts(currentUser.id);
           this.closeModal();
-          // this.showModal = false;
+        },
+        error: (err) => {
+          console.error('Update product failed', err);
         },
       });
     } else {
@@ -243,30 +258,28 @@ export class SellerDashboardComponent implements OnInit {
       };
 
       this.productService.addProduct(payload, currentUser.id, 'SELLER').subscribe({
-        next: () => {
+        next: (resp) => {
+          console.log('Create product success', resp);
+          this.successMessage =
+            this.editIndex !== null
+              ? 'Product updated successfully'
+              : 'Product created successfully';
           this.loadSellerProducts(currentUser.id);
-          // this.showModal = false;
           this.closeModal(); // Reset and hide modal
+        },
+        error: (err) => {
+          console.error('Create product failed', err);
         },
       });
     }
   }
 
-  private closeModal() {
+  closeModal() {
     this.productForm.reset();
     this.imagePreviews = [];
     this.imageValidationError = null;
     this.editIndex = null;
     this.showModal = false;
-  }
-
-  cancelEdit() {
-    this.productForm.reset();
-    this.imagePreviews = [];
-    this.imageValidationError = null;
-    this.editIndex = null;
-    this.showModal = false;
-    // (Optionally, cancel editing state if you track edited index)
   }
 
   editProduct(index: number) {
