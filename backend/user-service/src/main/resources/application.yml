@@ -12,6 +12,13 @@ spring:
       name: user
       password: password
 
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+
 jwt:
   secret: "oogabooga123oogabooga123oogabooga123!"
   expirationMs: 86400000
@@ -20,3 +27,7 @@ jwt:
 #    // 600000 // 10 min
 #    // 300000 // 5 minutes
 #    // 60000  // 1 minute
+
+logging:
+  level:
+    org.springframework.security: DEBUG
