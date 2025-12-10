@@ -6,6 +6,7 @@ import com.buyone.mediaservice.service.StorageService;
 import com.buyone.productservice.event.ProductDeletedEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
