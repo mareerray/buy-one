@@ -2,7 +2,7 @@ server:
   port: 8678
 spring:
   application:
-    name: Media Service
+    name: media-service
   data:
     mongodb:
       uri: "mongodb+srv://Cluster05093:.qwe.qwe.qwe@cluster05093.dh3rmhg.mongodb.net/buy-one?retryWrites=true&w=majority&appName=Cluster05093"
@@ -11,6 +11,13 @@ spring:
       resourceserver:
         jwt:
           secret: "oogabooga123oogabooga123oogabooga123!"
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
 
 
 app:
@@ -26,3 +33,7 @@ cloudflare:
     bucket: "buyone-images"
     endpoint: "https://ed2494a6dd015fe932f0eb26102d514d.r2.cloudflarestorage.com"
     region: "auto"
+
+logging:
+  level:
+    org.springframework.security: DEBUG

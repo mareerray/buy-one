@@ -9,6 +9,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 @Component
+@Profile("kafka")
 @RequiredArgsConstructor
 public class ProductEventListener {
     
