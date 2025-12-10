@@ -211,7 +211,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 30,
     images: ['assets/images/Bim!CoderWinTee1.png', 'assets/images/Bim!CoderWinTee2.png'],
     categoryId: 'CAT-005',
-    userId: 'USER-002',
+    userId: 'USER-002', //Mama Blues
     quantity: 6,
   },
   {
@@ -233,7 +233,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 30,
     images: ['assets/images/FlowStateSPMTee1.png', 'assets/images/FlowStateSPMTee2.png'],
     categoryId: 'CAT-003',
-    userId: 'USER-008',
+    userId: 'USER-008', //Mama Blues
     quantity: 6,
   },
   {

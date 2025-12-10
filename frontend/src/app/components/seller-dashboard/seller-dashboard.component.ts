@@ -20,7 +20,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./seller-dashboard.component.css'],
 })
 export class SellerDashboardComponent implements OnInit {
-  private router = inject(Router);
+  private router: Router = inject(Router);
   private mediaService = inject(MediaService);
   private authService = inject(AuthService);
   private productService = inject(ProductService);
@@ -223,7 +223,7 @@ export class SellerDashboardComponent implements OnInit {
     }
 
     if (this.editIndex !== null) {
-      // Edit mode: update existing product
+      // EDIT mode: update existing product
       // Keep the product's original ID and userId
       const existing = this.userProducts[this.editIndex];
       const payload: UpdateProductRequest = {
@@ -247,7 +247,7 @@ export class SellerDashboardComponent implements OnInit {
         },
       });
     } else {
-      // Add mode: create new product
+      // ADD mode: create new product
       const payload: CreateProductRequest = {
         name: this.productForm.value.name,
         description: this.productForm.value.description,
@@ -260,10 +260,11 @@ export class SellerDashboardComponent implements OnInit {
       this.productService.addProduct(payload, currentUser.id, 'SELLER').subscribe({
         next: (resp) => {
           console.log('Create product success', resp);
-          this.successMessage =
-            this.editIndex !== null
-              ? 'Product updated successfully'
-              : 'Product created successfully';
+          const createdProduct = resp.data;
+          if (createdProduct && createdProduct.id) {
+            this.uploadImagesToMediaService(createdProduct.id);
+          }
+          this.successMessage = 'Product created successfully';
           this.loadSellerProducts(currentUser.id);
           this.closeModal(); // Reset and hide modal
         },
@@ -280,6 +281,21 @@ export class SellerDashboardComponent implements OnInit {
     this.imageValidationError = null;
     this.editIndex = null;
     this.showModal = false;
+  }
+
+  private uploadImagesToMediaService(productId: string): void {
+    // Only upload images that came from real files
+    this.imagePreviews.forEach((preview) => {
+      if (!preview.file) return; // skip images that are only URLs (e.g. from edit mode)
+      this.mediaService.uploadProductImage(productId, preview.file, this.imagePreviews).subscribe({
+        next: (res) => {
+          console.log('Image for product uploaded successfully.', res.data);
+        },
+        error: (err) => {
+          console.error('Failed to upload product image.', productId, err);
+        },
+      });
+    });
   }
 
   editProduct(index: number) {

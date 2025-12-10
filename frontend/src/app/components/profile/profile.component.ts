@@ -3,11 +3,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../services/user.service';
 import { UserResponse } from '../../models/users/user-response.model';
 import { UserUpdateRequest } from '../../models/users/userUpdateRequest.model';
-import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { AbstractControl } from '@angular/forms';
+import { ReactiveFormsModule, AbstractControl } from '@angular/forms';
 import { MediaService } from '../../services/media.service';
-import { HttpEventType } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -77,12 +75,12 @@ export class ProfileComponent implements OnInit {
 
     // Upload via MediaService
     this.mediaService.uploadAvatar(file).subscribe({
-      next: (event) => {
-        if (event.type === HttpEventType.UploadProgress && event.total) {
-          this.uploadProgress = Math.round((100 * event.loaded) / event.total);
-        } else if (event.type === HttpEventType.Response) {
-          this.uploadProgress = 0;
-        }
+      next: (res) => {
+        // res is ApiResponse<MediaResponse>
+        const media = res.data;
+        // use media.url as the avatar URL from backend
+        this.avatar = media.url;
+        this.uploadProgress = 0;
       },
       error: (err) => {
         this.avatarError =
