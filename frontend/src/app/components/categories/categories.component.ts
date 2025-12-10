@@ -28,8 +28,13 @@ export class CategoriesComponent {
   products: ProductResponse[] = [];
   sellers = new Map<string, UserResponse>();
 
-  isLoading = false;
+  isLoadingCategories = false;
+  isLoadingProducts = false;
   errorMessage: string | null = null;
+
+  get isLoading(): boolean {
+    return this.isLoadingCategories || this.isLoadingProducts;
+  }
 
   constructor() {
     this.loadCategories();
@@ -39,7 +44,7 @@ export class CategoriesComponent {
 
   // Load categories from backend
   private loadCategories() {
-    this.isLoading = true;
+    this.isLoadingCategories = true;
     this.errorMessage = null;
 
     this.categoryService.getCategories().subscribe({
@@ -53,23 +58,28 @@ export class CategoriesComponent {
         } else if (!this.selectedCategorySlug && this.categories.length > 0) {
           this.selectedCategorySlug = this.categories[0].slug;
         }
-        this.isLoading = false;
+        this.isLoadingCategories = false;
       },
       error: () => {
         this.errorMessage = 'Could not load categories.';
-        this.isLoading = false;
+        this.isLoadingCategories = false;
       },
     });
   }
 
   private loadProducts() {
+    this.isLoadingProducts = true;
+    this.errorMessage = null;
+
     this.productService.getProducts().subscribe({
       next: (prods) => {
         this.products = prods;
         this.loadSellersForProducts();
+        this.isLoadingProducts = false;
       },
       error: () => {
         this.errorMessage = 'Could not load products.';
+        this.isLoadingProducts = false;
       },
     });
   }

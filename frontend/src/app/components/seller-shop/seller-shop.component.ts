@@ -28,20 +28,38 @@ export class SellerShopComponent implements OnInit {
   sellerProducts: ProductResponse[] = [];
   categories: Category[] = [];
 
-  isLoading = false;
+  isLoadingSeller = false;
+  isLoadingProducts = false;
   errorMessage: string | null = null;
 
   ngOnInit() {
-    // Get seller ID from route parameter
     const sellerId = this.route.snapshot.paramMap.get('id');
 
-    if (sellerId) {
-      this.loadSeller(sellerId);
-      this.loadSellerProducts(sellerId);
-      this.loadCategories();
-    } else {
+    if (!sellerId) {
       this.errorMessage = 'No Seller specified.';
+      this.isLoadingSeller = false;
+      return;
     }
+
+    this.isLoadingSeller = true;
+    this.isLoadingProducts = true; // for products
+
+    // Load seller
+    this.userService.getUserById(sellerId).subscribe({
+      next: (s) => {
+        this.seller = s;
+        this.isLoadingSeller = false;
+      },
+      error: () => {
+        this.seller = undefined;
+        this.isLoadingSeller = false;
+        this.errorMessage = 'Seller not found.';
+      },
+    });
+
+    // Load products for this seller
+    this.loadSellerProducts(sellerId); // uses isLoading inside
+    this.loadCategories();
   }
 
   private loadSeller(sellerId: string) {
@@ -60,15 +78,15 @@ export class SellerShopComponent implements OnInit {
   }
 
   private loadSellerProducts(sellerId: string) {
-    this.isLoading = true;
+    this.isLoadingProducts = true;
     this.productService.getProductsBySeller(sellerId).subscribe({
       next: (prods) => {
         this.sellerProducts = prods;
-        this.isLoading = false;
+        this.isLoadingProducts = false;
       },
       error: () => {
         this.errorMessage = 'Could not load seller products.';
-        this.isLoading = false;
+        this.isLoadingProducts = false;
       },
     });
   }
