@@ -1,6 +1,12 @@
 <!-- Seller Info Section -->
+ <!-- Seller loading -->
+<div *ngIf="isLoadingSeller" class="container py-4">
+  <div class="alert alert-info text-center">
+    Loading seller...
+  </div>
+</div>
 <div class="container py-4">
-  <div *ngIf="seller" class="seller-info-card card shadow-sm p-4 mb-4">
+  <div *ngIf="!isLoadingSeller && seller" class="seller-info-card card shadow-sm p-4 mb-4">
     <div class="d-flex flex-column align-items-center">
       <!-- Avatar and Name Row -->
       <div class="d-flex align-items-center mb-3">
@@ -32,18 +38,25 @@
   </div>
 
   <!-- No seller found message -->
-  <div *ngIf="!seller" class="alert alert-warning text-center">
+  <div *ngIf="!isLoadingSeller && !seller" class="alert alert-warning text-center">
     Seller not found.
   </div>
 </div>
 
 
 <!-- Products Section -->
-<div *ngIf="seller && sellerProducts.length === 0" class="text-center py-5 text-white">
+<!-- Loading state -->
+<div *ngIf="seller && isLoadingProducts" class="text-center py-5 text-white">
+  Loading products...
+</div>
+
+<!-- Empty state -->
+<div *ngIf="seller && !isLoadingProducts && sellerProducts.length === 0"
+     class="text-center py-5 text-white">
   This seller has no products listed yet.
 </div>
 
-<div *ngIf="seller && sellerProducts.length > 0">
+<div *ngIf="seller && !isLoadingProducts && sellerProducts.length > 0">
   <div class="container py-3">
     <h4 class="mb-4">Products by {{ seller.name }}</h4>
     <div class="row g-4">

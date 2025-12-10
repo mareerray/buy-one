@@ -82,14 +82,14 @@ public class ProductServiceImpl implements ProductService {
                 .price(savedProduct.getPrice())
                 .build();
         // Publish event
-        kafkaTemplate.send(productCreatedTopic, event)
-                .whenComplete((result, ex) -> {
-                    if (ex != null) {
-                        log.error("Failed to publish event", ex);
-                    } else {
-                        log.info("Event published: " + event);
-                    }
-                });
+        // kafkaTemplate.send(productCreatedTopic, event)
+        //         .whenComplete((result, ex) -> {
+        //             if (ex != null) {
+        //                 log.error("Failed to publish event", ex);
+        //             } else {
+        //                 log.info("Event published: " + event);
+        //             }
+        //         });
         return toProductResponse(savedProduct);
     }
     
@@ -161,14 +161,14 @@ public class ProductServiceImpl implements ProductService {
                 .name(updatedProduct.getName())
                 .price(updatedProduct.getPrice())
                 .build();
-        kafkaTemplate.send(productUpdatedTopic, event)
-                .whenComplete((result, ex) -> {
-                    if (ex != null) {
-                        log.error("Failed to publish event", ex);
-                    } else {
-                        log.info("Event published: " + event);
-                    }
-                });
+        // kafkaTemplate.send(productUpdatedTopic, event)
+        //         .whenComplete((result, ex) -> {
+        //             if (ex != null) {
+        //                 log.error("Failed to publish event", ex);
+        //             } else {
+        //                 log.info("Event published: " + event);
+        //             }
+        //         });
         return toProductResponse(updatedProduct);
     }
     
@@ -188,14 +188,14 @@ public class ProductServiceImpl implements ProductService {
                 .productId(product.getId())
                 .sellerId(sellerId)
                 .build();
-        kafkaTemplate.send(productDeletedTopic, event)
-                .whenComplete((result, ex) -> {
-                    if (ex != null) {
-                        log.error("Failed to publish event", ex);
-                    } else {
-                        log.info("Event published: " + event);
-                    }
-                });
+        // kafkaTemplate.send(productDeletedTopic, event)
+        //         .whenComplete((result, ex) -> {
+        //             if (ex != null) {
+        //                 log.error("Failed to publish event", ex);
+        //             } else {
+        //                 log.info("Event published: " + event);
+        //             }
+        //         });
 
     }
     
