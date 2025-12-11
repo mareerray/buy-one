@@ -28,8 +28,8 @@ app:
 cloudflare:
   r2:
     account-id: "ed2494a6dd015fe932f0eb26102d514d"
-    access-key-id: "${R2_ACCESS_KEY_ID}"
-    secret-access-key: "${R2_SECRET_ACCESS_KEY}"
+    access-key-id: "98633bbe85642d122cbdc482bedd7c33"
+    secret-access-key: "d6ebfdcba1a5136a4bcaa047f40527ef71bdcc6333f8d2e9823c331541918cac"
     bucket: "buyone-images"
     endpoint: "https://ed2494a6dd015fe932f0eb26102d514d.r2.cloudflarestorage.com"
     region: "auto"

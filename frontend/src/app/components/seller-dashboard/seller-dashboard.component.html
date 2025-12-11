@@ -47,7 +47,7 @@
           <li class="list-group-item" *ngFor="let product of userProducts; let i = index">
             <div class="d-flex align-items-center">
               <img *ngIf="product.images && product.images.length"
-                  [src]="product.images[0]"
+                  [src]="mediaBaseUrl + product.images[0]"
                   alt="Product Image"
                   class="me-3 square-image">
 

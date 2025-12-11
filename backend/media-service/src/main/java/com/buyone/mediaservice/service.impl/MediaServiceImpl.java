@@ -30,10 +30,10 @@ public class MediaServiceImpl implements MediaService {
     
     @Override
     public MediaResponse uploadImage(MultipartFile file,
-                                     String ownerId,
-                                     MediaOwnerType ownerType,
-                                     String currentUserId,
-                                     String currentUserRole) {
+                                    String ownerId,
+                                    MediaOwnerType ownerType,
+                                    String currentUserId,
+                                    String currentUserRole) {
         validateImageFile(file);
         if (!"SELLER".equals(currentUserRole)) {
             throw new ForbiddenException("Only Seller can upload images");
@@ -63,7 +63,7 @@ public class MediaServiceImpl implements MediaService {
         media.setImagePath(imagePath);
         media = mediaRepository.save(media);
         
-        String url = "/media/images/" + media.getId();
+        String url = "/media/images/" + media.getId() + "/file";
         
         return new MediaResponse(
                 media.getId(),
@@ -77,7 +77,7 @@ public class MediaServiceImpl implements MediaService {
     public MediaResponse getMedia(String id) {
         Media media = mediaRepository.findById(id)
                 .orElseThrow(() -> new MediaNotFoundException(id));
-        String url = "/media/images/" + media.getId();
+        String url = "/media/images/" + media.getId() + "/file";
         return new MediaResponse(
                 media.getId(),
                 media.getOwnerId(),
@@ -88,9 +88,9 @@ public class MediaServiceImpl implements MediaService {
     
     @Override
     public MediaResponse updateMedia(MultipartFile file,
-                                     String mediaId,
-                                     String currentUserId,
-                                     String currentUserRole) {
+                                    String mediaId,
+                                    String currentUserId,
+                                    String currentUserRole) {
         validateImageFile(file);
         
         if (!"SELLER".equals(currentUserRole)) {
@@ -115,7 +115,7 @@ public class MediaServiceImpl implements MediaService {
         
         media = mediaRepository.save(media);
         
-        String url = "/media/images/" + media.getId();
+        String url = "/media/images/" + media.getId() + "/file";
         
         return new MediaResponse(
                 media.getId(),
@@ -127,8 +127,8 @@ public class MediaServiceImpl implements MediaService {
     
     @Override
     public DeleteMediaResponse deleteMedia(String id,
-                                           String currentUserId,
-                                           String currentUserRole) {
+                                        String currentUserId,
+                                        String currentUserRole) {
         
         if (!"SELLER".equals(currentUserRole)) {
             throw new ForbiddenException("Only sellers can delete images.");
@@ -155,7 +155,7 @@ public class MediaServiceImpl implements MediaService {
                 .map(m -> new MediaResponse(
                         m.getId(),
                         m.getOwnerId(),
-                        "/media/images/" + m.getId(),
+                        "/media/images/" + m.getId() + "/file",
                         m.getCreatedAt()
                 ))
                 .toList();

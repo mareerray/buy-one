@@ -11,6 +11,7 @@ import { Category } from '../../models/categories/category.model';
 import { AuthService } from '../../services/auth.service';
 import { MediaService } from '../../services/media.service';
 import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-seller-dashboard',
@@ -26,6 +27,7 @@ export class SellerDashboardComponent implements OnInit {
   private productService = inject(ProductService);
   private categoryService = inject(CategoryService);
 
+  mediaBaseUrl = 'https://localhost:8080';
   userProducts: ProductResponse[] = [];
   categories: Category[] = [];
   isLoadingProducts = false;
@@ -199,8 +201,6 @@ export class SellerDashboardComponent implements OnInit {
   }
 
   submitProduct() {
-    console.log('submitProduct called', this.productForm.value);
-    console.log('form valid?', this.productForm.valid, this.productForm.errors);
     if (this.productForm.invalid) {
       console.log('form invalid, controls:', {
         name: this.productForm.get('name')?.errors,
@@ -216,7 +216,6 @@ export class SellerDashboardComponent implements OnInit {
     const currentUser = this.authService.currentUserValue;
     if (!currentUser) return;
 
-    const images = this.imagePreviews.length ? this.imagePreviews.map((p) => p.dataUrl) : [];
     if (this.imagePreviews.length === 0) {
       this.imageValidationError = 'Please add at least one image.';
       return;
@@ -226,6 +225,7 @@ export class SellerDashboardComponent implements OnInit {
       // EDIT mode: update existing product
       // Keep the product's original ID and userId
       const existing = this.userProducts[this.editIndex];
+      const images = this.imagePreviews.map((p) => p.dataUrl);
       const payload: UpdateProductRequest = {
         name: this.productForm.value.name,
         description: this.productForm.value.description,
@@ -254,19 +254,24 @@ export class SellerDashboardComponent implements OnInit {
         price: this.productForm.value.price,
         quantity: this.productForm.value.quantity,
         categoryId: this.productForm.value.categoryId,
-        images,
+        images: [], // images will be after media upload
       };
 
       this.productService.addProduct(payload, currentUser.id, 'SELLER').subscribe({
         next: (resp) => {
           console.log('Create product success', resp);
           const createdProduct = resp.data;
+          console.log('createdProduct:', createdProduct);
+          console.log('imagePreviews at create:', this.imagePreviews);
           if (createdProduct && createdProduct.id) {
-            this.uploadImagesToMediaService(createdProduct.id);
+            console.log('Calling uploadImagesToMediaService with id', createdProduct.id);
+            this.uploadImagesToMediaService(createdProduct.id, createdProduct, currentUser.id);
+          } else {
+            console.log('No createdProduct.id, skipping uploadImagesToMediaService');
+            this.successMessage = 'Product created successfully';
+            this.loadSellerProducts(currentUser.id);
+            this.closeModal(); // Reset and hide modal
           }
-          this.successMessage = 'Product created successfully';
-          this.loadSellerProducts(currentUser.id);
-          this.closeModal(); // Reset and hide modal
         },
         error: (err) => {
           console.error('Create product failed', err);
@@ -283,18 +288,62 @@ export class SellerDashboardComponent implements OnInit {
     this.showModal = false;
   }
 
-  private uploadImagesToMediaService(productId: string): void {
-    // Only upload images that came from real files
-    this.imagePreviews.forEach((preview) => {
-      if (!preview.file) return; // skip images that are only URLs (e.g. from edit mode)
-      this.mediaService.uploadProductImage(productId, preview.file, this.imagePreviews).subscribe({
-        next: (res) => {
-          console.log('Image for product uploaded successfully.', res.data);
-        },
-        error: (err) => {
-          console.error('Failed to upload product image.', productId, err);
-        },
+  private uploadImagesToMediaService(
+    productId: string,
+    createdProduct: ProductResponse,
+    sellerId: string,
+  ): void {
+    console.log('uploadImagesToMediaService called, productId:', productId);
+    console.log('imagePreviews inside uploadImagesToMediaService:', this.imagePreviews);
+
+    const uploadRequests = this.imagePreviews
+      .filter((preview) => preview.file)
+      .map((preview) => {
+        console.log('Uploading file', preview.file!.name);
+        return this.mediaService.uploadProductImage(productId, preview.file!);
       });
+
+    if (uploadRequests.length === 0) {
+      console.log('No real files to upload');
+      this.successMessage = 'Product created successfully';
+      this.loadSellerProducts(sellerId);
+      this.closeModal();
+      return;
+    }
+
+    forkJoin(uploadRequests).subscribe({
+      next: (results) => {
+        console.log('All images uploaded, results:', results);
+
+        // Build URLs from MediaResponses
+        // const imageUrls = results.map((res) => `/media/images/${res.data.id}/file`);
+
+        const imageUrls = results.map((res) => res.data.url);
+
+        const updatePayload: UpdateProductRequest = {
+          name: createdProduct.name,
+          description: createdProduct.description,
+          price: createdProduct.price,
+          quantity: createdProduct.quantity,
+          categoryId: createdProduct.categoryId,
+          images: imageUrls,
+        };
+
+        this.productService.updateProduct(productId, updatePayload, sellerId, 'SELLER').subscribe({
+          next: (updateResp) => {
+            console.log('Product updated with image URLs', updateResp);
+            this.successMessage = 'Product created successfully';
+            this.loadSellerProducts(sellerId);
+            this.closeModal();
+          },
+          error: (err) => {
+            console.error('Update product with images failed', err);
+          },
+        });
+      },
+      error: (err) => {
+        console.error('Failed to upload product image(s).', productId, err);
+      },
     });
   }
 

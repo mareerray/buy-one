@@ -12,7 +12,7 @@ export class MediaService {
   allowedProductImageTypes = ['image/jpeg', 'image/png'];
   allowedAvatarTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 
-  private baseUrl = '/media/images';
+  private baseUrl = 'https://localhost:8080/media/images';
   private http = inject(HttpClient);
   private auth = inject(AuthService);
 
@@ -55,7 +55,7 @@ export class MediaService {
   uploadProductImage(
     productId: string,
     file: File,
-    previewList: { file: File | null; dataUrl: string }[],
+    // previewList: { file: File | null; dataUrl: string }[],
   ): Observable<ApiResponse<MediaResponse>> {
     if (!this.allowedProductImageTypes.includes(file.type)) {
       return throwError(() => new Error('Invalid product image file type'));
@@ -63,9 +63,9 @@ export class MediaService {
     if (file.size > this.maxImageSize) {
       return throwError(() => new Error('Product image file size must be less than 2MB'));
     }
-    if (this.isAlreadySelected(file, previewList)) {
-      return throwError(() => new Error('This image has already been selected.'));
-    }
+    // if (this.isAlreadySelected(file, previewList)) {
+    //   return throwError(() => new Error('This image has already been selected.'));
+    // }
 
     const currentUser = this.auth.currentUserValue;
     if (!currentUser) {
