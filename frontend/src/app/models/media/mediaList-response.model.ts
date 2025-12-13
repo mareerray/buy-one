@@ -1,7 +1,7 @@
 import { MediaResponse } from './media-response.model';
 
 export interface MediaListResponse {
-  items: MediaResponse[];
+  images: MediaResponse[];
   total: number;
   max: number;
 }

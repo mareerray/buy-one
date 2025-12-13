@@ -27,7 +27,6 @@ export class SellerDashboardComponent implements OnInit {
   private productService = inject(ProductService);
   private categoryService = inject(CategoryService);
 
-  mediaBaseUrl = 'https://localhost:8080';
   userProducts: ProductResponse[] = [];
   categories: Category[] = [];
   isLoadingProducts = false;
@@ -42,7 +41,8 @@ export class SellerDashboardComponent implements OnInit {
 
   productForm: FormGroup;
   // imagePreview: string | ArrayBuffer | null = null;
-  imagePreviews: { file: File | null; dataUrl: string }[] = [];
+  imagePreviews: { file: File | null; dataUrl: string; mediaId?: string | null }[] = [];
+  maxImagesPerProduct = 5;
   isDragActive: boolean = false;
 
   fb = inject(FormBuilder);
@@ -94,6 +94,7 @@ export class SellerDashboardComponent implements OnInit {
     this.isLoadingProducts = true;
     this.productService.getProductsBySeller(sellerId).subscribe({
       next: (products) => {
+        console.log('products from backend', products);
         this.userProducts = products;
         this.isLoadingProducts = false;
       },
@@ -132,12 +133,33 @@ export class SellerDashboardComponent implements OnInit {
 
   onFilesSelected(event: any): void {
     const files: FileList = event.target.files;
+    // Future count if we add them
+    const futureCount = this.imagePreviews.length + files.length;
+    if (futureCount > this.maxImagesPerProduct) {
+      this.imageValidationError = `You can only upload up to ${this.maxImagesPerProduct} images per product.`;
+      setTimeout(() => (this.imageValidationError = null), 3000);
+      return;
+    }
+
     Array.from(files).forEach((file) => {
-      // Duplicate? Ask service!
+      // Duplicate in current selection
       if (this.mediaService.isAlreadySelected(file, this.imagePreviews)) {
         this.imageValidationError = 'This image has already been selected.';
         setTimeout(() => (this.imageValidationError = null), 3000);
         return;
+      }
+      // Edit mode, block same filename as existing
+      if (this.editIndex !== null) {
+        const existingProduct = this.userProducts[this.editIndex];
+        const existingFilenames = existingProduct.images?.some((url) =>
+          url.toLowerCase().includes(file.name.toLowerCase()),
+        );
+        if (existingFilenames) {
+          this.imageValidationError =
+            'An image with the same name already exists for this product.';
+          setTimeout(() => (this.imageValidationError = null), 3000);
+          return;
+        }
       }
       // Validate type
       if (!this.mediaService.allowedProductImageTypes.includes(file.type)) {
@@ -153,12 +175,28 @@ export class SellerDashboardComponent implements OnInit {
       }
       // If all good, show preview
       const reader = new FileReader();
-      reader.onload = () => this.imagePreviews.push({ file, dataUrl: reader.result as string });
+      reader.onload = () =>
+        this.imagePreviews.push({ file, dataUrl: reader.result as string, mediaId: null });
       reader.readAsDataURL(file);
     });
   }
 
   removeImage(index: number): void {
+    console.log('removeImage called', index);
+    const preview = this.imagePreviews[index];
+
+    // If this is an existing image with a mediaId, delete from media-service too
+    if (!preview.file && preview.mediaId) {
+      const currentUser = this.authService.currentUserValue;
+      if (currentUser) {
+        this.mediaService.deleteImage(preview.mediaId).subscribe({
+          next: () => console.log('Media deleted', preview.mediaId),
+          error: (err) => console.error('Failed to delete media', preview.mediaId, err),
+        });
+      }
+    }
+
+    // Remove from local list; submitProduct will send new images[] to product-service
     this.imagePreviews.splice(index, 1);
   }
 
@@ -221,29 +259,85 @@ export class SellerDashboardComponent implements OnInit {
       return;
     }
 
+    if (this.imagePreviews.length > this.maxImagesPerProduct) {
+      this.imageValidationError = `You can upload a maximum of ${this.maxImagesPerProduct} images per product.`;
+      return;
+    }
+
     if (this.editIndex !== null) {
       // EDIT mode: update existing product
-      // Keep the product's original ID and userId
       const existing = this.userProducts[this.editIndex];
-      const images = this.imagePreviews.map((p) => p.dataUrl);
-      const payload: UpdateProductRequest = {
-        name: this.productForm.value.name,
-        description: this.productForm.value.description,
-        price: this.productForm.value.price,
-        quantity: this.productForm.value.quantity,
-        categoryId: this.productForm.value.categoryId,
-        images,
-      };
+      const currentUser = this.authService.currentUserValue;
+      if (!currentUser) return;
 
-      this.productService.updateProduct(existing.id, payload, currentUser.id, 'SELLER').subscribe({
-        next: (resp) => {
-          console.log('Update product success', resp);
-          this.successMessage = 'Product updated successfully';
-          this.loadSellerProducts(currentUser.id);
-          this.closeModal();
+      // URLs already stored for this product
+      const existingUrls = this.imagePreviews.filter((p) => !p.file).map((p) => p.dataUrl);
+
+      // New files added in this edit session
+      const filesToUpload = this.imagePreviews.filter((p) => p.file).map((p) => p.file as File);
+
+      // No new files: just update text/price/quantity and keep same images
+      if (filesToUpload.length === 0) {
+        const payload: UpdateProductRequest = {
+          name: this.productForm.value.name,
+          description: this.productForm.value.description,
+          price: this.productForm.value.price,
+          quantity: this.productForm.value.quantity,
+          categoryId: this.productForm.value.categoryId,
+          images: existingUrls,
+        };
+
+        this.productService
+          .updateProduct(existing.id, payload, currentUser.id, 'SELLER')
+          .subscribe({
+            next: (resp) => {
+              console.log('Update product (no new images) success', resp);
+              this.successMessage = 'Product updated successfully';
+              this.loadSellerProducts(currentUser.id);
+            },
+            error: (err) => {
+              console.error('Update product failed', err);
+            },
+          });
+        return;
+      }
+
+      // There are new files: upload them to media-service first
+      const uploadRequests = filesToUpload.map((file) =>
+        this.mediaService.uploadProductImage(existing.id, file),
+      );
+
+      forkJoin(uploadRequests).subscribe({
+        next: (results) => {
+          console.log('All new images uploaded', results);
+          const newUrls = results.map((res) => res.data.url);
+          const allImages = [...existingUrls, ...newUrls];
+
+          const payload: UpdateProductRequest = {
+            name: this.productForm.value.name,
+            description: this.productForm.value.description,
+            price: this.productForm.value.price,
+            quantity: this.productForm.value.quantity,
+            categoryId: this.productForm.value.categoryId,
+            images: allImages,
+          };
+
+          this.productService
+            .updateProduct(existing.id, payload, currentUser.id, 'SELLER')
+            .subscribe({
+              next: (resp) => {
+                console.log('Update product with new images success', resp);
+                this.successMessage = 'Product updated successfully';
+                this.loadSellerProducts(currentUser.id);
+                this.closeModal();
+              },
+              error: (err) => {
+                console.error('Update product with images failed', err);
+              },
+            });
         },
         error: (err) => {
-          console.error('Update product failed', err);
+          console.error('Failed to upload product image(s) during edit.', existing.id, err);
         },
       });
     } else {
@@ -281,6 +375,7 @@ export class SellerDashboardComponent implements OnInit {
   }
 
   closeModal() {
+    console.log('closeModal called');
     this.productForm.reset();
     this.imagePreviews = [];
     this.imageValidationError = null;
@@ -305,18 +400,13 @@ export class SellerDashboardComponent implements OnInit {
 
     if (uploadRequests.length === 0) {
       console.log('No real files to upload');
-      this.successMessage = 'Product created successfully';
-      this.loadSellerProducts(sellerId);
-      this.closeModal();
+      this.imageValidationError = 'Please add at least one image.';
       return;
     }
 
     forkJoin(uploadRequests).subscribe({
       next: (results) => {
         console.log('All images uploaded, results:', results);
-
-        // Build URLs from MediaResponses
-        // const imageUrls = results.map((res) => `/media/images/${res.data.id}/file`);
 
         const imageUrls = results.map((res) => res.data.url);
 
@@ -357,9 +447,29 @@ export class SellerDashboardComponent implements OnInit {
       categoryId: product.categoryId,
       quantity: product.quantity,
     });
-    this.imagePreviews = product.images?.map((url) => ({ file: null, dataUrl: url })) || [];
-    this.editIndex = index;
-    this.showModal = true;
+
+    // Load media entries so we know mediaId for each URL
+    this.mediaService.listProductImages(product.id).subscribe({
+      next: (resp) => {
+        const medias = resp.data.images; // array of MediaResponse
+        // Map URLs from product.images to objects { file, dataUrl, mediaId }
+        this.imagePreviews =
+          product.images?.map((url) => {
+            const match = medias.find((m) => m.url === url);
+            return { file: null, dataUrl: url, mediaId: match ? match.id : null };
+          }) || [];
+        this.editIndex = index;
+        this.showModal = true;
+      },
+      error: (err) => {
+        console.error('Failed to load media list for product', product.id, err);
+        // fallback: no mediaId information
+        this.imagePreviews =
+          product.images?.map((url) => ({ file: null, dataUrl: url, mediaId: null })) || [];
+        this.editIndex = index;
+        this.showModal = true;
+      },
+    });
   }
 
   deleteProduct(index: number) {

@@ -12,7 +12,7 @@ export class MediaService {
   allowedProductImageTypes = ['image/jpeg', 'image/png'];
   allowedAvatarTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 
-  private baseUrl = 'https://localhost:8080/media/images';
+  private baseUrl = 'https://localhost:8080/media/images'; // Used for API calls
   private http = inject(HttpClient);
   private auth = inject(AuthService);
 

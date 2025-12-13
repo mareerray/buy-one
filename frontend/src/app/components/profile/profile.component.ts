@@ -58,14 +58,15 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  onAvatarSelect(event: Event) {
-    const file = (event.target as HTMLInputElement).files?.[0];
+  onAvatarSelect(event: any): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
     if (!file) return;
 
     this.avatarError = '';
     this.uploadProgress = 0;
 
-    // Preview instantly
+    // Local preview (base64) so user sees something instantly
     const reader = new FileReader();
     reader.onloadend = () => {
       this.avatar = reader.result as string;
@@ -73,14 +74,21 @@ export class ProfileComponent implements OnInit {
     };
     reader.readAsDataURL(file);
 
-    // Upload via MediaService
+    // Upload via MediaService (stores in media-service + Cloudflare)
     this.mediaService.uploadAvatar(file).subscribe({
       next: (res) => {
         // res is ApiResponse<MediaResponse>
-        const media = res.data;
-        // use media.url as the avatar URL from backend
-        this.avatar = media.url;
+        const media = res.data; // MediaResponse
+        this.avatar = media.url; // Use backend URL as final avatar
         this.uploadProgress = 0;
+        // Update AuthService immediately so navbar/seller-dashboard refresh
+        const current = this.authService.currentUserValue;
+        if (current) {
+          this.authService.updateCurrentUserInStorage({
+            ...current,
+            avatar: media.url,
+          });
+        }
       },
       error: (err) => {
         this.avatarError =
@@ -103,16 +111,13 @@ export class ProfileComponent implements OnInit {
       const dto: UserUpdateRequest = {
         id: this.currentUser.id,
         name: this.profileForm.value.name,
-        // email: this.profileForm.value.email,
-        avatar: this.avatar || this.currentUser.avatar,
-        // password not included here
+        avatar: this.avatar || this.currentUser.avatar, // the Cloudflare/media URL
       };
       this.userService.updateCurrentUser(dto).subscribe({
         next: (updatedUser) => {
           this.currentUser = updatedUser;
           this.profileForm.patchValue({
             name: updatedUser.name,
-            // email: updatedUser.email,
           });
           // keep AuthService / navbar in sync
           this.authService.updateCurrentUserInStorage(updatedUser); // navbar updates

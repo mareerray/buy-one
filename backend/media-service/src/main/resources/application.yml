@@ -11,6 +11,10 @@ spring:
       resourceserver:
         jwt:
           secret: "oogabooga123oogabooga123oogabooga123!"
+  servlet:
+    multipart:
+      max-file-size: 2MB    # each file must be ≤ 2 MB
+      max-request-size: 10MB # up to 5 images, 2 MB each” in a single request
 
 eureka:
   client:
@@ -21,6 +25,8 @@ eureka:
 
 
 app:
+  media:
+      public-base-url: "https://pub-0695601915114c88a20b5aa2ba5091cd.r2.dev"
   kafka:
     topic:
       product-deleted: product.deleted
