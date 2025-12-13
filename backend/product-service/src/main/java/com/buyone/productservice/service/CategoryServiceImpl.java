@@ -1,4 +1,4 @@
-package com.buyone.productservice.service.impl;
+package com.buyone.productservice.service;
 
 import com.buyone.productservice.exception.ResourceNotFoundException;
 import com.buyone.productservice.model.Category;

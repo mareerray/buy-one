@@ -5,7 +5,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { MediaService } from '../../../services/media.service';
-import { HttpEventType } from '@angular/common/http';
 import { AuthService } from '../../../services/auth.service';
 
 import { MatCardModule } from '@angular/material/card';
@@ -36,15 +35,6 @@ import { MatRadioModule } from '@angular/material/radio';
   ],
 })
 export class SignUpComponent {
-  // @Output() signUp = new EventEmitter<{
-  //   name: string;
-  //   email: string;
-  //   password: string;
-  //   role: 'client' | 'seller';
-  //   avatar?: string;
-  // }>();
-  // @Output() switchToSignIn = new EventEmitter<void>();
-
   uploadProgress = 0;
   avatar: string = '';
   avatarError: string = '';
@@ -57,7 +47,7 @@ export class SignUpComponent {
   private fb = inject(FormBuilder);
   private mediaService = inject(MediaService);
   private authService = inject(AuthService);
-  private router = inject(Router);
+  private router: Router = inject(Router);
 
   constructor() {
     this.form = this.fb.group(
@@ -103,12 +93,11 @@ export class SignUpComponent {
 
     // Upload with mediaService
     this.mediaService.uploadAvatar(file).subscribe({
-      next: (event) => {
-        if (event.type === HttpEventType.UploadProgress && event.total) {
-          this.uploadProgress = Math.round((100 * event.loaded) / event.total);
-        } else if (event.type === HttpEventType.Response) {
-          this.uploadProgress = 0;
-        }
+      next: (res) => {
+        // res is ApiResponse<MediaResponse>
+        const media = res.data;
+        this.avatar = media.url; // backend URL
+        this.uploadProgress = 0;
       },
       error: (err) => {
         this.avatarError =
@@ -145,13 +134,13 @@ export class SignUpComponent {
     };
 
     this.authService.signup(payload).subscribe({
-      next: (user) => {
+      next: (_user: any) => {
         this.isLoading = false;
-        console.log('Sign-up successful', user);
+        console.log('Sign-up successful', _user);
         // this.signUp.emit(payload); --- IGNORE ---
         this.router.navigate(['/signin']);
       },
-      error: (error) => {
+      error: (error: any) => {
         this.isLoading = false;
         this.errorMessage = 'Sign-up failed. Please try again.';
         console.error('Sign-up error', error);

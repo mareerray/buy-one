@@ -1,5 +1,4 @@
 package com.buyone.mediaservice.service.impl;
-
 import com.buyone.mediaservice.model.Media;
 import com.buyone.mediaservice.model.MediaOwnerType;
 import com.buyone.mediaservice.repository.MediaRepository;
@@ -14,6 +13,7 @@ import com.buyone.mediaservice.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.time.Instant;
 import java.util.List;
@@ -27,13 +27,16 @@ public class MediaServiceImpl implements MediaService {
     
     private static final int MAX_IMAGES_PER_PRODUCT = 5;
     private static final long MAX_FILE_SIZE_BYTES = 2L * 1024 * 1024;
+
+    @Value("${app.media.public-base-url}")
+    private String publicBucketBaseUrl;
     
     @Override
     public MediaResponse uploadImage(MultipartFile file,
-                                     String ownerId,
-                                     MediaOwnerType ownerType,
-                                     String currentUserId,
-                                     String currentUserRole) {
+                                    String ownerId,
+                                    MediaOwnerType ownerType,
+                                    String currentUserId,
+                                    String currentUserRole) {
         validateImageFile(file);
         if (!"SELLER".equals(currentUserRole)) {
             throw new ForbiddenException("Only Seller can upload images");
@@ -58,12 +61,14 @@ public class MediaServiceImpl implements MediaService {
         
         media = mediaRepository.save(media);
         
+        // store() should return something like "media/<id>.png"
         String imagePath = storageService.store(file, media.getId());
         
         media.setImagePath(imagePath);
         media = mediaRepository.save(media);
         
-        String url = "/media/images/" + media.getId();
+        // Public Cloudflare URL, e.g. https://pub-....r2.dev/media/<id>.png
+        String url = publicBucketBaseUrl + "/" + imagePath;
         
         return new MediaResponse(
                 media.getId(),
@@ -77,7 +82,8 @@ public class MediaServiceImpl implements MediaService {
     public MediaResponse getMedia(String id) {
         Media media = mediaRepository.findById(id)
                 .orElseThrow(() -> new MediaNotFoundException(id));
-        String url = "/media/images/" + media.getId();
+        // Public Cloudflare URL, e.g. https://pub-....r2.dev/media/<id>.png
+        String url = publicBucketBaseUrl + "/" + media.getImagePath();
         return new MediaResponse(
                 media.getId(),
                 media.getOwnerId(),
@@ -88,9 +94,9 @@ public class MediaServiceImpl implements MediaService {
     
     @Override
     public MediaResponse updateMedia(MultipartFile file,
-                                     String mediaId,
-                                     String currentUserId,
-                                     String currentUserRole) {
+                                    String mediaId,
+                                    String currentUserId,
+                                    String currentUserRole) {
         validateImageFile(file);
         
         if (!"SELLER".equals(currentUserRole)) {
@@ -115,7 +121,8 @@ public class MediaServiceImpl implements MediaService {
         
         media = mediaRepository.save(media);
         
-        String url = "/media/images/" + media.getId();
+        // Public Cloudflare URL, e.g. https://pub-....r2.dev/media/<id>.png
+        String url = publicBucketBaseUrl + "/" + newImagePath;
         
         return new MediaResponse(
                 media.getId(),
@@ -127,8 +134,8 @@ public class MediaServiceImpl implements MediaService {
     
     @Override
     public DeleteMediaResponse deleteMedia(String id,
-                                           String currentUserId,
-                                           String currentUserRole) {
+                                        String currentUserId,
+                                        String currentUserRole) {
         
         if (!"SELLER".equals(currentUserRole)) {
             throw new ForbiddenException("Only sellers can delete images.");
@@ -136,10 +143,17 @@ public class MediaServiceImpl implements MediaService {
         
         Media media = mediaRepository.findById(id)
                 .orElseThrow(() -> new MediaNotFoundException(id));
+
+        // If this is a user avatar, ownerId must equal currentUserId
+        if (media.getOwnerType() == MediaOwnerType.USER) {
+            if (!media.getOwnerId().equals(currentUserId)) {
+                throw new ForbiddenException("You can only delete your own avatar.");
+            }
+        }
         
         // Ownership: only ownerId can delete this media
-        if (!media.getOwnerId().equals(currentUserId)) {
-            throw new ForbiddenException("You can only delete your own media.");
+        if (media.getOwnerType() == MediaOwnerType.PRODUCT) {
+            // For now, just allow delete for SELLER role (already checked above)
         }
         
         storageService.delete(media.getImagePath());
@@ -155,7 +169,7 @@ public class MediaServiceImpl implements MediaService {
                 .map(m -> new MediaResponse(
                         m.getId(),
                         m.getOwnerId(),
-                        "/media/images/" + m.getId(),
+                        publicBucketBaseUrl + "/" + m.getImagePath(),
                         m.getCreatedAt()
                 ))
                 .toList();

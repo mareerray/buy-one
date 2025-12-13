@@ -11,6 +11,7 @@ import { Category } from '../../models/categories/category.model';
 import { AuthService } from '../../services/auth.service';
 import { MediaService } from '../../services/media.service';
 import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-seller-dashboard',
@@ -20,7 +21,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./seller-dashboard.component.css'],
 })
 export class SellerDashboardComponent implements OnInit {
-  private router = inject(Router);
+  private router: Router = inject(Router);
   private mediaService = inject(MediaService);
   private authService = inject(AuthService);
   private productService = inject(ProductService);
@@ -40,7 +41,8 @@ export class SellerDashboardComponent implements OnInit {
 
   productForm: FormGroup;
   // imagePreview: string | ArrayBuffer | null = null;
-  imagePreviews: { file: File | null; dataUrl: string }[] = [];
+  imagePreviews: { file: File | null; dataUrl: string; mediaId?: string | null }[] = [];
+  maxImagesPerProduct = 5;
   isDragActive: boolean = false;
 
   fb = inject(FormBuilder);
@@ -92,6 +94,7 @@ export class SellerDashboardComponent implements OnInit {
     this.isLoadingProducts = true;
     this.productService.getProductsBySeller(sellerId).subscribe({
       next: (products) => {
+        console.log('products from backend', products);
         this.userProducts = products;
         this.isLoadingProducts = false;
       },
@@ -130,12 +133,33 @@ export class SellerDashboardComponent implements OnInit {
 
   onFilesSelected(event: any): void {
     const files: FileList = event.target.files;
+    // Future count if we add them
+    const futureCount = this.imagePreviews.length + files.length;
+    if (futureCount > this.maxImagesPerProduct) {
+      this.imageValidationError = `You can only upload up to ${this.maxImagesPerProduct} images per product.`;
+      setTimeout(() => (this.imageValidationError = null), 3000);
+      return;
+    }
+
     Array.from(files).forEach((file) => {
-      // Duplicate? Ask service!
+      // Duplicate in current selection
       if (this.mediaService.isAlreadySelected(file, this.imagePreviews)) {
         this.imageValidationError = 'This image has already been selected.';
         setTimeout(() => (this.imageValidationError = null), 3000);
         return;
+      }
+      // Edit mode, block same filename as existing
+      if (this.editIndex !== null) {
+        const existingProduct = this.userProducts[this.editIndex];
+        const existingFilenames = existingProduct.images?.some((url) =>
+          url.toLowerCase().includes(file.name.toLowerCase()),
+        );
+        if (existingFilenames) {
+          this.imageValidationError =
+            'An image with the same name already exists for this product.';
+          setTimeout(() => (this.imageValidationError = null), 3000);
+          return;
+        }
       }
       // Validate type
       if (!this.mediaService.allowedProductImageTypes.includes(file.type)) {
@@ -151,12 +175,28 @@ export class SellerDashboardComponent implements OnInit {
       }
       // If all good, show preview
       const reader = new FileReader();
-      reader.onload = () => this.imagePreviews.push({ file, dataUrl: reader.result as string });
+      reader.onload = () =>
+        this.imagePreviews.push({ file, dataUrl: reader.result as string, mediaId: null });
       reader.readAsDataURL(file);
     });
   }
 
   removeImage(index: number): void {
+    console.log('removeImage called', index);
+    const preview = this.imagePreviews[index];
+
+    // If this is an existing image with a mediaId, delete from media-service too
+    if (!preview.file && preview.mediaId) {
+      const currentUser = this.authService.currentUserValue;
+      if (currentUser) {
+        this.mediaService.deleteImage(preview.mediaId).subscribe({
+          next: () => console.log('Media deleted', preview.mediaId),
+          error: (err) => console.error('Failed to delete media', preview.mediaId, err),
+        });
+      }
+    }
+
+    // Remove from local list; submitProduct will send new images[] to product-service
     this.imagePreviews.splice(index, 1);
   }
 
@@ -199,8 +239,6 @@ export class SellerDashboardComponent implements OnInit {
   }
 
   submitProduct() {
-    console.log('submitProduct called', this.productForm.value);
-    console.log('form valid?', this.productForm.valid, this.productForm.errors);
     if (this.productForm.invalid) {
       console.log('form invalid, controls:', {
         name: this.productForm.get('name')?.errors,
@@ -216,56 +254,118 @@ export class SellerDashboardComponent implements OnInit {
     const currentUser = this.authService.currentUserValue;
     if (!currentUser) return;
 
-    const images = this.imagePreviews.length ? this.imagePreviews.map((p) => p.dataUrl) : [];
     if (this.imagePreviews.length === 0) {
       this.imageValidationError = 'Please add at least one image.';
       return;
     }
 
-    if (this.editIndex !== null) {
-      // Edit mode: update existing product
-      // Keep the product's original ID and userId
-      const existing = this.userProducts[this.editIndex];
-      const payload: UpdateProductRequest = {
-        name: this.productForm.value.name,
-        description: this.productForm.value.description,
-        price: this.productForm.value.price,
-        quantity: this.productForm.value.quantity,
-        categoryId: this.productForm.value.categoryId,
-        images,
-      };
+    if (this.imagePreviews.length > this.maxImagesPerProduct) {
+      this.imageValidationError = `You can upload a maximum of ${this.maxImagesPerProduct} images per product.`;
+      return;
+    }
 
-      this.productService.updateProduct(existing.id, payload, currentUser.id, 'SELLER').subscribe({
-        next: (resp) => {
-          console.log('Update product success', resp);
-          this.successMessage = 'Product updated successfully';
-          this.loadSellerProducts(currentUser.id);
-          this.closeModal();
+    if (this.editIndex !== null) {
+      // EDIT mode: update existing product
+      const existing = this.userProducts[this.editIndex];
+      const currentUser = this.authService.currentUserValue;
+      if (!currentUser) return;
+
+      // URLs already stored for this product
+      const existingUrls = this.imagePreviews.filter((p) => !p.file).map((p) => p.dataUrl);
+
+      // New files added in this edit session
+      const filesToUpload = this.imagePreviews.filter((p) => p.file).map((p) => p.file as File);
+
+      // No new files: just update text/price/quantity and keep same images
+      if (filesToUpload.length === 0) {
+        const payload: UpdateProductRequest = {
+          name: this.productForm.value.name,
+          description: this.productForm.value.description,
+          price: this.productForm.value.price,
+          quantity: this.productForm.value.quantity,
+          categoryId: this.productForm.value.categoryId,
+          images: existingUrls,
+        };
+
+        this.productService
+          .updateProduct(existing.id, payload, currentUser.id, 'SELLER')
+          .subscribe({
+            next: (resp) => {
+              console.log('Update product (no new images) success', resp);
+              this.successMessage = 'Product updated successfully';
+              this.loadSellerProducts(currentUser.id);
+            },
+            error: (err) => {
+              console.error('Update product failed', err);
+            },
+          });
+        return;
+      }
+
+      // There are new files: upload them to media-service first
+      const uploadRequests = filesToUpload.map((file) =>
+        this.mediaService.uploadProductImage(existing.id, file),
+      );
+
+      forkJoin(uploadRequests).subscribe({
+        next: (results) => {
+          console.log('All new images uploaded', results);
+          const newUrls = results.map((res) => res.data.url);
+          const allImages = [...existingUrls, ...newUrls];
+
+          const payload: UpdateProductRequest = {
+            name: this.productForm.value.name,
+            description: this.productForm.value.description,
+            price: this.productForm.value.price,
+            quantity: this.productForm.value.quantity,
+            categoryId: this.productForm.value.categoryId,
+            images: allImages,
+          };
+
+          this.productService
+            .updateProduct(existing.id, payload, currentUser.id, 'SELLER')
+            .subscribe({
+              next: (resp) => {
+                console.log('Update product with new images success', resp);
+                this.successMessage = 'Product updated successfully';
+                this.loadSellerProducts(currentUser.id);
+                this.closeModal();
+              },
+              error: (err) => {
+                console.error('Update product with images failed', err);
+              },
+            });
         },
         error: (err) => {
-          console.error('Update product failed', err);
+          console.error('Failed to upload product image(s) during edit.', existing.id, err);
         },
       });
     } else {
-      // Add mode: create new product
+      // ADD mode: create new product
       const payload: CreateProductRequest = {
         name: this.productForm.value.name,
         description: this.productForm.value.description,
         price: this.productForm.value.price,
         quantity: this.productForm.value.quantity,
         categoryId: this.productForm.value.categoryId,
-        images,
+        images: [], // images will be after media upload
       };
 
       this.productService.addProduct(payload, currentUser.id, 'SELLER').subscribe({
         next: (resp) => {
           console.log('Create product success', resp);
-          this.successMessage =
-            this.editIndex !== null
-              ? 'Product updated successfully'
-              : 'Product created successfully';
-          this.loadSellerProducts(currentUser.id);
-          this.closeModal(); // Reset and hide modal
+          const createdProduct = resp.data;
+          console.log('createdProduct:', createdProduct);
+          console.log('imagePreviews at create:', this.imagePreviews);
+          if (createdProduct && createdProduct.id) {
+            console.log('Calling uploadImagesToMediaService with id', createdProduct.id);
+            this.uploadImagesToMediaService(createdProduct.id, createdProduct, currentUser.id);
+          } else {
+            console.log('No createdProduct.id, skipping uploadImagesToMediaService');
+            this.successMessage = 'Product created successfully';
+            this.loadSellerProducts(currentUser.id);
+            this.closeModal(); // Reset and hide modal
+          }
         },
         error: (err) => {
           console.error('Create product failed', err);
@@ -275,11 +375,66 @@ export class SellerDashboardComponent implements OnInit {
   }
 
   closeModal() {
+    console.log('closeModal called');
     this.productForm.reset();
     this.imagePreviews = [];
     this.imageValidationError = null;
     this.editIndex = null;
     this.showModal = false;
+  }
+
+  private uploadImagesToMediaService(
+    productId: string,
+    createdProduct: ProductResponse,
+    sellerId: string,
+  ): void {
+    console.log('uploadImagesToMediaService called, productId:', productId);
+    console.log('imagePreviews inside uploadImagesToMediaService:', this.imagePreviews);
+
+    const uploadRequests = this.imagePreviews
+      .filter((preview) => preview.file)
+      .map((preview) => {
+        console.log('Uploading file', preview.file!.name);
+        return this.mediaService.uploadProductImage(productId, preview.file!);
+      });
+
+    if (uploadRequests.length === 0) {
+      console.log('No real files to upload');
+      this.imageValidationError = 'Please add at least one image.';
+      return;
+    }
+
+    forkJoin(uploadRequests).subscribe({
+      next: (results) => {
+        console.log('All images uploaded, results:', results);
+
+        const imageUrls = results.map((res) => res.data.url);
+
+        const updatePayload: UpdateProductRequest = {
+          name: createdProduct.name,
+          description: createdProduct.description,
+          price: createdProduct.price,
+          quantity: createdProduct.quantity,
+          categoryId: createdProduct.categoryId,
+          images: imageUrls,
+        };
+
+        this.productService.updateProduct(productId, updatePayload, sellerId, 'SELLER').subscribe({
+          next: (updateResp) => {
+            console.log('Product updated with image URLs', updateResp);
+            this.successMessage = 'Product created successfully';
+            this.loadSellerProducts(sellerId);
+            this.closeModal();
+          },
+          error: (err) => {
+            console.error('Update product with images failed', err);
+          },
+        });
+      },
+      error: (err) => {
+        console.error('Failed to upload product image(s).', productId, err);
+      },
+    });
   }
 
   editProduct(index: number) {
@@ -292,9 +447,29 @@ export class SellerDashboardComponent implements OnInit {
       categoryId: product.categoryId,
       quantity: product.quantity,
     });
-    this.imagePreviews = product.images?.map((url) => ({ file: null, dataUrl: url })) || [];
-    this.editIndex = index;
-    this.showModal = true;
+
+    // Load media entries so we know mediaId for each URL
+    this.mediaService.listProductImages(product.id).subscribe({
+      next: (resp) => {
+        const medias = resp.data.images; // array of MediaResponse
+        // Map URLs from product.images to objects { file, dataUrl, mediaId }
+        this.imagePreviews =
+          product.images?.map((url) => {
+            const match = medias.find((m) => m.url === url);
+            return { file: null, dataUrl: url, mediaId: match ? match.id : null };
+          }) || [];
+        this.editIndex = index;
+        this.showModal = true;
+      },
+      error: (err) => {
+        console.error('Failed to load media list for product', product.id, err);
+        // fallback: no mediaId information
+        this.imagePreviews =
+          product.images?.map((url) => ({ file: null, dataUrl: url, mediaId: null })) || [];
+        this.editIndex = index;
+        this.showModal = true;
+      },
+    });
   }
 
   deleteProduct(index: number) {

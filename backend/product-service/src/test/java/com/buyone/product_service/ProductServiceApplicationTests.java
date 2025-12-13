@@ -1,4 +1,4 @@
-package com.buyone.productservice;
+package com.buyone.product_service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
