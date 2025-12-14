@@ -15,7 +15,9 @@
       <div class="col-md-5 text-center position-relative">
         <div style="display: inline-block; position: relative">
           <img
-            [src]="avatar || 'assets/avatars/user-default.png'"
+            [src]="avatar === null
+              ? 'assets/avatars/user-default.png'
+              : (avatar || currentUser?.avatar || 'assets/avatars/user-default.png')"
             class="rounded-circle border"
             style="width: 120px; height: 120px"
             alt="avatar"

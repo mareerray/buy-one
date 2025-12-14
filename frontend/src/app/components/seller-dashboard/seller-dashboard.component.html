@@ -52,7 +52,11 @@
                   class="me-3 square-image">
 
               <div class="flex-grow-1">
-                <div class="fw-bold">
+                <div 
+                  class="fw-bold"
+                  [routerLink]="['/product', product.id]"
+                  style="cursor: pointer;"
+                  >
                   ID: {{product.id}} <br />
                   <strong>{{ product.name }}</strong><br />
                 </div>

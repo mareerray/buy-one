@@ -45,42 +45,42 @@ export const MOCK_PRODUCTS: Product[] = [
     userId: 'USER-008',
     quantity: 6,
   },
-  {
-    id: '4',
-    name: 'Urban Legends Tee',
-    description:
-      'Stand out with a statement—this tee features two icons against a glowing city backdrop, perfect for those who set their own rules.',
-    price: 45,
-    images: ['assets/images/UrbanLegendsTee1.png', 'assets/images/UrbanLegendsTee2.jpeg'],
-    categoryId: 'CAT-006',
-    userId: 'USER-006',
-    quantity: 1,
-  },
-  {
-    id: '5',
-    name: 'Martial Arts Promo Tee',
-    description:
-      'Show off power and skill—a tee inspired by martial arts legends, perfect for those with fighting spirit.',
-    price: 45,
-    images: [
-      'assets/images/AllenMartialArtsPromoTee1.png',
-      'assets/images/AllenMartialArtsPromoTee2.jpeg',
-    ],
-    categoryId: 'CAT-006',
-    userId: 'USER-006',
-    quantity: 1,
-  },
-  {
-    id: '6',
-    name: 'Action Noir Tee',
-    description:
-      'Make a statement—bold, fearless, and ready for the night. Action-movie vibes in every thread!',
-    price: 45,
-    images: ['assets/images/OlegActionNoirTee1.png', 'assets/images/OlegActionNoirTee2.jpeg'],
-    categoryId: 'CAT-006',
-    userId: 'USER-006',
-    quantity: 1,
-  },
+  // {
+  //   id: '4',
+  //   name: 'Urban Legends Tee',
+  //   description:
+  //     'Stand out with a statement—this tee features two icons against a glowing city backdrop, perfect for those who set their own rules.',
+  //   price: 45,
+  //   images: ['assets/images/UrbanLegendsTee1.png', 'assets/images/UrbanLegendsTee2.jpeg'],
+  //   categoryId: 'CAT-006',
+  //   userId: 'USER-006',
+  //   quantity: 1,
+  // },
+  // {
+  //   id: '5',
+  //   name: 'Martial Arts Promo Tee',
+  //   description:
+  //     'Show off power and skill—a tee inspired by martial arts legends, perfect for those with fighting spirit.',
+  //   price: 45,
+  //   images: [
+  //     'assets/images/AllenMartialArtsPromoTee1.png',
+  //     'assets/images/AllenMartialArtsPromoTee2.jpeg',
+  //   ],
+  //   categoryId: 'CAT-006',
+  //   userId: 'USER-006',
+  //   quantity: 1,
+  // },
+  // {
+  //   id: '6',
+  //   name: 'Action Noir Tee',
+  //   description:
+  //     'Make a statement—bold, fearless, and ready for the night. Action-movie vibes in every thread!',
+  //   price: 45,
+  //   images: ['assets/images/OlegActionNoirTee1.png', 'assets/images/OlegActionNoirTee2.jpeg'],
+  //   categoryId: 'CAT-006',
+  //   userId: 'USER-006',
+  //   quantity: 1,
+  // },
   {
     id: '7',
     name: 'Sharingan Ninja Tee',
@@ -159,17 +159,17 @@ export const MOCK_PRODUCTS: Product[] = [
     userId: 'USER-004',
     quantity: 6,
   },
-  {
-    id: '14',
-    name: 'Groupie-Tracker Tee',
-    description:
-      'Geek out in style! This tee sports a fun, graph-inspired design with curly braces and clever programmer flair.',
-    price: 22,
-    images: ['assets/images/GroupieTrackerTee1.png', 'assets/images/GroupieTrackerTee2.png'],
-    categoryId: 'CAT-001',
-    userId: 'USER-004',
-    quantity: 6,
-  },
+  // {
+  //   id: '14',
+  //   name: 'Groupie-Tracker Tee',
+  //   description:
+  //     'Geek out in style! This tee sports a fun, graph-inspired design with curly braces and clever programmer flair.',
+  //   price: 22,
+  //   images: ['assets/images/GroupieTrackerTee1.png', 'assets/images/GroupieTrackerTee2.png'],
+  //   categoryId: 'CAT-001',
+  //   userId: 'USER-004',
+  //   quantity: 6,
+  // },
   {
     id: '15',
     name: 'Debug Life Meme Tee',
@@ -192,28 +192,28 @@ export const MOCK_PRODUCTS: Product[] = [
     userId: 'USER-002',
     quantity: 6,
   },
-  {
-    id: '17',
-    name: 'Not Bad Meme Tee',
-    description:
-      'Bring meme culture to real life! This “Not Bad” stamp tee is perfect for showing off your chill approval at any moment. Bright, bold, and limited edition.',
-    price: 45,
-    images: ['assets/images/OppaNotBadMemeTee1.png', 'assets/images/OppaNotBadMemeTee2.jpeg'],
-    categoryId: 'CAT-006',
-    userId: 'USER-006',
-    quantity: 1,
-  },
-  {
-    id: '18',
-    name: 'Bim! Coder Win Tee',
-    description:
-      'Celebrate your coding victories! Featuring the iconic “Bim!” message and a check mark, this CAT-005 shirt lets everyone know your code passed the test.',
-    price: 30,
-    images: ['assets/images/Bim!CoderWinTee1.png', 'assets/images/Bim!CoderWinTee2.png'],
-    categoryId: 'CAT-005',
-    userId: 'USER-002', //Mama Blues
-    quantity: 6,
-  },
+  // {
+  //   id: '17',
+  //   name: 'Not Bad Meme Tee',
+  //   description:
+  //     'Bring meme culture to real life! This “Not Bad” stamp tee is perfect for showing off your chill approval at any moment. Bright, bold, and limited edition.',
+  //   price: 45,
+  //   images: ['assets/images/OppaNotBadMemeTee1.png', 'assets/images/OppaNotBadMemeTee2.jpeg'],
+  //   categoryId: 'CAT-006',
+  //   userId: 'USER-006',
+  //   quantity: 1,
+  // },
+  // {
+  //   id: '18',
+  //   name: 'Bim! Coder Win Tee',
+  //   description:
+  //     'Celebrate your coding victories! Featuring the iconic “Bim!” message and a check mark, this CAT-005 shirt lets everyone know your code passed the test.',
+  //   price: 30,
+  //   images: ['assets/images/Bim!CoderWinTee1.png', 'assets/images/Bim!CoderWinTee2.png'],
+  //   categoryId: 'CAT-005',
+  //   userId: 'USER-002', //Mama Blues
+  //   quantity: 6,
+  // },
   {
     id: '19',
     name: 'Night Owl Coder Tee',
@@ -225,17 +225,17 @@ export const MOCK_PRODUCTS: Product[] = [
     userId: 'USER-008',
     quantity: 6,
   },
-  {
-    id: '20',
-    name: 'Flow State SPM Tee',
-    description:
-      'Feel the rhythm of deep coding sessions! A stylish shirt for women coders who hit their stride with smart tech, focus, and headphones.',
-    price: 30,
-    images: ['assets/images/FlowStateSPMTee1.png', 'assets/images/FlowStateSPMTee2.png'],
-    categoryId: 'CAT-003',
-    userId: 'USER-008', //Mama Blues
-    quantity: 6,
-  },
+  // {
+  //   id: '20',
+  //   name: 'Flow State SPM Tee',
+  //   description:
+  //     'Feel the rhythm of deep coding sessions! A stylish shirt for women coders who hit their stride with smart tech, focus, and headphones.',
+  //   price: 30,
+  //   images: ['assets/images/FlowStateSPMTee1.png', 'assets/images/FlowStateSPMTee2.png'],
+  //   categoryId: 'CAT-003',
+  //   userId: 'USER-008', //Mama Blues
+  //   quantity: 6,
+  // },
   {
     id: '21',
     name: 'Zen Dev Moment Tee',
@@ -247,26 +247,26 @@ export const MOCK_PRODUCTS: Product[] = [
     userId: 'USER-008', //Mama Blues
     quantity: 6,
   },
-  {
-    id: '22',
-    name: 'Bright Ideas Tee',
-    description:
-      'Channel the spark of code creativity! This design celebrates women problem-solvers, idea makers, and developers with a burst of colorful inspiration.',
-    price: 30,
-    images: ['assets/images/BrightIdeasTee1.png', 'assets/images/BrightIdeasTee2.png'],
-    categoryId: 'CAT-003',
-    userId: 'USER-008', //Mama Blues
-    quantity: 6,
-  },
-  {
-    id: '23',
-    name: 'Messy Bun Dev Tee',
-    description:
-      'Show off your coding style! This tee features a creative coder rocking the iconic messy bun—perfect for those late nights, deep thinking, and breakthrough moments.',
-    price: 30,
-    images: ['assets/images/MessyBunDevTee1.png', 'assets/images/MessyBunDevTee2.png'],
-    categoryId: 'CAT-003',
-    userId: 'USER-008', //Mama Blues
-    quantity: 6,
-  },
+  // {
+  //   id: '22',
+  //   name: 'Bright Ideas Tee',
+  //   description:
+  //     'Channel the spark of code creativity! This design celebrates women problem-solvers, idea makers, and developers with a burst of colorful inspiration.',
+  //   price: 30,
+  //   images: ['assets/images/BrightIdeasTee1.png', 'assets/images/BrightIdeasTee2.png'],
+  //   categoryId: 'CAT-003',
+  //   userId: 'USER-008', //Mama Blues
+  //   quantity: 6,
+  // },
+  // {
+  //   id: '23',
+  //   name: 'Messy Bun Dev Tee',
+  //   description:
+  //     'Show off your coding style! This tee features a creative coder rocking the iconic messy bun—perfect for those late nights, deep thinking, and breakthrough moments.',
+  //   price: 30,
+  //   images: ['assets/images/MessyBunDevTee1.png', 'assets/images/MessyBunDevTee2.png'],
+  //   categoryId: 'CAT-003',
+  //   userId: 'USER-008', //Mama Blues
+  //   quantity: 6,
+  // },
 ];

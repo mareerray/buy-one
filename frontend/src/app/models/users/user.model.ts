@@ -9,7 +9,7 @@ export interface User {
 
 const papaAvatar = 'assets/avatars/papa.jpg';
 const emilyAvatar = 'assets/avatars/emily.jpg'; //002
-const johnAvatar = 'assets/avatars/koaladrinkscoffee.webp'; //004
+const samAvatar = 'assets/avatars/koaladrinkscoffee.webp'; //004
 const sarahAvatar = 'assets/avatars/panda.webp'; //006
 const mamaAvatar = 'assets/avatars/mama.jpg'; //008
 const lindaAvatar = 'assets/avatars/linda.jpg';
@@ -33,11 +33,11 @@ export const MOCK_USERS: User[] = [
   },
   {
     id: 'USER-004',
-    name: 'John Doe',
-    email: 'john@doe.com',
-    password: 'John123!',
+    name: 'Sam Smith',
+    email: 'Sam@smith.com',
+    password: 'Sams123!',
     role: 'seller',
-    avatar: johnAvatar,
+    avatar: samAvatar,
   },
   {
     id: 'USER-006',

@@ -81,14 +81,6 @@ export class ProfileComponent implements OnInit {
         const media = res.data; // MediaResponse
         this.avatar = media.url; // Use backend URL as final avatar
         this.uploadProgress = 0;
-        // Update AuthService immediately so navbar/seller-dashboard refresh
-        const current = this.authService.currentUserValue;
-        if (current) {
-          this.authService.updateCurrentUserInStorage({
-            ...current,
-            avatar: media.url,
-          });
-        }
       },
       error: (err) => {
         this.avatarError =
@@ -99,7 +91,7 @@ export class ProfileComponent implements OnInit {
   }
 
   handleRemoveAvatar() {
-    this.avatar = 'assets/avatars/user-default.png';
+    this.avatar = null;
     this.avatarError = '';
     this.uploadProgress = 0;
   }
@@ -111,7 +103,8 @@ export class ProfileComponent implements OnInit {
       const dto: UserUpdateRequest = {
         id: this.currentUser.id,
         name: this.profileForm.value.name,
-        avatar: this.avatar || this.currentUser.avatar, // the Cloudflare/media URL
+        // if avatar is explicitly cleared, send null; otherwise keep currentUser.avatar
+        avatar: this.avatar === null ? null : this.avatar || this.currentUser.avatar, // the Cloudflare/media URL
       };
       this.userService.updateCurrentUser(dto).subscribe({
         next: (updatedUser) => {

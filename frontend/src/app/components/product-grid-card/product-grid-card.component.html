@@ -25,10 +25,8 @@
     <!-- Seller Info -->
     <ng-container *ngIf="showSeller && seller">
       <div class="mb-3 d-flex align-items-center">
-        <!-- <span class="me-2">Seller: </span> -->
         <img
-          *ngIf="seller.avatar"
-          [src]="seller.avatar"
+          [src]="seller.avatar || 'assets/avatars/user-default.png'"
           [alt]="seller.name"
           class="rounded-circle me-2"
           style="width: 20px; height: 20px; object-fit: cover"

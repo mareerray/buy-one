@@ -1,7 +1,6 @@
 export interface UserUpdateRequest {
   id: string;
   name: string;
-  // email: string;
-  avatar?: string;
+  avatar?: string | null;
   password?: string;
 }

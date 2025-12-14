@@ -1,4 +1,5 @@
-package com.buyone.mediaservice.service.impl;
+package com.buyone.mediaservice.service.impl; 
+
 import com.buyone.mediaservice.model.Media;
 import com.buyone.mediaservice.model.MediaOwnerType;
 import com.buyone.mediaservice.repository.MediaRepository;
@@ -11,6 +12,7 @@ import com.buyone.mediaservice.exception.InvalidFileException;
 import com.buyone.mediaservice.exception.ConflictException;
 import com.buyone.mediaservice.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,6 +45,15 @@ public class MediaServiceImpl implements MediaService {
         }
         if (ownerType == MediaOwnerType.USER && !ownerId.equals(currentUserId)) {
             throw new ForbiddenException("You can only upload an avatar for yourself.");
+        }
+
+        // If this is a user avatar, ensure only one avatar per user
+        if (ownerType == MediaOwnerType.USER) {
+            List<Media> existingAvatar = mediaRepository.findAllByOwnerIdAndOwnerType(ownerId, MediaOwnerType.USER);
+            for (Media m : existingAvatar) {
+                storageService.delete(m.getImagePath());
+                mediaRepository.delete(m);
+            }
         }
 
         // If this is a product image, enforce max 5 images per product
@@ -163,7 +174,7 @@ public class MediaServiceImpl implements MediaService {
     
     @Override
     public List<MediaResponse> mediaListForProduct(String productId) {
-        var medias = mediaRepository.findAllByOwnerIdAndOwnerType(productId, MediaOwnerType.PRODUCT);
+        List<Media> medias = mediaRepository.findAllByOwnerIdAndOwnerType(productId, MediaOwnerType.PRODUCT);
         
         return medias.stream()
                 .map(m -> new MediaResponse(

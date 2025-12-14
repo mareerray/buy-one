@@ -124,9 +124,13 @@ public class UserServiceImpl implements UserService {
         if (request.getRole() != null) {
             existingUser.setRole(request.getRole());
         }
-        if (request.getAvatar() != null) {
-            existingUser.setAvatar(request.getAvatar());
-        }
+
+        // Always set avatar from request (can be null to clear)
+        existingUser.setAvatar(request.getAvatar()); // may be null -> clears avatar   
+    
+        // if (request.getAvatar() != null) {
+        //     existingUser.setAvatar(request.getAvatar());
+        // }
         
         User updatedUser = userRepository.save(existingUser);
         return toUserResponse(updatedUser);
@@ -150,9 +154,7 @@ public class UserServiceImpl implements UserService {
         if (request.getPassword() != null && !request.getPassword().isBlank()) {
             existingUser.setPassword(passwordEncoder.encode(request.getPassword()));
         }
-        if (request.getAvatar() != null) {
-            existingUser.setAvatar(request.getAvatar());
-        }
+        existingUser.setAvatar(request.getAvatar()); // may be null -> clears avatar
         // if you want to allow email change via /me, handle it carefully & check uniqueness
         
         User updatedUser = userRepository.save(existingUser);

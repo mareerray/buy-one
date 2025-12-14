@@ -3,5 +3,5 @@ export interface RegisterUserRequest {
   email: string;
   password: string;
   role: 'client' | 'seller';
-  avatar?: string;
+  avatar?: string | null;
 }
