@@ -89,7 +89,7 @@ export class MediaService {
     return this.http.get<ApiResponse<MediaListResponse>>(`${this.baseUrl}/product/${productId}`);
   }
 
-  deleteImage(mediaId: string): Observable<void> {
+  deleteImage(mediaId: string): Observable<any> {
     const currentUser = this.auth.currentUserValue;
     if (!currentUser) {
       return throwError(() => new Error('User not logged in'));

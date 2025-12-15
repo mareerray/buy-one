@@ -154,8 +154,19 @@ public class MediaServiceImpl implements MediaService {
         
         Media media = mediaRepository.findById(id)
                 .orElseThrow(() -> new MediaNotFoundException(id));
-
-        // If this is a user avatar, ownerId must equal currentUserId
+        
+        // ✅ CRITICAL: Ownership check FIRST
+        if (!media.getOwnerId().equals(currentUserId)) {
+            throw new ForbiddenException("You can only delete your own media.");
+        }
+        
+        // ✅ Role check: CLIENT can delete OWN avatar, SELLER can delete anything
+        if (media.getOwnerType() == MediaOwnerType.USER && !"SELLER".equals(currentUserRole)) {
+            throw new ForbiddenException("Only sellers can manage user avatars.");
+        }
+        
+        
+/*        // If this is a user avatar, ownerId must equal currentUserId
         if (media.getOwnerType() == MediaOwnerType.USER) {
             if (!media.getOwnerId().equals(currentUserId)) {
                 throw new ForbiddenException("You can only delete your own avatar.");
@@ -165,7 +176,7 @@ public class MediaServiceImpl implements MediaService {
         // Ownership: only ownerId can delete this media
         if (media.getOwnerType() == MediaOwnerType.PRODUCT) {
             // For now, just allow delete for SELLER role (already checked above)
-        }
+        }*/
         
         storageService.delete(media.getImagePath());
         mediaRepository.deleteById(id);

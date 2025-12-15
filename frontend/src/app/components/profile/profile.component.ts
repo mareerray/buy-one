@@ -21,6 +21,7 @@ export class ProfileComponent implements OnInit {
   passwordForm: FormGroup;
   avatar: string | null = null;
   avatarError: string = '';
+  avatarMediaId: string | null = null;
   uploadProgress = 0;
   successMessage = '';
   showSuccess = false;
@@ -54,6 +55,7 @@ export class ProfileComponent implements OnInit {
         // Disable email field
         this.profileForm.get('email')?.disable();
         this.avatar = user.avatar || null;
+        this.avatarMediaId = this.extractMediaId(user.avatar);
       }
     });
   }
@@ -70,7 +72,6 @@ export class ProfileComponent implements OnInit {
     const reader = new FileReader();
     reader.onloadend = () => {
       this.avatar = reader.result as string;
-      this.avatarError = '';
     };
     reader.readAsDataURL(file);
 
@@ -80,6 +81,7 @@ export class ProfileComponent implements OnInit {
         // res is ApiResponse<MediaResponse>
         const media = res.data; // MediaResponse
         this.avatar = media.url; // Use backend URL as final avatar
+        this.avatarMediaId = media.id;
         this.uploadProgress = 0;
       },
       error: (err) => {
@@ -89,12 +91,39 @@ export class ProfileComponent implements OnInit {
       },
     });
   }
+    handleRemoveAvatar() {
+        if (!this.avatarMediaId) {
+          this.avatar = null;
+          this.avatarMediaId = null;
+          return;
+        }
 
-  handleRemoveAvatar() {
+        this.mediaService.deleteImage(this.avatarMediaId).subscribe({
+            next: () => {
+              this.avatar = null;
+              this.avatarMediaId = null;
+              console.log('✅ Avatar deleted from R2 + MongoDB');
+            },
+            error: (err) => {
+              console.error('Delete failed', err);
+              this.avatar = null;  // Still clear UI
+              this.avatarMediaId = null;
+            }
+          });
+      }
+
+      private extractMediaId(url?: string): string | null {
+        if (!url) return null;
+        const match = url.match(/media\/([a-f0-9-]+)\./);
+        return match?.[1] || null;
+      }
+
+
+/*   handleRemoveAvatar() {
     this.avatar = null;
     this.avatarError = '';
     this.uploadProgress = 0;
-  }
+  } */
 
   saveProfile() {
     if (this.profileForm.valid && this.currentUser) {
@@ -104,7 +133,8 @@ export class ProfileComponent implements OnInit {
         id: this.currentUser.id,
         name: this.profileForm.value.name,
         // if avatar is explicitly cleared, send null; otherwise keep currentUser.avatar
-        avatar: this.avatar === null ? null : this.avatar || this.currentUser.avatar, // the Cloudflare/media URL
+        // avatar: this.avatar === null ? null : this.avatar || this.currentUser.avatar, // the Cloudflare/media URL
+        avatar: this.avatar,
       };
       this.userService.updateCurrentUser(dto).subscribe({
         next: (updatedUser) => {
@@ -133,7 +163,7 @@ export class ProfileComponent implements OnInit {
         id: this.currentUser.id,
         name: this.currentUser.name, // keep unchanged
         // email: this.currentUser.email, // keep unchanged
-        avatar: this.currentUser.avatar,
+        avatar: this.avatar,
         password: this.passwordForm.value.newPassword,
       };
       this.userService.updateCurrentUser(dto).subscribe({
