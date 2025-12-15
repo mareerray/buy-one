@@ -92,17 +92,6 @@
     quantity: 6,
   },
   {
-    id: '13',
-    name: 'Keep Coding Tee',
-    description:
-      'Show off your coder pride! This shirt features a witty developer print. For anyone who lives on code and caffeine.',
-    price: 28,
-    images: ['assets/images/KeepCodingTee1.png', 'assets/images/KeepCodingTee2.png'],
-    categoryId: 'CAT-001',
-    userId: 'USER-004',
-    quantity: 6,
-  },
-  {
     id: '15',
     name: 'Debug Life Meme Tee',
     description:
@@ -135,8 +124,24 @@
     userId: 'USER-008',
     quantity: 6,
   },
+];
+
+  
+  
+  ---------------------------------------------
   {
-    id: '21',
+    id: ✅,
+    name: 'Keep Coding Tee',
+    description:
+      'Show off your coder pride! This shirt features a witty developer print. For anyone who lives on code and caffeine.',
+    price: 28,
+    images: ['assets/images/KeepCodingTee1.png', 'assets/images/KeepCodingTee2.png'],
+    categoryId: 'CAT-001',
+    userId: 'USER-004',
+    quantity: 6,
+  },
+  {
+    id: ✅,
     name: 'Zen Dev Moment Tee',
     description:
       'Embrace calm and concentration. Featuring a coder in a peaceful workspace, this tee is perfect for anyone who finds harmony in their code.',
@@ -146,12 +151,6 @@
     userId: 'USER-008', //Mama Blues
     quantity: 6,
   },
-];
-
-  
-  
-  ---------------------------------------------
-
   {
     id: ✅,
     name: 'Cyber Shooter Tee',

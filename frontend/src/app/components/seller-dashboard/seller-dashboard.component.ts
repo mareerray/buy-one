@@ -292,10 +292,13 @@ export class SellerDashboardComponent implements OnInit {
         this.productService
           .updateProduct(existing.id, payload, currentUser.id, 'SELLER')
           .subscribe({
-            next: (resp) => {
-              console.log('Update product (no new images) success', resp);
+            next: () => {
               this.successMessage = 'Product updated successfully';
               this.loadSellerProducts(currentUser.id);
+              this.closeModal(); // ✅ close only on success
+              setTimeout(() => {
+                this.successMessage = null;
+              }, 3000);
             },
             error: (err) => {
               console.error('Update product failed', err);
@@ -327,11 +330,13 @@ export class SellerDashboardComponent implements OnInit {
           this.productService
             .updateProduct(existing.id, payload, currentUser.id, 'SELLER')
             .subscribe({
-              next: (resp) => {
-                console.log('Update product with new images success', resp);
+              next: () => {
                 this.successMessage = 'Product updated successfully';
                 this.loadSellerProducts(currentUser.id);
                 this.closeModal(); // User clicks Save
+                setTimeout(() => {
+                  this.successMessage = null;
+                }, 3000);
               },
               error: (err) => {
                 console.error('Update product with images failed', err);
@@ -355,10 +360,7 @@ export class SellerDashboardComponent implements OnInit {
 
       this.productService.addProduct(payload, currentUser.id, 'SELLER').subscribe({
         next: (resp) => {
-          console.log('Create product success', resp);
           const createdProduct = resp.data;
-          console.log('createdProduct:', createdProduct);
-          console.log('imagePreviews at create:', this.imagePreviews);
 
           if (createdProduct && createdProduct.id) {
             console.log('Calling uploadImagesToMediaService with id', createdProduct.id);
@@ -368,8 +370,7 @@ export class SellerDashboardComponent implements OnInit {
               currentUser.id,
             ).subscribe({
               next: () => {
-                // everything done: now close modal
-                this.closeModal();
+                this.closeModal(); // ✅ close only after all done
               },
               error: (err) => {
                 console.error('Update product with images failed', err);
@@ -379,7 +380,10 @@ export class SellerDashboardComponent implements OnInit {
             console.log('No createdProduct.id, skipping uploadImagesToMediaService');
             this.successMessage = 'Product created successfully';
             this.loadSellerProducts(currentUser.id);
-            this.closeModal(); // User clicks Save
+            this.closeModal(); // ✅ User clicks Save
+            setTimeout(() => {
+              this.successMessage = null;
+            }, 3000);
           }
         },
         error: (err) => {
@@ -427,66 +431,15 @@ export class SellerDashboardComponent implements OnInit {
 
         return this.productService.updateProduct(productId, updatePayload, sellerId, 'SELLER');
       }),
-      tap((updateResp) => {
-        console.log('Product updated with image URLs', updateResp);
+      tap(() => {
         this.successMessage = 'Product created successfully';
         this.loadSellerProducts(sellerId);
+        setTimeout(() => {
+          this.successMessage = null;
+        }, 3000);
       }),
     );
   }
-
-  // private uploadImagesToMediaService(
-  //   productId: string,
-  //   createdProduct: ProductResponse,
-  //   sellerId: string,
-  // ): void {
-  //   console.log('uploadImagesToMediaService called, productId:', productId);
-  //   console.log('imagePreviews inside uploadImagesToMediaService:', this.imagePreviews);
-
-  //   const uploadRequests = this.imagePreviews
-  //     .filter((preview) => preview.file)
-  //     .map((preview) => {
-  //       console.log('Uploading file', preview.file!.name);
-  //       return this.mediaService.uploadProductImage(productId, preview.file!);
-  //     });
-
-  //   if (uploadRequests.length === 0) {
-  //     console.log('No real files to upload');
-  //     this.imageValidationError = 'Please add at least one image.';
-  //     return;
-  //   }
-
-  //   forkJoin(uploadRequests).subscribe({
-  //     next: (results) => {
-  //       console.log('All images uploaded, results:', results);
-
-  //       const imageUrls = results.map((res) => res.data.url);
-
-  //       const updatePayload: UpdateProductRequest = {
-  //         name: createdProduct.name,
-  //         description: createdProduct.description,
-  //         price: createdProduct.price,
-  //         quantity: createdProduct.quantity,
-  //         categoryId: createdProduct.categoryId,
-  //         images: imageUrls,
-  //       };
-
-  //       this.productService.updateProduct(productId, updatePayload, sellerId, 'SELLER').subscribe({
-  //         next: (updateResp) => {
-  //           console.log('Product updated with image URLs', updateResp);
-  //           this.successMessage = 'Product created successfully';
-  //           this.loadSellerProducts(sellerId);
-  //         },
-  //         error: (err) => {
-  //           console.error('Update product with images failed', err);
-  //         },
-  //       });
-  //     },
-  //     error: (err) => {
-  //       console.error('Failed to upload product image(s).', productId, err);
-  //     },
-  //   });
-  // }
 
   editProduct(index: number) {
     const product = this.userProducts[index];

@@ -8,7 +8,8 @@
 
 .flex-grow-1 {
   padding-left: 10px;
-  padding-right: 20px;
+  padding-right: 30px;
+  margin-right: auto;
 }
 
 .custom-modal-backdrop {
@@ -164,4 +165,29 @@
 
 .btn-danger {
   color: var(--text-primary);
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  flex-wrap: nowrap;
+}
+
+@media (max-width: 576px) {
+  .action-buttons {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+}
+
+.view-icon-btn {
+  border-radius: 50%;
+  padding: 4px 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  top: -1px; /* adjust if needed */
 }
