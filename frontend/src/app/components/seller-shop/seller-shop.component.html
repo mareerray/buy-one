@@ -49,8 +49,13 @@
   Loading products...
 </div>
 
+<!-- Error state -->
+<div *ngIf="!isLoadingProducts && errorMessage">
+  {{ errorMessage }}
+</div>
+
 <!-- Empty state -->
-<div *ngIf="seller && !isLoadingProducts && sellerProducts.length === 0"
+<div *ngIf="seller && !isLoadingProducts  && !errorMessage && sellerProducts.length === 0"
      class="text-center py-5 text-white">
   This seller has no products listed yet.
 </div>

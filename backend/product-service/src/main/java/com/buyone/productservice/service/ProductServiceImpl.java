@@ -203,9 +203,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductResponse> getProductsBySeller(String sellerId) {
         List<Product> products = productRepository.findByUserId(sellerId);
-        if (products.isEmpty()) {
-            throw new ProductNotFoundException("No products found for seller: " + sellerId);
-        }
+        // Do NOT throw on empty; just map to DTOs
+        // if (products.isEmpty()) {
+        //     throw new ProductNotFoundException("No products found for seller: " + sellerId);
+        // }
         return products.stream().map(this::toProductResponse).collect(Collectors.toList());
     }
     

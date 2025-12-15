@@ -93,6 +93,8 @@ export class SellerDashboardComponent implements OnInit {
 
   private loadSellerProducts(sellerId: string) {
     this.isLoadingProducts = true;
+    this.errorMessage = '';
+
     this.productService.getProductsBySeller(sellerId).subscribe({
       next: (products) => {
         console.log('products from backend', products);

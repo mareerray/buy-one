@@ -19,10 +19,13 @@ export class ProfileComponent implements OnInit {
   currentUser: UserResponse | null = null;
   profileForm: FormGroup;
   passwordForm: FormGroup;
-  avatar: string | null = null;
+  avatar: string | null = null; // always URL or null
+  avatarPreview: string | null = null; // for <img> only
+  loaded = false; // flag to delay rendering the avatar until the user is loaded
+
   avatarError: string = '';
   avatarMediaId: string | null = null;
-  uploadProgress = 0;
+  // uploadProgress = 0;
   successMessage = '';
   showSuccess = false;
 
@@ -52,11 +55,13 @@ export class ProfileComponent implements OnInit {
       if (user) {
         this.currentUser = user;
         this.profileForm.patchValue({ name: user.name, email: user.email });
-        // Disable email field
-        this.profileForm.get('email')?.disable();
+        this.profileForm.get('email')?.disable(); // Disable email field
+
         this.avatar = user.avatar || null;
+        this.avatarPreview = this.avatar;
         this.avatarMediaId = this.extractMediaId(user.avatar);
       }
+      this.loaded = true; // render avatar only after this
     });
   }
 
@@ -66,12 +71,12 @@ export class ProfileComponent implements OnInit {
     if (!file) return;
 
     this.avatarError = '';
-    this.uploadProgress = 0;
+    // this.uploadProgress = 0;
 
     // Local preview (base64) so user sees something instantly
     const reader = new FileReader();
     reader.onloadend = () => {
-      this.avatar = reader.result as string;
+      this.avatarPreview = reader.result as string;
     };
     reader.readAsDataURL(file);
 
@@ -82,48 +87,45 @@ export class ProfileComponent implements OnInit {
         const media = res.data; // MediaResponse
         this.avatar = media.url; // Use backend URL as final avatar
         this.avatarMediaId = media.id;
-        this.uploadProgress = 0;
+        this.avatarPreview = this.avatar; // ensure preview uses final URL
+        // this.uploadProgress = 0;
       },
       error: (err) => {
         this.avatarError =
           typeof err === 'string' ? err : err.message || 'Failed to upload avatar.';
-        this.uploadProgress = 0;
+        // this.uploadProgress = 0;
       },
     });
   }
-    handleRemoveAvatar() {
-        if (!this.avatarMediaId) {
-          this.avatar = null;
-          this.avatarMediaId = null;
-          return;
-        }
+  handleRemoveAvatar() {
+    if (!this.avatarMediaId) {
+      this.avatar = null;
+      this.avatarPreview = null;
+      this.avatarMediaId = null;
+      return;
+    }
 
-        this.mediaService.deleteImage(this.avatarMediaId).subscribe({
-            next: () => {
-              this.avatar = null;
-              this.avatarMediaId = null;
-              console.log('✅ Avatar deleted from R2 + MongoDB');
-            },
-            error: (err) => {
-              console.error('Delete failed', err);
-              this.avatar = null;  // Still clear UI
-              this.avatarMediaId = null;
-            }
-          });
-      }
+    this.mediaService.deleteImage(this.avatarMediaId).subscribe({
+      next: () => {
+        this.avatar = null;
+        this.avatarPreview = null;
+        this.avatarMediaId = null;
+        console.log('✅ Avatar deleted from R2 + MongoDB');
+      },
+      error: (err) => {
+        console.error('Delete failed', err);
+        this.avatar = null; // Still clear UI
+        this.avatarPreview = null;
+        this.avatarMediaId = null;
+      },
+    });
+  }
 
-      private extractMediaId(url?: string): string | null {
-        if (!url) return null;
-        const match = url.match(/media\/([a-f0-9-]+)\./);
-        return match?.[1] || null;
-      }
-
-
-/*   handleRemoveAvatar() {
-    this.avatar = null;
-    this.avatarError = '';
-    this.uploadProgress = 0;
-  } */
+  private extractMediaId(url?: string): string | null {
+    if (!url) return null;
+    const match = url.match(/media\/([a-f0-9-]+)\./);
+    return match?.[1] || null;
+  }
 
   saveProfile() {
     if (this.profileForm.valid && this.currentUser) {
