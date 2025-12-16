@@ -184,18 +184,19 @@ public class ProductServiceImpl implements ProductService {
             throw new ForbiddenException("Unauthorized: You do not own this product");
         }
         productRepository.deleteById(id);
+        
         ProductDeletedEvent event = ProductDeletedEvent.builder()
                 .productId(product.getId())
                 .sellerId(sellerId)
                 .build();
-        // kafkaTemplate.send(productDeletedTopic, event)
-        //         .whenComplete((result, ex) -> {
-        //             if (ex != null) {
-        //                 log.error("Failed to publish event", ex);
-        //             } else {
-        //                 log.info("Event published: " + event);
-        //             }
-        //         });
+         kafkaTemplate.send(productDeletedTopic, event)
+                 .whenComplete((result, ex) -> {
+                     if (ex != null) {
+                         log.error("Failed to publish event", ex);
+                     } else {
+                         log.info("Event published: " + event);
+                     }
+                 });
 
     }
     
