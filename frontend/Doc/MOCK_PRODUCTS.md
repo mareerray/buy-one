@@ -6,7 +6,7 @@
     price: 29,
     images: ['assets/images/CodeWizardTee1.png', 'assets/images/CodeWizardTee2.jpeg'],
     categoryId: 'CAT-001',
-    userId: 'USER-002',
+    userId: //Joon Kim,
     quantity: 10,
   },
   {
@@ -20,7 +20,7 @@
       'assets/images/MarkusClassicPortraitTee2.jpeg',
     ],
     categoryId: 'CAT-006',
-    userId: 'USER-006',
+    userId: //Joon Kim,
     quantity: 1,
   },
   {
@@ -31,7 +31,7 @@
     price: 30,
     images: ['assets/images/PopCodeQueenTee1.png', 'assets/images/PopCodeQueenTee2.png'],
     categoryId: 'CAT-003',
-    userId: 'USER-008',
+    userId: //Joon Kim,
     quantity: 6,
   },
   {
@@ -43,20 +43,6 @@
     categoryId: 'CAT-002',
     userId: 'USER-004',
     quantity: 10,
-  },
-  {
-    id: '8',
-    name: 'Little Warrior Manga Tee',
-    description:
-      'Power up your style! Featuring a bold manga hero ready for adventure—this tee brings iconic action and nostalgia straight from classic anime pages.',
-    price: 30,
-    images: [
-      'assets/images/LittleWarriorMangaTee1.png',
-      'assets/images/LittleWarriorMangaTee2.png',
-    ],
-    categoryId: 'CAT-002',
-    userId: 'USER-002',
-    quantity: 6,
   },
   {
     id: '9',
@@ -103,17 +89,6 @@
     quantity: 6,
   },
   {
-    id: '16',
-    name: 'Totoro Night Pop Tee',
-    description:
-      'Step into a magical night with Totoro! This tee features the beloved forest spirit in glowing, dreamy colors—perfect for anime fans, dreamers, and Studio Ghibli lovers.',
-    price: 30,
-    images: ['assets/images/TotoroNightPopTee1.png', 'assets/images/TotoroNightPopTee2.jpg'],
-    categoryId: 'CAT-002',
-    userId: 'USER-002',
-    quantity: 6,
-  },
-  {
     id: '19',
     name: 'Night Owl Coder Tee',
     description:
@@ -129,6 +104,31 @@
   
   
   ---------------------------------------------
+  {
+    id: '8',
+    name: 'Little Warrior Manga Tee',
+    description:
+      'Power up your style! Featuring a bold manga hero ready for adventure—this tee brings iconic action and nostalgia straight from classic anime pages.',
+    price: 30,
+    images: [
+      'assets/images/LittleWarriorMangaTee1.png',
+      'assets/images/LittleWarriorMangaTee2.png',
+    ],
+    categoryId: 'CAT-002',
+    userId: 'USER-002',
+    quantity: 6,
+  },
+  {
+    id: '16',
+    name: 'Totoro Night Pop Tee',
+    description:
+      'Step into a magical night with Totoro! This tee features the beloved forest spirit in glowing, dreamy colors—perfect for anime fans, dreamers, and Studio Ghibli lovers.',
+    price: 30,
+    images: ['assets/images/TotoroNightPopTee1.png', 'assets/images/TotoroNightPopTee2.jpg'],
+    categoryId: 'CAT-002',
+    userId: 'USER-002',
+    quantity: 6,
+  },
   {
     id: ✅,
     name: 'Keep Coding Tee',

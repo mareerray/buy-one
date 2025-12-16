@@ -25,7 +25,6 @@ export class ProfileComponent implements OnInit {
 
   avatarError: string = '';
   avatarMediaId: string | null = null;
-  // uploadProgress = 0;
   successMessage = '';
   showSuccess = false;
 
@@ -71,7 +70,18 @@ export class ProfileComponent implements OnInit {
     if (!file) return;
 
     this.avatarError = '';
-    // this.uploadProgress = 0;
+
+    if (file.size > this.mediaService.maxImageSize) {
+      this.avatarPreview = this.avatar; // revert preview to current avatar
+      this.avatarError = 'Avatar file size must be less than 2MB';
+      return;
+    }
+
+    if (!this.mediaService.allowedAvatarTypes.includes(file.type)) {
+      this.avatarPreview = this.avatar; // revert preview to current avatar
+      this.avatarError = 'Invalid avatar file type';
+      return;
+    }
 
     // Local preview (base64) so user sees something instantly
     const reader = new FileReader();
@@ -91,12 +101,16 @@ export class ProfileComponent implements OnInit {
         // this.uploadProgress = 0;
       },
       error: (err) => {
-        this.avatarError =
-          typeof err === 'string' ? err : err.message || 'Failed to upload avatar.';
-        // this.uploadProgress = 0;
+        if (err instanceof Error) {
+          // Error from media.service (type/size/user checks)
+          this.avatarError = err.message;
+        } else {
+          this.avatarError = 'Failed to upload avatar.';
+        }
       },
     });
   }
+
   handleRemoveAvatar() {
     if (!this.avatarMediaId) {
       this.avatar = null;
@@ -128,14 +142,20 @@ export class ProfileComponent implements OnInit {
   }
 
   saveProfile() {
+    // Block saving if avatar upload failed
+    if (this.avatarError) {
+      this.showSuccess = false;
+      this.successMessage = '';
+      console.warn('Cannot save profile because avatar upload failed.');
+      return;
+    }
+
     if (this.profileForm.valid && this.currentUser) {
       this.successMessage = '';
 
       const dto: UserUpdateRequest = {
         id: this.currentUser.id,
         name: this.profileForm.value.name,
-        // if avatar is explicitly cleared, send null; otherwise keep currentUser.avatar
-        // avatar: this.avatar === null ? null : this.avatar || this.currentUser.avatar, // the Cloudflare/media URL
         avatar: this.avatar,
       };
       this.userService.updateCurrentUser(dto).subscribe({
@@ -164,7 +184,6 @@ export class ProfileComponent implements OnInit {
       const dto: UserUpdateRequest = {
         id: this.currentUser.id,
         name: this.currentUser.name, // keep unchanged
-        // email: this.currentUser.email, // keep unchanged
         avatar: this.avatar,
         password: this.passwordForm.value.newPassword,
       };

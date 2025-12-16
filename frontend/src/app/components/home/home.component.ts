@@ -76,17 +76,4 @@ export class HomeComponent implements OnInit {
   shopNow() {}
   registerSeller() {}
   browseCreators() {}
-
-  // Format sellers for the slider - INCLUDE ID
-  // sliderSellers = MOCK_USERS.filter((user) => user.role === 'seller').map((seller) => ({
-  //   id: seller.id,
-  //   avatar: seller.avatar ?? 'assets/avatars/user-default.png',
-  //   name: seller.name,
-  // }));
-
-  // Format products for the slider - INCLUDE ID
-  // sliderProducts = MOCK_PRODUCTS.map((product) => ({
-  //   id: product.id,
-  //   image: Array.isArray(product.images) ? product.images[0] : product.images,
-  // }));
 }

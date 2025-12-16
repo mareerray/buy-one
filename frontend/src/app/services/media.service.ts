@@ -16,7 +16,7 @@ export class MediaService {
   private http = inject(HttpClient);
   private auth = inject(AuthService);
 
-  // ---------- Validation helpers (keep these) ----------
+  // ---------- Validation helpers ----------
 
   isAlreadySelected(file: File, previewList: { file: File | null; dataUrl: string }[]): boolean {
     return previewList.some(
@@ -27,10 +27,14 @@ export class MediaService {
   // ---------- Real HTTP methods ----------
 
   uploadAvatar(file: File): Observable<ApiResponse<MediaResponse>> {
+    console.log('✅ Avatar file size:', file.size, 'max allowed:', this.maxImageSize);
+
     if (!this.allowedAvatarTypes.includes(file.type)) {
       return throwError(() => new Error('Invalid avatar file type'));
     }
+
     if (file.size > this.maxImageSize) {
+      console.log('⚠️ Blocking avatar upload: file too large');
       return throwError(() => new Error('Avatar file size must be less than 2MB'));
     }
 
@@ -63,9 +67,6 @@ export class MediaService {
     if (file.size > this.maxImageSize) {
       return throwError(() => new Error('Product image file size must be less than 2MB'));
     }
-    // if (this.isAlreadySelected(file, previewList)) {
-    //   return throwError(() => new Error('This image has already been selected.'));
-    // }
 
     const currentUser = this.auth.currentUserValue;
     if (!currentUser) {

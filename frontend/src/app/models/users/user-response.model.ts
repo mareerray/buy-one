@@ -7,11 +7,3 @@ export interface UserResponse {
   role: Role;
   avatar?: string;
 }
-
-// export interface ResponseUser {
-//   id: string;
-//   name: string;
-//   email: string;
-//   role: 'client' | 'seller';
-//   avatar?: string;
-// }
