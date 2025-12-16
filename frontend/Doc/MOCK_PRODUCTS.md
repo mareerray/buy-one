@@ -1,4 +1,16 @@
   export const MOCK_PRODUCTS: Product[] = [
+  
+  {
+    id: '19',
+    name: 'Night Owl Coder Tee',
+    description:
+      'Celebrate late-night hacking and creativity! This tee captures the energy of a passionate coder working under glowing code screens.',
+    price: 40,
+    images: ['assets/images/NightOwlCoderTee1.png', 'assets/images/NightOwlCoderTee2.png'],
+    categoryId: 'CAT-003',
+    userId: 'USER-008',
+    quantity: 6,
+  },
   {
     id: ⚠️,
     name: 'Code Wizard Tee',
@@ -34,78 +46,54 @@
     userId: //Joon Kim,
     quantity: 6,
   },
-  {
-    id: '7',
-    name: 'Sharingan Ninja Tee',
-    description: 'For anime fans and shinobi admirers. Striking eyes and mysterious vibes.',
-    price: 35,
-    images: ['assets/images/SharinganNinjaTee1.jpg'],
-    categoryId: 'CAT-002',
-    userId: 'USER-004',
-    quantity: 10,
-  },
-  {
-    id: '9',
-    name: 'Meme Cat Pocket Tee',
-    description: 'For meme lovers—cheeky pocket cat with a hidden message.',
-    price: 25,
-    images: [
-      'https://images.unsplash.com/photo-1704095371948-58d1f95d8064?q=80&w=2674&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      'assets/images/pixelArt.jpg',
-    ],
-    categoryId: 'CAT-005',
-    userId: 'USER-004',
-    quantity: 15,
-  },
-  {
-    id: '10',
-    name: 'Esports Champion Tee',
-    description: 'Unleash your gaming spirit with this esports-inspired design!',
-    price: 29,
-    images: ['assets/images/EsportsChampionTee1.png', 'assets/images/EsportsChampionTee2.png'],
-    categoryId: 'CAT-004',
-    userId: 'USER-002',
-    quantity: 10,
-  },
-  {
-    id: '12',
-    name: 'Pro League Tee',
-    description: 'Declare yourself a winner—bold, sharp, and ready for action!',
-    price: 29,
-    images: ['assets/images/ProLeagueTee1.png', 'assets/images/ProLeagueTee2.png'],
-    categoryId: 'CAT-004',
-    userId: 'USER-002',
-    quantity: 6,
-  },
-  {
-    id: '15',
-    name: 'Debug Life Meme Tee',
-    description:
-      'Embrace the daily struggle of every coder! "Why isn’t it working?" gesture. Relatable, lighthearted, and perfect for debugging sessions.',
-    price: 25,
-    images: ['assets/images/DebugLifeMemeTee1.png', 'assets/images/DebugLifeMemeTee2.png'],
-    categoryId: 'CAT-005',
-    userId: 'USER-004',
-    quantity: 6,
-  },
-  {
-    id: '19',
-    name: 'Night Owl Coder Tee',
-    description:
-      'Celebrate late-night hacking and creativity! This tee captures the energy of a passionate coder working under glowing code screens.',
-    price: 40,
-    images: ['assets/images/NightOwlCoderTee1.png', 'assets/images/NightOwlCoderTee2.png'],
-    categoryId: 'CAT-003',
-    userId: 'USER-008',
-    quantity: 6,
-  },
 ];
 
   
   
   ---------------------------------------------
   {
-    id: '8',
+    id: ✅,
+    name: 'Debug Life Meme Tee',
+    description:
+      'Embrace the daily struggle of every coder! "Why isn’t it working?" gesture. Relatable, lighthearted, and perfect for debugging sessions.',
+    price: 25,
+    images: ['assets/images/DebugLifeMemeTee1.png', 'assets/images/DebugLifeMemeTee2.png'],
+    categoryId: 'CAT-005',
+    userId: //Jackie Chan,
+    quantity: 6,
+  },
+  {
+    id: ✅,
+    name: 'Pro League Tee',
+    description: 'Declare yourself a winner—bold, sharp, and ready for action!',
+    price: 29,
+    images: ['assets/images/ProLeagueTee1.png', 'assets/images/ProLeagueTee2.png'],
+    categoryId: 'CAT-004',
+    userId: //Linda Long,
+    quantity: 6,
+  },
+  {
+    id: ✅,
+    name: 'Esports Champion Tee',
+    description: 'Unleash your gaming spirit with this esports-inspired design!',
+    price: 29,
+    images: ['assets/images/EsportsChampionTee1.png', 'assets/images/EsportsChampionTee2.png'],
+    categoryId: 'CAT-004',
+    userId: //Linda Long,
+    quantity: 10,
+  },
+  {
+    id: ✅,
+    name: 'Sharingan Ninja Tee',
+    description: 'For anime fans and shinobi admirers. Striking eyes and mysterious vibes.',
+    price: 35,
+    images: ['assets/images/SharinganNinjaTee1.jpg'],
+    categoryId: 'CAT-002',
+    userId: //Sam Smith,
+    quantity: 10,
+  },
+  {
+    id: ✅,
     name: 'Little Warrior Manga Tee',
     description:
       'Power up your style! Featuring a bold manga hero ready for adventure—this tee brings iconic action and nostalgia straight from classic anime pages.',
@@ -115,18 +103,18 @@
       'assets/images/LittleWarriorMangaTee2.png',
     ],
     categoryId: 'CAT-002',
-    userId: 'USER-002',
+    userId: //Sam Smith,
     quantity: 6,
   },
   {
-    id: '16',
+    id: ✅,
     name: 'Totoro Night Pop Tee',
     description:
       'Step into a magical night with Totoro! This tee features the beloved forest spirit in glowing, dreamy colors—perfect for anime fans, dreamers, and Studio Ghibli lovers.',
     price: 30,
     images: ['assets/images/TotoroNightPopTee1.png', 'assets/images/TotoroNightPopTee2.jpg'],
     categoryId: 'CAT-002',
-    userId: 'USER-002',
+    userId: //Sam Smith,
     quantity: 6,
   },
   {
@@ -137,7 +125,7 @@
     price: 28,
     images: ['assets/images/KeepCodingTee1.png', 'assets/images/KeepCodingTee2.png'],
     categoryId: 'CAT-001',
-    userId: 'USER-004',
+    userId: //Emily Apple,
     quantity: 6,
   },
   {
@@ -148,7 +136,7 @@
     price: 30,
     images: ['assets/images/ZenDevMomentTee1.png', 'assets/images/ZenDevMomentTee2.png'],
     categoryId: 'CAT-003',
-    userId: 'USER-008', //Mama Blues
+    userId: //Mama Blues,
     quantity: 6,
   },
   {
@@ -158,7 +146,7 @@
     price: 29,
     images: ['assets/images/CyberShooterTee1.png', 'assets/images/CyberShooterTee2.png'],
     categoryId: 'CAT-004',
-    userId: 'USER-002',
+    userId: //Linda Long,
     quantity: 8,
   },
   {
@@ -263,3 +251,31 @@
     userId: //Sarah Lee,
     quantity: 1,
   },
+ --------------------------------------------------------------------
+
+   deleteProduct(index: number) {
+    const currentUser = this.authService.currentUserValue;
+    if (!currentUser) return;
+
+    const product = this.userProducts[index];
+    if (!product) {
+      console.warn('Product not found at index:', index);
+      return;
+    }
+
+    const confirmed = window.confirm('Are you sure you want to delete this product?');
+    if (!confirmed) return;
+
+    this.productService.deleteProduct(product.id, currentUser.id, 'SELLER').subscribe({
+      next: () => {
+        this.userProducts.splice(index, 1);
+        this.successMessage = 'Product deleted successfully';
+        setTimeout(() => (this.successMessage = null), 3000);
+      },
+      error: (err) => {
+        console.error('Delete failed', err);
+        this.errorMessage = 'Failed to delete product. Please try again.';
+        setTimeout(() => (this.errorMessage = null), 3000);
+      },
+    });
+  }
