@@ -1,0 +1,94 @@
+version: '3.8'
+
+x-common-env: &common-env
+  EUREKA_CLIENT_SERVICE-URL-DEFAULTZONE: http://discovery-service:8761/eureka/
+  SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017
+  SPRING_KAFKA_BOOTSTRAP-SERVERS: kafka:9092
+
+services:
+  # === INFRA ===
+  mongodb:
+    image: mongo:7
+    ports: ["27017:27017"]
+    volumes: [mongodb_data:/data/db]
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS:-password}
+
+  kafka:
+    image: bitnami/kafka:3.8
+    ports: ["9092:9092"]
+    environment:
+      # KRaft Mode (NO ZooKeeper!)
+      KAFKA_ENABLE_KRAFT: "yes"
+      KAFKA_CFG_NODE_ID: 0
+      KAFKA_CFG_PROCESS_ROLES: "controller,broker"
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: "0@kafka:9093"
+      KAFKA_CFG_LISTENERS: "PLAINTEXT://:9092,CONTROLLER://:9093"
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: "CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT"
+      KAFKA_CFG_INTER_BROKER_LISTENER_NAME: "PLAINTEXT"
+      KAFKA_CFG_ADVERTISED_LISTENERS: "PLAINTEXT://localhost:9092"
+      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: "true"
+    volumes: [kafka_data:/bitnami/kafka]
+
+  # === DISCOVERY (starts first) ===
+  discovery-service:
+    build: ./backend/discovery-service
+    ports: ["8761:8761"]
+    environment: [*common-env]
+
+  # === GATEWAY ===
+  gateway-service:
+    build: ./backend/gateway-service
+    ports: ["8080:8080"]
+    depends_on:
+      - discovery-service
+    environment:
+      <<: *common-env
+      SERVER_PORT: 8080
+
+  # === BUSINESS SERVICES ===
+  user-service:
+    build: ./backend/user-service
+    depends_on:
+      - discovery-service
+      - mongodb
+    environment:
+      <<: *common-env
+      SPRING_DATA_MONGODB_DATABASE: ${USER_DB:-userdb}
+      SERVER_PORT: 8082
+
+  product-service:
+    build: ./backend/product-service
+    depends_on:
+      - discovery-service
+      - mongodb
+      - kafka
+    environment:
+      <<: *common-env
+      SPRING_DATA_MONGODB_DATABASE: ${PRODUCT_DB:-productdb}
+      SERVER_PORT: 8083
+
+  media-service:
+    build: ./backend/media-service
+    depends_on:
+      - discovery-service
+      - mongodb
+      - kafka
+    environment:
+      <<: *common-env
+      SPRING_DATA_MONGODB_DATABASE: ${MEDIA_DB:-mediadb}
+      CLOUDFLARE_R2_ENDPOINT: ${R2_ENDPOINT}
+      CLOUDFLARE_R2_ACCESS_KEY: ${R2_ACCESS_KEY}
+      CLOUDFLARE_R2_SECRET_KEY: ${R2_SECRET_KEY}
+      SERVER_PORT: 8084
+
+  # === FRONTEND ===
+  frontend:
+    build: ./frontend
+    ports: ["4200:80"]
+    depends_on: [gateway-service]
+
+volumes:
+  mongodb_data:
+  kafka_data:
