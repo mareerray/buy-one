@@ -1,18 +1,17 @@
 spring:
+  application:
+    name: product-service
   config:
     activate:
       on-profile: docker
   data:
     mongodb:
-      database: ${SPRING_DATA_MONGODB_DATABASE}  # buy-one
+      uri: ${SPRING_DATA_MONGODB_URI}
+      database: ${SPRING_DATA_MONGODB_DATABASE:productdb}
   kafka:
-    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}  # kafka:9092
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
 
 eureka:
   client:
     service-url:
-      defaultZone: ${EUREKA_CLIENT_SERVICE-URL-DEFAULTZONE}  # discovery-service:8761
-
-logging:
-  level:
-    org.springframework.security: WARN
+      defaultZone: http://discovery-service:8761/eureka/

@@ -1,16 +1,17 @@
 spring:
+  application:
+    name: media-service
   config:
     activate:
       on-profile: docker
   data:
     mongodb:
-      database: ${SPRING_DATA_MONGODB_DATABASE}
+      uri: ${SPRING_DATA_MONGODB_URI}
+      database: ${SPRING_DATA_MONGODB_DATABASE:mediadb}
   kafka:
-    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
+
 eureka:
   client:
     service-url:
-      defaultZone: ${EUREKA_CLIENT_SERVICE-URL-DEFAULTZONE}
-logging:
-  level:
-    org.springframework.security: WARN
+      defaultZone: http://discovery-service:8761/eureka/
