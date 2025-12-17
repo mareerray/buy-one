@@ -1,8 +1,4 @@
 <!-- seller-dashboard.component.html -->
-<div *ngIf="successMessage" class="alert alert-success mt-3 text-center d-flex justify-content-center align-items-center" role="alert">
-  {{ successMessage }}
-  <button type="button" class="btn-close ms-2" (click)="successMessage = null"></button>
-</div>
 <!-- Seller info -->
 <div class="container mt-4">
   <div class="row justify-content-center">
@@ -33,18 +29,23 @@
           <i class="fa fa-plus me-1"></i> Add New Product
         </button>
       </h3>
+      <div *ngIf="successMessage" class="alert alert-success mt-3 text-center d-flex justify-content-center align-items-center" role="alert">
+        {{ successMessage }}
+        <button type="button" class="btn-close ms-2" (click)="successMessage = null"></button>
+      </div>
+
       <!-- Loading state -->
       <div *ngIf="isLoadingProducts" class="text-center py-5 text-white">
         Loading your products...
       </div>
 
       <!-- Error state -->
-      <div *ngIf="!isLoadingProducts && errorMessage">
+      <div *ngIf="!isLoadingProducts && errorMessage && !successMessage">
         {{ errorMessage }}
       </div>
 
       <!-- Empty state -->
-      <div *ngIf="!isLoadingProducts && !errorMessage && userProducts.length === 0"
+      <div *ngIf="!isLoadingProducts && !successMessage && !errorMessage && userProducts.length === 0"
           class="text-center py-5 text-white">
         You have not created any products yet.
       </div>

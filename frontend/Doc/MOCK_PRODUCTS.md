@@ -10,19 +10,14 @@
     categoryId: 'CAT-003',
     userId: 'USER-008',
     quantity: 6,
-  },
+  },  
+];
+
+  
+  
+  ---------------------------------------------
   {
-    id: ⚠️,
-    name: 'Code Wizard Tee',
-    description: 'For devs who love stylish, clever code jokes.',
-    price: 29,
-    images: ['assets/images/CodeWizardTee1.png', 'assets/images/CodeWizardTee2.jpeg'],
-    categoryId: 'CAT-001',
-    userId: //Joon Kim,
-    quantity: 10,
-  },
-  {
-    id: ⚠️,
+    id: ✅,
     name: 'Classic Portrait Tee',
     description:
       'Wear timeless art—this tee features a mysterious portrait with vintage colors, made for art lovers!',
@@ -36,7 +31,7 @@
     quantity: 1,
   },
   {
-    id: ⚠️,
+    id: ✅,
     name: 'Pop Code Queen Tee',
     description:
       'Stand out with bold code and bold color! This wearable artwork is for vibrant, confident women in tech, ready to code and conquer.',
@@ -46,11 +41,16 @@
     userId: //Joon Kim,
     quantity: 6,
   },
-];
-
-  
-  
-  ---------------------------------------------
+  {
+    id: ✅,
+    name: 'Code Wizard Tee',
+    description: 'For devs who love stylish, clever code jokes.',
+    price: 29,
+    images: ['assets/images/CodeWizardTee1.png', 'assets/images/CodeWizardTee2.jpeg'],
+    categoryId: 'CAT-001',
+    userId: //Joon Kim,
+    quantity: 10,
+  },
   {
     id: ✅,
     name: 'Debug Life Meme Tee',
