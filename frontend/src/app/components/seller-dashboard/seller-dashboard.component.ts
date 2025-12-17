@@ -489,10 +489,24 @@ export class SellerDashboardComponent implements OnInit {
     if (!currentUser) return;
 
     const product = this.userProducts[index];
+    if (!product) {
+      console.warn('Product not found at index:', index);
+      return;
+    }
+
+    const confirmed = window.confirm('Are you sure you want to delete this product?');
+    if (!confirmed) return;
 
     this.productService.deleteProduct(product.id, currentUser.id, 'SELLER').subscribe({
       next: () => {
-        this.userProducts.splice(index, 1); // or reloadSellerProducts
+        this.userProducts = this.userProducts.filter((_, i) => i !== index);
+        this.successMessage = 'Product deleted successfully';
+        setTimeout(() => (this.successMessage = null), 3000);
+      },
+      error: (err) => {
+        console.error('Delete failed', err);
+        this.errorMessage = 'Failed to delete product. Please try again.';
+        setTimeout(() => (this.errorMessage = null), 3000);
       },
     });
   }
