@@ -53,11 +53,20 @@ export class CategoriesComponent {
 
         // if URL already has a slug, respect it
         const slugFromUrl = this.route.snapshot.paramMap.get('slug');
-        if (slugFromUrl && this.categories.some((cat) => cat.slug === slugFromUrl)) {
-          this.selectedCategorySlug = slugFromUrl;
+
+        if (slugFromUrl) {
+          const exists = this.categories.some((cat) => cat.slug === slugFromUrl);
+          if (exists) {
+            this.selectedCategorySlug = slugFromUrl;
+          } else {
+            // invalid slug in URL → go back to /categories
+            this.router.navigate(['/categories']);
+            this.selectedCategorySlug = null;
+          }
         } else if (!this.selectedCategorySlug && this.categories.length > 0) {
           this.selectedCategorySlug = this.categories[0].slug;
         }
+
         this.isLoadingCategories = false;
       },
       error: () => {
@@ -105,7 +114,22 @@ export class CategoriesComponent {
   private listenToRoute() {
     this.route.paramMap.subscribe((params) => {
       const slugFromUrl = params.get('slug');
-      if (slugFromUrl && this.categories.some((cat) => cat.slug === slugFromUrl)) {
+      if (!slugFromUrl) {
+        // /categories (no slug) → just clear selection
+        this.selectedCategorySlug = null;
+        return;
+      }
+      // If categories already loaded, validate immediately
+      if (this.categories.length > 0) {
+        const exists = this.categories.some((cat) => cat.slug === slugFromUrl);
+        if (exists) {
+          this.selectedCategorySlug = slugFromUrl;
+        } else {
+          // invalid slug → redirect to /categories
+          this.router.navigate(['/categories']);
+        }
+      } else {
+        // Categories not loaded yet: remember slug, validation will happen in loadCategories
         this.selectedCategorySlug = slugFromUrl;
       }
     });
