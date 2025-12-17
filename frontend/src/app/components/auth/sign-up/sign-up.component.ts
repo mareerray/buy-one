@@ -38,14 +38,12 @@ export class SignUpComponent {
   uploadProgress = 0;
   avatar: string = 'assets/avatars/user-default.png';
   avatarError: string = '';
-  // showAvatar: boolean = false;
   errorMessage = '';
   isLoading = false;
 
   form: FormGroup;
 
   private fb = inject(FormBuilder);
-  // private mediaService = inject(MediaService);
   private authService = inject(AuthService);
   private router: Router = inject(Router);
 
@@ -96,7 +94,6 @@ export class SignUpComponent {
       next: (_user: any) => {
         this.isLoading = false;
         console.log('Sign-up successful', _user);
-        // this.signUp.emit(payload); --- IGNORE ---
         this.router.navigate(['/signin']);
       },
       error: (error: any) => {
@@ -106,45 +103,4 @@ export class SignUpComponent {
       },
     });
   }
-
-  // handleAvatarUpload(event: Event) {
-  //   const file = (event.target as HTMLInputElement).files?.[0];
-  //   if (!file) return;
-
-  //   this.avatarError = '';
-  //   this.uploadProgress = 0;
-
-  //   // Local preview with FileReader immediately
-  //   const reader = new FileReader();
-  //   reader.onloadend = () => {
-  //     this.avatar = reader.result as string;
-  //     this.showAvatar = true;
-  //     this.avatarError = '';
-  //   };
-  //   reader.readAsDataURL(file);
-
-  //   // Upload with mediaService
-  //   this.mediaService.uploadAvatar(file).subscribe({
-  //     next: (res) => {
-  //       // res is ApiResponse<MediaResponse>
-  //       const media = res.data;
-  //       this.avatar = media.url; // backend URL
-  //       this.uploadProgress = 0;
-  //     },
-  //     error: (err) => {
-  //       this.avatarError =
-  //         typeof err === 'string'
-  //           ? err
-  //           : err.message || 'Failed to upload avatar. Please try again.';
-  //       this.uploadProgress = 0;
-  //     },
-  //   });
-  // }
-
-  // handleRemoveAvatar() {
-  //   this.avatar = 'assets/avatars/user-default.png';
-  //   this.showAvatar = false;
-  //   this.avatarError = '';
-  //   this.uploadProgress = 0;
-  // }
 }

@@ -41,7 +41,6 @@ export class SellerDashboardComponent implements OnInit {
   editIndex: number | null = null;
 
   productForm: FormGroup;
-  // imagePreview: string | ArrayBuffer | null = null;
   imagePreviews: { file: File | null; dataUrl: string; mediaId?: string | null }[] = [];
   maxImagesPerProduct = 5;
   isDragActive: boolean = false;

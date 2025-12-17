@@ -127,11 +127,7 @@ public class UserServiceImpl implements UserService {
 
         // Always set avatar from request (can be null to clear)
         existingUser.setAvatar(request.getAvatar()); // may be null -> clears avatar   
-    
-        // if (request.getAvatar() != null) {
-        //     existingUser.setAvatar(request.getAvatar());
-        // }
-        
+            
         User updatedUser = userRepository.save(existingUser);
         return toUserResponse(updatedUser);
     }

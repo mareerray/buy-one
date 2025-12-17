@@ -38,9 +38,7 @@ export class UserService {
   }
 
   getSellers(): Observable<UserResponse[]> {
-    return this.http.get<UserResponse[]>(`${this.baseUrl}/sellers`, {
-      headers: this.getAuthHeaders(),
-    });
+    return this.http.get<UserResponse[]>(`${this.baseUrl}/sellers`);
   }
 
   getUserById(userId: string): Observable<UserResponse> {
