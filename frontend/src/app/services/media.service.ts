@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { ApiResponse } from '../models/api-response/api-response.model';
 import { MediaResponse } from '../models/media/media-response.model';
 import { MediaListResponse } from '../models/media/mediaList-response.model';
+import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
@@ -12,7 +13,7 @@ export class MediaService {
   allowedProductImageTypes = ['image/jpeg', 'image/png'];
   allowedAvatarTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 
-  private baseUrl = 'https://localhost:8080/media/images'; // Used for API calls
+  private baseUrl = `${environment.apiBaseUrl}/media/images`;
   private http = inject(HttpClient);
   private auth = inject(AuthService);
 
