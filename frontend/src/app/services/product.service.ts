@@ -6,11 +6,12 @@ import { CreateProductRequest } from '../models/products/createProductRequest.mo
 import { UpdateProductRequest } from '../models/products/updateProductRequest.model';
 import { ProductResponse } from '../models/products/product-response.model';
 import { ApiResponse } from '../models/api-response/api-response.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
   private http = inject(HttpClient);
-  private baseUrl = 'https://localhost:8080/products';
+  private baseUrl = `${environment.apiBaseUrl}/products`;
 
   private productsSubject = new BehaviorSubject<ProductResponse[]>([]);
   products$ = this.productsSubject.asObservable();

@@ -1,4 +1,5 @@
-package com.buyone.mediaservice.service.impl;
+package com.buyone.mediaservice.service.impl; 
+
 import com.buyone.mediaservice.model.Media;
 import com.buyone.mediaservice.model.MediaOwnerType;
 import com.buyone.mediaservice.repository.MediaRepository;
@@ -11,6 +12,7 @@ import com.buyone.mediaservice.exception.InvalidFileException;
 import com.buyone.mediaservice.exception.ConflictException;
 import com.buyone.mediaservice.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,11 +40,31 @@ public class MediaServiceImpl implements MediaService {
                                     String currentUserId,
                                     String currentUserRole) {
         validateImageFile(file);
-        if (!"SELLER".equals(currentUserRole)) {
-            throw new ForbiddenException("Only Seller can upload images");
+        boolean isSeller = "SELLER".equals(currentUserRole);
+        boolean isClient = "CLIENT".equals(currentUserRole);
+
+        // For USER avatars: allow both SELLER and CLIENT,
+        //    but only for their own user id
+        if (ownerType == MediaOwnerType.USER) {
+            if (!(isSeller || isClient)) {
+                throw new ForbiddenException("Only Sellers and Clients can upload user avatars.");
+            }
+            if (!ownerId.equals(currentUserId)) {
+                throw new ForbiddenException("You can only upload an avatar for yourself.");
+            }
         }
-        if (ownerType == MediaOwnerType.USER && !ownerId.equals(currentUserId)) {
-            throw new ForbiddenException("You can only upload an avatar for yourself.");
+        // For PRODUCT images: only SELLER role allowed
+        if (ownerType == MediaOwnerType.PRODUCT && !isSeller) {
+            throw new ForbiddenException("Only Seller can upload product images.");
+        }
+
+        // If this is a user avatar, ensure only one avatar per user
+        if (ownerType == MediaOwnerType.USER) {
+            List<Media> existingAvatar = mediaRepository.findAllByOwnerIdAndOwnerType(ownerId, MediaOwnerType.USER);
+            for (Media m : existingAvatar) {
+                storageService.delete(m.getImagePath());
+                mediaRepository.delete(m);
+            }
         }
 
         // If this is a product image, enforce max 5 images per product
@@ -52,6 +74,7 @@ public class MediaServiceImpl implements MediaService {
                 throw new ConflictException("This product already has the maximum number of images (" + MAX_IMAGES_PER_PRODUCT + ").");
             }
         }
+    
         
         Media media = Media.builder()
                 .ownerId(ownerId)
@@ -136,25 +159,45 @@ public class MediaServiceImpl implements MediaService {
     public DeleteMediaResponse deleteMedia(String id,
                                         String currentUserId,
                                         String currentUserRole) {
-        
-        if (!"SELLER".equals(currentUserRole)) {
-            throw new ForbiddenException("Only sellers can delete images.");
-        }
-        
+        boolean isSeller = "SELLER".equals(currentUserRole);
+        boolean isClient = "CLIENT".equals(currentUserRole);
+
         Media media = mediaRepository.findById(id)
                 .orElseThrow(() -> new MediaNotFoundException(id));
 
-        // If this is a user avatar, ownerId must equal currentUserId
+        // USER avatars: owner can delete their own avatar (CLIENT or SELLER)
         if (media.getOwnerType() == MediaOwnerType.USER) {
             if (!media.getOwnerId().equals(currentUserId)) {
                 throw new ForbiddenException("You can only delete your own avatar.");
             }
+            if (!(isSeller || isClient)) {
+                throw new ForbiddenException("Only Sellers or Clients can delete user avatars.");
+            }   
         }
-        
-        // Ownership: only ownerId can delete this media
+
+        // PRODUCT images: only SELLER allowed, and must be owner
         if (media.getOwnerType() == MediaOwnerType.PRODUCT) {
-            // For now, just allow delete for SELLER role (already checked above)
+            if (!isSeller) {
+                throw new ForbiddenException("Only sellers can delete product images.");
+            }
+            if (!media.getOwnerId().equals(currentUserId)) {
+                throw new ForbiddenException("You can only delete your own product images.");
+            }
         }
+
+        // if (!"SELLER".equals(currentUserRole)) {
+        //     throw new ForbiddenException("Only sellers can delete images.");
+        // }
+        
+        // ✅ CRITICAL: Ownership check FIRST
+        // if (!media.getOwnerId().equals(currentUserId)) {
+        //     throw new ForbiddenException("You can only delete your own media.");
+        // }
+        
+        // ✅ Role check: CLIENT can delete OWN avatar, SELLER can delete anything
+        // if (media.getOwnerType() == MediaOwnerType.USER && !"SELLER".equals(currentUserRole)) {
+        //     throw new ForbiddenException("Only sellers can manage user avatars.");
+        // }
         
         storageService.delete(media.getImagePath());
         mediaRepository.deleteById(id);
@@ -163,7 +206,7 @@ public class MediaServiceImpl implements MediaService {
     
     @Override
     public List<MediaResponse> mediaListForProduct(String productId) {
-        var medias = mediaRepository.findAllByOwnerIdAndOwnerType(productId, MediaOwnerType.PRODUCT);
+        List<Media> medias = mediaRepository.findAllByOwnerIdAndOwnerType(productId, MediaOwnerType.PRODUCT);
         
         return medias.stream()
                 .map(m -> new MediaResponse(
@@ -193,5 +236,4 @@ public class MediaServiceImpl implements MediaService {
             throw new InvalidFileException("Only image files are allowed!");
         }
     }
-    
 }

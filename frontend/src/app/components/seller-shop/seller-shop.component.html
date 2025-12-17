@@ -12,14 +12,13 @@
       <div class="d-flex align-items-center mb-3">
         <!-- Seller Avatar -->
         <img
-          *ngIf="seller.avatar"
-          [src]="seller.avatar"
+          [src]="seller.avatar || 'assets/avatars/user-default.png'"
           [alt]="seller.name"
           class="seller-avatar rounded-circle me-3"
         />
-        <div *ngIf="!seller.avatar" class="seller-avatar-placeholder rounded-circle me-3">
+        <!-- <div *ngIf="!seller.avatar" class="seller-avatar-placeholder rounded-circle me-3">
           <i class="fas fa-user"></i>
-        </div>
+        </div> -->
         
         <!-- Seller Name and Badge -->
         <div>
@@ -50,8 +49,13 @@
   Loading products...
 </div>
 
+<!-- Error state -->
+<div *ngIf="!isLoadingProducts && errorMessage">
+  {{ errorMessage }}
+</div>
+
 <!-- Empty state -->
-<div *ngIf="seller && !isLoadingProducts && sellerProducts.length === 0"
+<div *ngIf="seller && !isLoadingProducts  && !errorMessage && sellerProducts.length === 0"
      class="text-center py-5 text-white">
   This seller has no products listed yet.
 </div>

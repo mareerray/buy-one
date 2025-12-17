@@ -4,8 +4,9 @@ import { HttpClient } from '@angular/common/http';
 
 import { LoginRequest } from '../models/users/loginRequest.model';
 import { RegisterUserRequest } from '../models/users/registerUserRequest.model';
-import { LoginResponse } from '../models/users/login-response.model'; // Create this
-import { UserResponse } from '../models/users/user-response.model'; // Create this
+import { LoginResponse } from '../models/users/login-response.model';
+import { UserResponse } from '../models/users/user-response.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +14,7 @@ import { UserResponse } from '../models/users/user-response.model'; // Create th
 export class AuthService {
   private http = inject(HttpClient);
 
-  private baseUrl = 'https://localhost:8080/auth';
+  private baseUrl = `${environment.apiBaseUrl}/auth`;
   private currentUserSubject = new BehaviorSubject<UserResponse | null>(this.loadUserFromStorage());
   public currentUser$ = this.currentUserSubject.asObservable();
 

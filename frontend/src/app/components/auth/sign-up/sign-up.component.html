@@ -14,15 +14,18 @@
           <!-- Dropdown Avatar Upload -->
           <div
             class="avatar-section mb-3 text-center position-relative"
-            style="width: 150px; margin: auto"
+            style="width: 300px; margin: auto"
           >
             <img
-              [src]="avatar || 'assets/avatars/user-default.png'"
-              alt="Avatar preview"
+              [src]="avatar"
+              alt="Default avatar"
               class="avatar-preview mb-2 rounded-circle"
               style="width: 120px; height: 120px"
             />
-            <div
+            <p class="text-secondary mt-2" style="font-size: 0.8em; max-width: 280px; margin: 0 auto;">
+              This is your default avatar. You can upload your own picture later in your profile settings.
+            </p>
+            <!-- <div
               class="dropdown custom-avatar-dropdown"
               style="position: absolute; right: 8px; bottom: 65px"
             >
@@ -77,7 +80,7 @@
             </div>
             <div class="progress mt-1" *ngIf="uploadProgress > 0">
               <div class="progress-bar" [style.width.%]="uploadProgress"></div>
-            </div>
+            </div>-->
           </div>
           <!-- Error Alert  -->
           <div class="alert alert-danger" *ngIf="errorMessage" role="alert">

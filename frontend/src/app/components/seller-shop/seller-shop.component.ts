@@ -79,6 +79,8 @@ export class SellerShopComponent implements OnInit {
 
   private loadSellerProducts(sellerId: string) {
     this.isLoadingProducts = true;
+    this.errorMessage = '';
+
     this.productService.getProductsBySeller(sellerId).subscribe({
       next: (prods) => {
         this.sellerProducts = prods;

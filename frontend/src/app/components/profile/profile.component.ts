@@ -19,9 +19,12 @@ export class ProfileComponent implements OnInit {
   currentUser: UserResponse | null = null;
   profileForm: FormGroup;
   passwordForm: FormGroup;
-  avatar: string | null = null;
+  avatar: string | null = null; // always URL or null
+  avatarPreview: string | null = null; // for <img> only
+  loaded = false; // flag to delay rendering the avatar until the user is loaded
+
   avatarError: string = '';
-  uploadProgress = 0;
+  avatarMediaId: string | null = null;
   successMessage = '';
   showSuccess = false;
 
@@ -51,10 +54,13 @@ export class ProfileComponent implements OnInit {
       if (user) {
         this.currentUser = user;
         this.profileForm.patchValue({ name: user.name, email: user.email });
-        // Disable email field
-        this.profileForm.get('email')?.disable();
+        this.profileForm.get('email')?.disable(); // Disable email field
+
         this.avatar = user.avatar || null;
+        this.avatarPreview = this.avatar;
+        this.avatarMediaId = this.extractMediaId(user.avatar);
       }
+      this.loaded = true; // render avatar only after this
     });
   }
 
@@ -64,13 +70,23 @@ export class ProfileComponent implements OnInit {
     if (!file) return;
 
     this.avatarError = '';
-    this.uploadProgress = 0;
+
+    if (file.size > this.mediaService.maxImageSize) {
+      this.avatarPreview = this.avatar; // revert preview to current avatar
+      this.avatarError = 'Avatar file size must be less than 2MB';
+      return;
+    }
+
+    if (!this.mediaService.allowedAvatarTypes.includes(file.type)) {
+      this.avatarPreview = this.avatar; // revert preview to current avatar
+      this.avatarError = 'Invalid avatar file type';
+      return;
+    }
 
     // Local preview (base64) so user sees something instantly
     const reader = new FileReader();
     reader.onloadend = () => {
-      this.avatar = reader.result as string;
-      this.avatarError = '';
+      this.avatarPreview = reader.result as string;
     };
     reader.readAsDataURL(file);
 
@@ -80,38 +96,67 @@ export class ProfileComponent implements OnInit {
         // res is ApiResponse<MediaResponse>
         const media = res.data; // MediaResponse
         this.avatar = media.url; // Use backend URL as final avatar
-        this.uploadProgress = 0;
-        // Update AuthService immediately so navbar/seller-dashboard refresh
-        const current = this.authService.currentUserValue;
-        if (current) {
-          this.authService.updateCurrentUserInStorage({
-            ...current,
-            avatar: media.url,
-          });
-        }
+        this.avatarMediaId = media.id;
+        this.avatarPreview = this.avatar; // ensure preview uses final URL
+        // this.uploadProgress = 0;
       },
       error: (err) => {
-        this.avatarError =
-          typeof err === 'string' ? err : err.message || 'Failed to upload avatar.';
-        this.uploadProgress = 0;
+        if (err instanceof Error) {
+          // Error from media.service (type/size/user checks)
+          this.avatarError = err.message;
+        } else {
+          this.avatarError = 'Failed to upload avatar.';
+        }
       },
     });
   }
 
   handleRemoveAvatar() {
-    this.avatar = 'assets/avatars/user-default.png';
-    this.avatarError = '';
-    this.uploadProgress = 0;
+    if (!this.avatarMediaId) {
+      this.avatar = null;
+      this.avatarPreview = null;
+      this.avatarMediaId = null;
+      return;
+    }
+
+    this.mediaService.deleteImage(this.avatarMediaId).subscribe({
+      next: () => {
+        this.avatar = null;
+        this.avatarPreview = null;
+        this.avatarMediaId = null;
+        console.log('✅ Avatar deleted from R2 + MongoDB');
+      },
+      error: (err) => {
+        console.error('Delete failed', err);
+        this.avatar = null; // Still clear UI
+        this.avatarPreview = null;
+        this.avatarMediaId = null;
+      },
+    });
+  }
+
+  private extractMediaId(url?: string): string | null {
+    if (!url) return null;
+    const match = url.match(/media\/([a-f0-9-]+)\./);
+    return match?.[1] || null;
   }
 
   saveProfile() {
+    // Block saving if avatar upload failed
+    if (this.avatarError) {
+      this.showSuccess = false;
+      this.successMessage = '';
+      console.warn('Cannot save profile because avatar upload failed.');
+      return;
+    }
+
     if (this.profileForm.valid && this.currentUser) {
       this.successMessage = '';
 
       const dto: UserUpdateRequest = {
         id: this.currentUser.id,
         name: this.profileForm.value.name,
-        avatar: this.avatar || this.currentUser.avatar, // the Cloudflare/media URL
+        avatar: this.avatar,
       };
       this.userService.updateCurrentUser(dto).subscribe({
         next: (updatedUser) => {
@@ -139,8 +184,7 @@ export class ProfileComponent implements OnInit {
       const dto: UserUpdateRequest = {
         id: this.currentUser.id,
         name: this.currentUser.name, // keep unchanged
-        // email: this.currentUser.email, // keep unchanged
-        avatar: this.currentUser.avatar,
+        avatar: this.avatar,
         password: this.passwordForm.value.newPassword,
       };
       this.userService.updateCurrentUser(dto).subscribe({

@@ -6,6 +6,7 @@
 <div *ngIf="!isLoading && errorMessage" class="alert alert-danger text-center">
   {{ errorMessage }}
 </div>
+
 <!-- Main content -->
 <div *ngIf="!isLoading && !errorMessage">
   <div class="container py-5 categories-page">
@@ -70,7 +71,11 @@
               </div>
             </div>
           </header>
-          <!-- existing product grid -->
+          <!-- Empty category state (inside grid area) -->
+          <div *ngIf="selectedCategory && filteredProducts.length === 0" class="text-center py-5 text-white">
+            No products in "{{ selectedCategory.name }}" yet. Please check back later.
+          </div>
+          <!-- Product grid (only if there are products) -->
           <div class="row g-4">
             <div *ngFor="let product of filteredProducts" class="col-12 col-sm-6 col-lg-4">
               <app-product-grid-card

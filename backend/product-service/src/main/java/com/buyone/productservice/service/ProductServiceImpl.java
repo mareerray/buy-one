@@ -184,18 +184,19 @@ public class ProductServiceImpl implements ProductService {
             throw new ForbiddenException("Unauthorized: You do not own this product");
         }
         productRepository.deleteById(id);
+        
         ProductDeletedEvent event = ProductDeletedEvent.builder()
                 .productId(product.getId())
                 .sellerId(sellerId)
                 .build();
-        // kafkaTemplate.send(productDeletedTopic, event)
-        //         .whenComplete((result, ex) -> {
-        //             if (ex != null) {
-        //                 log.error("Failed to publish event", ex);
-        //             } else {
-        //                 log.info("Event published: " + event);
-        //             }
-        //         });
+         kafkaTemplate.send(productDeletedTopic, event)
+                 .whenComplete((result, ex) -> {
+                     if (ex != null) {
+                         log.error("Failed to publish event", ex);
+                     } else {
+                         log.info("Event published: " + event);
+                     }
+                 });
 
     }
     
@@ -203,9 +204,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductResponse> getProductsBySeller(String sellerId) {
         List<Product> products = productRepository.findByUserId(sellerId);
-        if (products.isEmpty()) {
-            throw new ProductNotFoundException("No products found for seller: " + sellerId);
-        }
+        // Do NOT throw on empty; just map to DTOs
+        // if (products.isEmpty()) {
+        //     throw new ProductNotFoundException("No products found for seller: " + sellerId);
+        // }
         return products.stream().map(this::toProductResponse).collect(Collectors.toList());
     }
     

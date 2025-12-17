@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { ApiResponse } from '../models/api-response/api-response.model';
 import { MediaResponse } from '../models/media/media-response.model';
 import { MediaListResponse } from '../models/media/mediaList-response.model';
+import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
@@ -12,11 +13,11 @@ export class MediaService {
   allowedProductImageTypes = ['image/jpeg', 'image/png'];
   allowedAvatarTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 
-  private baseUrl = 'https://localhost:8080/media/images'; // Used for API calls
+  private baseUrl = `${environment.apiBaseUrl}/media/images`;
   private http = inject(HttpClient);
   private auth = inject(AuthService);
 
-  // ---------- Validation helpers (keep these) ----------
+  // ---------- Validation helpers ----------
 
   isAlreadySelected(file: File, previewList: { file: File | null; dataUrl: string }[]): boolean {
     return previewList.some(
@@ -27,10 +28,14 @@ export class MediaService {
   // ---------- Real HTTP methods ----------
 
   uploadAvatar(file: File): Observable<ApiResponse<MediaResponse>> {
+    console.log('✅ Avatar file size:', file.size, 'max allowed:', this.maxImageSize);
+
     if (!this.allowedAvatarTypes.includes(file.type)) {
       return throwError(() => new Error('Invalid avatar file type'));
     }
+
     if (file.size > this.maxImageSize) {
+      console.log('⚠️ Blocking avatar upload: file too large');
       return throwError(() => new Error('Avatar file size must be less than 2MB'));
     }
 
@@ -63,9 +68,6 @@ export class MediaService {
     if (file.size > this.maxImageSize) {
       return throwError(() => new Error('Product image file size must be less than 2MB'));
     }
-    // if (this.isAlreadySelected(file, previewList)) {
-    //   return throwError(() => new Error('This image has already been selected.'));
-    // }
 
     const currentUser = this.auth.currentUserValue;
     if (!currentUser) {
@@ -89,7 +91,7 @@ export class MediaService {
     return this.http.get<ApiResponse<MediaListResponse>>(`${this.baseUrl}/product/${productId}`);
   }
 
-  deleteImage(mediaId: string): Observable<void> {
+  deleteImage(mediaId: string): Observable<any> {
     const currentUser = this.auth.currentUserValue;
     if (!currentUser) {
       return throwError(() => new Error('User not logged in'));

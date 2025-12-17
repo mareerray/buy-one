@@ -4,13 +4,14 @@ import { Observable } from 'rxjs';
 
 import { UserUpdateRequest } from '../models/users/userUpdateRequest.model';
 import { UserResponse } from '../models/users/user-response.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
   private http = inject(HttpClient);
-  private baseUrl = 'https://localhost:8080/api/users';
+  private baseUrl = `${environment.apiBaseUrl}/api/users`;
 
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
@@ -38,9 +39,7 @@ export class UserService {
   }
 
   getSellers(): Observable<UserResponse[]> {
-    return this.http.get<UserResponse[]>(`${this.baseUrl}/sellers`, {
-      headers: this.getAuthHeaders(),
-    });
+    return this.http.get<UserResponse[]>(`${this.baseUrl}/sellers`);
   }
 
   getUserById(userId: string): Observable<UserResponse> {

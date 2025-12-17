@@ -1,7 +1,4 @@
 <!-- seller-dashboard.component.html -->
-<div *ngIf="successMessage" class="alert alert-success mt-3">
-  {{ successMessage }}
-</div>
 <!-- Seller info -->
 <div class="container mt-4">
   <div class="row justify-content-center">
@@ -32,19 +29,30 @@
           <i class="fa fa-plus me-1"></i> Add New Product
         </button>
       </h3>
+      <div *ngIf="successMessage" class="alert alert-success mt-3 text-center d-flex justify-content-center align-items-center" role="alert">
+        {{ successMessage }}
+        <button type="button" class="btn-close ms-2" (click)="successMessage = null"></button>
+      </div>
+
       <!-- Loading state -->
       <div *ngIf="isLoadingProducts" class="text-center py-5 text-white">
         Loading your products...
       </div>
+
+      <!-- Error state -->
+      <div *ngIf="!isLoadingProducts && errorMessage && !successMessage">
+        {{ errorMessage }}
+      </div>
+
       <!-- Empty state -->
-      <div *ngIf="!isLoadingProducts && userProducts.length === 0"
+      <div *ngIf="!isLoadingProducts && !successMessage && !errorMessage && userProducts.length === 0"
           class="text-center py-5 text-white">
         You have not created any products yet.
       </div>
       <!-- Product cards -->
       <div *ngIf="!isLoadingProducts && userProducts.length > 0">
         <ul class="list-group mb-5">
-          <li class="list-group-item" *ngFor="let product of userProducts; let i = index">
+          <li class="list-group-item product-row" *ngFor="let product of userProducts; let i = index">
             <div class="d-flex align-items-center">
               <img *ngIf="product.images && product.images.length"
                   [src]="product.images[0]"
@@ -52,10 +60,12 @@
                   class="me-3 square-image">
 
               <div class="flex-grow-1">
-                <div class="fw-bold">
-                  ID: {{product.id}} <br />
-                  <strong>{{ product.name }}</strong><br />
-                </div>
+                <div class="fw-bold d-flex align-items-center gap-2">
+                  <span>
+                    ID: {{ product.id }}<br />
+                    <strong>{{ product.name }}</strong><br />
+                  </span>
+                </div> 
                 " {{ product.description }} "<br />
                 <span>
                   <i
@@ -73,8 +83,39 @@
                   <span class="ms-3">Quantity: {{ product.quantity }} pc</span>
                 </div>
               </div>
-              <button class="btn btn-sm btn-warning me-2 hover-lift" (click)="editProduct(i)">Edit</button>
-              <button class="btn btn-sm btn-danger hover-lift" (click)="deleteProduct(i)">Delete</button>
+              <div class="action-buttons">
+                <!-- View (eye) -->
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-light view-icon-btn"
+                  [routerLink]="['/product', product.id]"
+                  aria-label="View product"
+                >
+                  <i class="fas fa-eye"></i>
+                </button>
+
+                <!-- Edit (pencil) -->
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-primary"
+                  (click)="editProduct(i)"
+                  aria-label="Edit product"
+                >
+                  <i class="fas fa-edit"></i>
+                </button>
+
+                <!-- Delete (trash) -->
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-danger"
+                  (click)="deleteProduct(i)"
+                  aria-label="Delete product"
+                >
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+              <!-- <button class="btn btn-sm btn-warning me-2 hover-lift" (click)="editProduct(i)">Edit</button>
+              <button class="btn btn-sm btn-danger hover-lift" (click)="deleteProduct(i)">Delete</button> -->
             </div>
           </li>
         </ul>
@@ -94,7 +135,8 @@
   class="modal fade show custom-modal-absolute"
   tabindex="-1"
   style="display: block;"
-  *ngIf="showModal">
+  *ngIf="showModal"
+  (click)="$event.stopPropagation()">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -242,12 +284,14 @@
                 <div *ngFor="let img of imagePreviews; let i = index" class="position-relative">
                   <img [src]="img.dataUrl" class="img-thumbnail" width="120" />
                   <button
+                    type="button"
                     class="btn btn-danger btn-sm position-absolute top-0 end-0 btn-small-x hover-lift"
                     (click)="removeImage(i)"
                   >
                     ✖
                   </button>
                   <button
+                  type="button"
                     class="btn btn-secondary btn-sm position-absolute bottom-0 end-0 hover-lift"
                     (click)="moveImageUp(i)"
                     *ngIf="i > 0"
@@ -255,6 +299,7 @@
                     ↑
                   </button>
                   <button
+                    type="button"
                     class="btn btn-secondary btn-sm position-absolute bottom-0 start-0 hover-lift"
                     (click)="moveImageDown(i)"
                     *ngIf="i < imagePreviews.length - 1"

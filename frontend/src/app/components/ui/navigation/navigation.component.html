@@ -25,8 +25,7 @@
       <a routerLink="/profile">
         <span class="navbar-user">
           <img
-            *ngIf="currentUserAvatar"
-            [src]="currentUserAvatar"
+            [src]="authService.currentUserValue?.avatar || 'assets/avatars/user-default.png'"
             alt="avatar"
             class="navbar-avatar"
           />

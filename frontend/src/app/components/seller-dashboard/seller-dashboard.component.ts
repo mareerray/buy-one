@@ -10,13 +10,14 @@ import { Category } from '../../models/categories/category.model';
 
 import { AuthService } from '../../services/auth.service';
 import { MediaService } from '../../services/media.service';
-import { Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
+import { Router, RouterLink } from '@angular/router';
+import { forkJoin, of, switchMap, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-seller-dashboard',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NgIf],
+  imports: [CommonModule, ReactiveFormsModule, NgIf, RouterLink],
   templateUrl: './seller-dashboard.component.html',
   styleUrls: ['./seller-dashboard.component.css'],
 })
@@ -40,7 +41,6 @@ export class SellerDashboardComponent implements OnInit {
   editIndex: number | null = null;
 
   productForm: FormGroup;
-  // imagePreview: string | ArrayBuffer | null = null;
   imagePreviews: { file: File | null; dataUrl: string; mediaId?: string | null }[] = [];
   maxImagesPerProduct = 5;
   isDragActive: boolean = false;
@@ -66,7 +66,7 @@ export class SellerDashboardComponent implements OnInit {
     }
 
     this.sellerName = currentUser.name;
-    this.sellerAvatar = currentUser.avatar || 'assets/avatars/default-user.jpg';
+    this.sellerAvatar = currentUser.avatar || 'assets/avatars/user-default.png';
     this.loadCategories();
     this.loadSellerProducts(currentUser.id);
   }
@@ -92,6 +92,8 @@ export class SellerDashboardComponent implements OnInit {
 
   private loadSellerProducts(sellerId: string) {
     this.isLoadingProducts = true;
+    this.errorMessage = '';
+
     this.productService.getProductsBySeller(sellerId).subscribe({
       next: (products) => {
         console.log('products from backend', products);
@@ -195,7 +197,6 @@ export class SellerDashboardComponent implements OnInit {
         });
       }
     }
-
     // Remove from local list; submitProduct will send new images[] to product-service
     this.imagePreviews.splice(index, 1);
   }
@@ -290,10 +291,13 @@ export class SellerDashboardComponent implements OnInit {
         this.productService
           .updateProduct(existing.id, payload, currentUser.id, 'SELLER')
           .subscribe({
-            next: (resp) => {
-              console.log('Update product (no new images) success', resp);
+            next: () => {
               this.successMessage = 'Product updated successfully';
               this.loadSellerProducts(currentUser.id);
+              this.closeModal(); // ✅ close only on success
+              setTimeout(() => {
+                this.successMessage = null;
+              }, 3000);
             },
             error: (err) => {
               console.error('Update product failed', err);
@@ -325,11 +329,13 @@ export class SellerDashboardComponent implements OnInit {
           this.productService
             .updateProduct(existing.id, payload, currentUser.id, 'SELLER')
             .subscribe({
-              next: (resp) => {
-                console.log('Update product with new images success', resp);
+              next: () => {
                 this.successMessage = 'Product updated successfully';
                 this.loadSellerProducts(currentUser.id);
-                this.closeModal();
+                this.closeModal(); // User clicks Save
+                setTimeout(() => {
+                  this.successMessage = null;
+                }, 3000);
               },
               error: (err) => {
                 console.error('Update product with images failed', err);
@@ -353,18 +359,30 @@ export class SellerDashboardComponent implements OnInit {
 
       this.productService.addProduct(payload, currentUser.id, 'SELLER').subscribe({
         next: (resp) => {
-          console.log('Create product success', resp);
           const createdProduct = resp.data;
-          console.log('createdProduct:', createdProduct);
-          console.log('imagePreviews at create:', this.imagePreviews);
+
           if (createdProduct && createdProduct.id) {
             console.log('Calling uploadImagesToMediaService with id', createdProduct.id);
-            this.uploadImagesToMediaService(createdProduct.id, createdProduct, currentUser.id);
+            this.uploadImagesToMediaService(
+              createdProduct.id,
+              createdProduct,
+              currentUser.id,
+            ).subscribe({
+              next: () => {
+                this.closeModal(); // ✅ close only after all done
+              },
+              error: (err) => {
+                console.error('Update product with images failed', err);
+              },
+            });
           } else {
             console.log('No createdProduct.id, skipping uploadImagesToMediaService');
             this.successMessage = 'Product created successfully';
             this.loadSellerProducts(currentUser.id);
-            this.closeModal(); // Reset and hide modal
+            this.closeModal(); // ✅ User clicks Save
+            setTimeout(() => {
+              this.successMessage = null;
+            }, 3000);
           }
         },
         error: (err) => {
@@ -374,20 +392,11 @@ export class SellerDashboardComponent implements OnInit {
     }
   }
 
-  closeModal() {
-    console.log('closeModal called');
-    this.productForm.reset();
-    this.imagePreviews = [];
-    this.imageValidationError = null;
-    this.editIndex = null;
-    this.showModal = false;
-  }
-
   private uploadImagesToMediaService(
     productId: string,
     createdProduct: ProductResponse,
     sellerId: string,
-  ): void {
+  ): Observable<any> {
     console.log('uploadImagesToMediaService called, productId:', productId);
     console.log('imagePreviews inside uploadImagesToMediaService:', this.imagePreviews);
 
@@ -401,13 +410,13 @@ export class SellerDashboardComponent implements OnInit {
     if (uploadRequests.length === 0) {
       console.log('No real files to upload');
       this.imageValidationError = 'Please add at least one image.';
-      return;
+      // Return an observable that completes immediately
+      return of(null);
     }
 
-    forkJoin(uploadRequests).subscribe({
-      next: (results) => {
+    return forkJoin(uploadRequests).pipe(
+      switchMap((results) => {
         console.log('All images uploaded, results:', results);
-
         const imageUrls = results.map((res) => res.data.url);
 
         const updatePayload: UpdateProductRequest = {
@@ -419,22 +428,16 @@ export class SellerDashboardComponent implements OnInit {
           images: imageUrls,
         };
 
-        this.productService.updateProduct(productId, updatePayload, sellerId, 'SELLER').subscribe({
-          next: (updateResp) => {
-            console.log('Product updated with image URLs', updateResp);
-            this.successMessage = 'Product created successfully';
-            this.loadSellerProducts(sellerId);
-            this.closeModal();
-          },
-          error: (err) => {
-            console.error('Update product with images failed', err);
-          },
-        });
-      },
-      error: (err) => {
-        console.error('Failed to upload product image(s).', productId, err);
-      },
-    });
+        return this.productService.updateProduct(productId, updatePayload, sellerId, 'SELLER');
+      }),
+      tap(() => {
+        this.successMessage = 'Product created successfully';
+        this.loadSellerProducts(sellerId);
+        setTimeout(() => {
+          this.successMessage = null;
+        }, 3000);
+      }),
+    );
   }
 
   editProduct(index: number) {
@@ -472,15 +475,38 @@ export class SellerDashboardComponent implements OnInit {
     });
   }
 
+  closeModal() {
+    console.log('closeModal called');
+    this.productForm.reset();
+    this.imagePreviews = [];
+    this.imageValidationError = null;
+    this.editIndex = null;
+    this.showModal = false;
+  }
+
   deleteProduct(index: number) {
     const currentUser = this.authService.currentUserValue;
     if (!currentUser) return;
 
     const product = this.userProducts[index];
+    if (!product) {
+      console.warn('Product not found at index:', index);
+      return;
+    }
+
+    const confirmed = window.confirm('Are you sure you want to delete this product?');
+    if (!confirmed) return;
 
     this.productService.deleteProduct(product.id, currentUser.id, 'SELLER').subscribe({
       next: () => {
-        this.userProducts.splice(index, 1); // or reloadSellerProducts
+        this.userProducts = this.userProducts.filter((_, i) => i !== index);
+        this.successMessage = 'Product deleted successfully';
+        setTimeout(() => (this.successMessage = null), 3000);
+      },
+      error: (err) => {
+        console.error('Delete failed', err);
+        this.errorMessage = 'Failed to delete product. Please try again.';
+        setTimeout(() => (this.errorMessage = null), 3000);
       },
     });
   }
