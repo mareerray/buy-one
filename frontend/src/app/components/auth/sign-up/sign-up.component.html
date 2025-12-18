@@ -25,62 +25,6 @@
             <p class="text-secondary mt-2" style="font-size: 0.8em; max-width: 280px; margin: 0 auto;">
               This is your default avatar. You can upload your own picture later in your profile settings.
             </p>
-            <!-- <div
-              class="dropdown custom-avatar-dropdown"
-              style="position: absolute; right: 8px; bottom: 65px"
-            >
-              <button
-                class="btn btn-dark btn-sm p-1 dropdown-toggle"
-                type="button"
-                id="avatarActionsSignup"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-                style="
-                  border-radius: 50%;
-                  box-shadow: 0 1px 4px rgba(33, 33, 33, 0.1);
-                  cursor: pointer;
-                "
-              >
-                <i class="bi bi-camera"></i>
-              </button>
-              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="avatarActionsSignup">
-                <li>
-                  <label
-                    for="avatarUploadSignup"
-                    class="dropdown-item mb-0"
-                    style="cursor: pointer"
-                  >
-                    Upload
-                    <input
-                      id="avatarUploadSignup"
-                      type="file"
-                      accept="image/*"
-                      (change)="handleAvatarUpload($event)"
-                      class="d-none"
-                    />
-                  </label>
-                </li>
-                <li><hr class="dropdown-divider" /></li>
-                <li>
-                  <button
-                    class="dropdown-item text-danger"
-                    type="button"
-                    (click)="handleRemoveAvatar()"
-                  >
-                    Remove
-                  </button>
-                </li>
-              </ul>
-            </div>
-            <p class="text-secondary mt-2" style="font-size: 0.8em">
-              (Acceptable formats: JPEG, PNG, WEBP, GIF (max size: 2MB))
-            </p>
-            <div class="error-msg mt-1" *ngIf="avatarError">
-              {{ avatarError }}
-            </div>
-            <div class="progress mt-1" *ngIf="uploadProgress > 0">
-              <div class="progress-bar" [style.width.%]="uploadProgress"></div>
-            </div>-->
           </div>
           <!-- Error Alert  -->
           <div class="alert alert-danger" *ngIf="errorMessage" role="alert">
