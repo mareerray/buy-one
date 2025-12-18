@@ -50,7 +50,7 @@ export class HeroComponent implements OnInit, OnDestroy {
       id: '1',
       title: 'Quirky Tees, Curated for You',
       subtitle: 'Where creators sell bold designs. Where fans discover unique styles.',
-      image: 'assets/images/MarkusClassicPortraitTee1.png',
+      image: 'assets/images/MarkusClassicPortraitTee(1).png',
       badge: 'Marketplace',
     },
     {
@@ -64,7 +64,7 @@ export class HeroComponent implements OnInit, OnDestroy {
       id: '3',
       title: 'Sell Your Designs',
       subtitle: 'Join our marketplace and reach fans looking for quirky, premium tees',
-      image: 'assets/images/GroupieTrackerTee1.png',
+      image: 'assets/images/GroupieTrackerTee(1).png',
       badge: 'Start Selling',
     },
     {

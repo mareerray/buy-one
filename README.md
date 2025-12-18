@@ -3,7 +3,7 @@ buy-one is an end-to-end e-commerce platform built with Spring Boot microservice
 
 ---
 
-![App screenshot](./frontend/src/assets/images/projectOverview.png)
+![App screenshot](./frontend/src/assets/images/projectOverview.jpg)
 
 ## Features
 
