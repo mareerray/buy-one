@@ -19,7 +19,7 @@ public class UpdateUserRequest {
     @Size(max = 100, message = "Email must be less than 100 characters")
     private String email; // Keep for admin update
     
-    @Size(min = 6, max = 24, message = "Password must be between 6 and 24 characters")
+    @Size(min = 8, max = 24, message = "Password must be between 8 and 24 characters")
     private String password;
     
     private Role role;

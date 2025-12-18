@@ -42,7 +42,14 @@ export class ProfileComponent implements OnInit {
     this.passwordForm = this.fb.group(
       {
         currentPassword: ['', Validators.required],
-        newPassword: ['', [Validators.required, Validators.minLength(8)]],
+        newPassword: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(8),
+            Validators.pattern('^(?=.*[a-z])(?=.*\\d).{8,}$'),
+          ],
+        ],
         confirmPassword: ['', Validators.required],
       },
       { validator: this.passwordsMatch },

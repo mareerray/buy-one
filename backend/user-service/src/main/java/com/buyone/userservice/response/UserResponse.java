@@ -16,8 +16,4 @@ public class UserResponse {
     private String email;
     private Role role;
     private String avatar;
-    
-    // Optional: Exclude fields you don’t want exposed in the API
-    
-    // Optional: Add status, creation date, etc. for audit and UX
 }
