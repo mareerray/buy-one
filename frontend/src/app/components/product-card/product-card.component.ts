@@ -1,7 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { switchMap } from 'rxjs';
 import { ProductImageCarouselComponent } from '../ui/product-image-carousel/product-image-carousel.component';
 import { RouterLink } from '@angular/router';
 
@@ -27,6 +26,7 @@ export class ProductCardComponent implements OnInit {
   product!: ProductResponse; // non-null after load
   seller: UserResponse | undefined;
   category: Category | undefined;
+  errorMessage: string | null = null;
 
   isFading = false;
 
@@ -34,29 +34,59 @@ export class ProductCardComponent implements OnInit {
     const productId = this.route.snapshot.paramMap.get('id');
     if (!productId) return;
 
-    this.productService
-      .getProductById(productId)
-      .pipe(
-        switchMap((prod) => {
-          this.product = prod; // <- store in field
+    this.productService.getProductById(productId).subscribe({
+      next: (prod) => {
+        this.product = prod;
 
-          // load seller and category in parallel
-          const user$ = this.userService.getUserById(prod.userId);
+        // load seller
+        this.userService.getUserById(prod.userId).subscribe({
+          next: (user) => (this.seller = user),
+          error: () => {}, // optional: handle seller errors
+        });
 
-          const category$ = this.categoryService.getCategoryById(prod.categoryId);
-
-          return user$.pipe(
-            switchMap((user) => {
-              this.seller = user;
-              return category$;
-            }),
-          );
-        }),
-      )
-      .subscribe((cat) => {
-        this.category = cat;
-      });
+        // load category
+        this.categoryService.getCategoryById(prod.categoryId).subscribe({
+          next: (cat) => (this.category = cat),
+          error: () => {}, // optional: handle category errors
+        });
+      },
+      error: (err) => {
+        if (err.status === 404) {
+          this.errorMessage = 'Product not found';
+        } else {
+          this.errorMessage = 'Failed to load product. Please try again.';
+        }
+      },
+    });
   }
+
+  // ngOnInit() {
+  //   const productId = this.route.snapshot.paramMap.get('id');
+  //   if (!productId) return;
+
+  //   this.productService
+  //     .getProductById(productId)
+  //     .pipe(
+  //       switchMap((prod) => {
+  //         this.product = prod; // <- store in field
+
+  //         // load seller and category in parallel
+  //         const user$ = this.userService.getUserById(prod.userId);
+
+  //         const category$ = this.categoryService.getCategoryById(prod.categoryId);
+
+  //         return user$.pipe(
+  //           switchMap((user) => {
+  //             this.seller = user;
+  //             return category$;
+  //           }),
+  //         );
+  //       }),
+  //     )
+  //     .subscribe((cat) => {
+  //       this.category = cat;
+  //     });
+  // }
 
   getCategoryName(): string {
     return this.category ? this.category.name : '';

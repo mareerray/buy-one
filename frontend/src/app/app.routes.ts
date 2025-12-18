@@ -13,8 +13,7 @@ import { SellerGuard } from './guards/seller.guard';
 import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
-  // { path: '', redirectTo: 'signin', pathMatch: 'full' },
-  { path: '', component: HomeComponent },
+  { path: '', component: HomeComponent, pathMatch: 'full' },
   { path: 'signin', component: SignInComponent },
   { path: 'signup', component: SignUpComponent },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
@@ -25,4 +24,5 @@ export const routes: Routes = [
   { path: 'seller-dashboard', component: SellerDashboardComponent, canActivate: [SellerGuard] },
   { path: 'seller-shop/:id', component: SellerShopComponent },
   { path: 'about', component: AboutComponent },
+  { path: '**', redirectTo: '' },
 ];

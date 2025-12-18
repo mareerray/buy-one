@@ -1,12 +1,13 @@
-<!-- Loading state -->
-<div *ngIf="isLoading" class="text-center py-5 text-white">
-  Loading categories and products...
+<div class="container py-4">
+  <!-- Loading state -->
+  <div *ngIf="isLoading" class="text-center py-5 text-white">
+    Loading categories and products...
+  </div>
+  <!-- Error state -->
+  <div *ngIf="!isLoading && errorMessage" class="alert alert-danger text-center">
+    {{ errorMessage }}
+  </div>
 </div>
-<!-- Error state -->
-<div *ngIf="!isLoading && errorMessage" class="alert alert-danger text-center">
-  {{ errorMessage }}
-</div>
-
 <!-- Main content -->
 <div *ngIf="!isLoading && !errorMessage">
   <div class="container py-5 categories-page">

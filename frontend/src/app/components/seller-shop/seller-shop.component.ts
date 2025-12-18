@@ -53,7 +53,7 @@ export class SellerShopComponent implements OnInit {
       error: () => {
         this.seller = undefined;
         this.isLoadingSeller = false;
-        this.errorMessage = 'Seller not found.';
+        this.errorMessage = '';
       },
     });
 
@@ -68,7 +68,7 @@ export class SellerShopComponent implements OnInit {
         if (user && user.role === 'SELLER') {
           this.seller = user;
         } else {
-          this.errorMessage = 'Seller not found.';
+          this.errorMessage = '';
         }
       },
       error: () => {

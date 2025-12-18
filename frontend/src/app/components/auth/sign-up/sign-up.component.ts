@@ -4,8 +4,8 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-// import { MediaService } from '../../../services/media.service';
 import { AuthService } from '../../../services/auth.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -57,7 +57,7 @@ export class SignUpComponent {
           [
             Validators.required,
             Validators.minLength(8),
-            // Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])'),
+            Validators.pattern('^(?=.*[a-z])(?=.*\\d).{8,}$'),
           ],
         ],
         confirmPassword: ['', Validators.required],
@@ -96,9 +96,13 @@ export class SignUpComponent {
         console.log('Sign-up successful', _user);
         this.router.navigate(['/signin']);
       },
-      error: (error: any) => {
+      error: (error: HttpErrorResponse) => {
         this.isLoading = false;
-        this.errorMessage = 'Sign-up failed. Please try again.';
+        if (error.status === 409 && error.error?.message === 'Email already exists') {
+          this.errorMessage = 'This email is already taken.';
+        } else {
+          this.errorMessage = 'Sign-up failed. Please try again.';
+        }
         console.error('Sign-up error', error);
       },
     });
