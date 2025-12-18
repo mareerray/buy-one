@@ -1,4 +1,4 @@
-# buy-one 
+<h1 id="top">buy-one</h1>
 buy-one is an end-to-end e-commerce platform built with Spring Boot microservices and Angular, allowing clients to browse products and sellers to manage their own catalog and product media.
 
 ## Features
@@ -132,3 +132,5 @@ Frontend tests can be executed from the `frontend` folder with `npm test` or `ng
 
 [Mayuree Reunsati](https://github.com/mareerray) <br>
 [Joon Kim](https://github.com/kurizma)
+
+[Back to top](#top)
