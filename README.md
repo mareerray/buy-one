@@ -130,5 +130,5 @@ Frontend tests can be executed from the `frontend` folder with `npm test` or `ng
 
 ## Created by
 
-[Mayuree Reunsati](https://github.com/mareerray)
+[Mayuree Reunsati](https://github.com/mareerray) <br>
 [Joon Kim](https://github.com/kurizma)
