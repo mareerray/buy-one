@@ -70,7 +70,6 @@ export class ProductListingComponent implements OnInit {
         this.initializeCategoryOptions();
       },
       error: () => {
-        // optional: keep dropdown with only "All categories"
         this.categories = [];
         this.categoryOptions = [];
       },
@@ -80,8 +79,7 @@ export class ProductListingComponent implements OnInit {
   private initializeCategoryOptions() {
     this.categoryOptions = this.categories.map((c) => ({
       id: c.id,
-      // use slug or name depending on what you want to show
-      name: c.slug, // or c.name
+      name: c.slug,
     }));
   }
 

@@ -114,7 +114,6 @@ export class SellerShopComponent implements OnInit {
   }
 
   sendMessage() {
-    // Placeholder for messaging functionality
     alert('Messaging feature coming soon!');
   }
 }

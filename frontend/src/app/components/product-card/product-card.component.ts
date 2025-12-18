@@ -60,34 +60,6 @@ export class ProductCardComponent implements OnInit {
     });
   }
 
-  // ngOnInit() {
-  //   const productId = this.route.snapshot.paramMap.get('id');
-  //   if (!productId) return;
-
-  //   this.productService
-  //     .getProductById(productId)
-  //     .pipe(
-  //       switchMap((prod) => {
-  //         this.product = prod; // <- store in field
-
-  //         // load seller and category in parallel
-  //         const user$ = this.userService.getUserById(prod.userId);
-
-  //         const category$ = this.categoryService.getCategoryById(prod.categoryId);
-
-  //         return user$.pipe(
-  //           switchMap((user) => {
-  //             this.seller = user;
-  //             return category$;
-  //           }),
-  //         );
-  //       }),
-  //     )
-  //     .subscribe((cat) => {
-  //       this.category = cat;
-  //     });
-  // }
-
   getCategoryName(): string {
     return this.category ? this.category.name : '';
   }
