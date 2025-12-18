@@ -1,6 +1,10 @@
 <h1 id="top">buy-one</h1>
 buy-one is an end-to-end e-commerce platform built with Spring Boot microservices and Angular, allowing clients to browse products and sellers to manage their own catalog and product media.
 
+---
+
+![App screenshot](./frontend/src/assets/images/projectOverview.png)
+
 ## Features
 
 - User registration as CLIENT or SELLER with JWT-based authentication and authorization.
